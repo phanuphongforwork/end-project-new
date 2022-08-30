@@ -16,19 +16,14 @@ export default {
   data: () => ({
     items: [
       {
-        text: "Dashboard",
+        text: "หน้าแรก",
         disabled: false,
-        href: "breadcrumbs_dashboard",
+        href: "/",
       },
       {
-        text: "Link 1",
+        text: "ทะเบียนครัวเรือน",
         disabled: false,
-        href: "breadcrumbs_link_1",
-      },
-      {
-        text: "Link 2",
-        disabled: true,
-        href: "breadcrumbs_link_2",
+        href: "/",
       },
     ],
   }),
