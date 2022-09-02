@@ -23,6 +23,7 @@
               }"
               v-for="(menu, i) in item.subMenus"
               :key="i"
+              :href="menu.to"
             >
               <v-list-item-icon>
                 <v-icon v-text="menu.icon"></v-icon>
@@ -99,13 +100,20 @@ export default {
               text: "บทบาท",
               icon: "mdi-shield-check",
               active: false,
+              to: "/",
             },
             {
               text: "แก้ไขบทบาท",
               icon: "mdi-shield-edit ",
               active: false,
+              to: "/",
             },
-            { text: "ลบบทบาท", icon: "mdi-delete-forever ", active: false },
+            {
+              text: "ลบบทบาท",
+              icon: "mdi-delete-forever ",
+              active: false,
+              to: "/",
+            },
           ],
         },
         {
@@ -115,16 +123,19 @@ export default {
               text: "บัญชีผู้ใช้งาน",
               icon: "mdi-account-box ",
               active: false,
+              to: "/",
             },
             {
               text: "แก้ไขบัญชีผู้ใช้งาน",
               icon: "mdi-account-edit  ",
               active: false,
+              to: "/",
             },
             {
               text: "ลบบัญชีผู้ใช้งาน",
               icon: "mdi-delete-forever",
               active: false,
+              to: "/",
             },
           ],
         },
@@ -135,13 +146,15 @@ export default {
               text: "ทะเบียนครัวเรือน",
               icon: "mdi-book-open-variant ",
               active: true,
+              to: "/",
             },
             {
               text: "แก้ไขทะเบียนครัวเรือน",
               icon: "mdi-file-document-edit",
               active: false,
+              to: "/",
             },
-            { text: "ลบทะเบียนครัวเรือน", icon: "mdi-delete-forever" },
+            { text: "ลบทะเบียนครัวเรือน", icon: "mdi-delete-forever", to: "/" },
           ],
         },
         {
@@ -151,15 +164,18 @@ export default {
               text: "บุคคลในครัวเรือน",
               icon: "mdi-account-multiple",
               active: false,
+              to: "/",
             },
             {
               text: "แก้ไขบุคคลในครัวเรือน",
               icon: "mdi-account-wrench",
               active: false,
+              to: "/",
             },
             {
               text: "ลบบุคคลในครัวเรือน",
-              icon: "mdi-account-multiple-remove ",
+              icon: "mdi-account-multiple-remove",
+              to: "/",
             },
           ],
         },
