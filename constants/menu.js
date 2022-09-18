@@ -11,10 +11,10 @@ export default [
     ],
   },
   {
-    title: "จัดการบทบาท",
+    title: "จัดการสิทธิ์การใช้งาน",
     subMenus: [
       {
-        text: "บทบาท",
+        text: "สิทธิ์การใช้งาน",
         icon: "mdi-shield-check",
         active: false,
         to: "/roles",
@@ -57,21 +57,21 @@ export default [
         text: "แก้ไขทะเบียนครัวเรือน",
         icon: "mdi-file-document-edit",
         active: false,
-        to: "/house-holds/edit",
+        to: "/house-holds-edit",
       },
     ],
   },
   {
-    title: "จัดการบุคคลในครัวเรือน",
+    title: "จัดการประชากรครัวเรือน",
     subMenus: [
       {
-        text: "บุคคลในครัวเรือน",
+        text: "ประชากรครัวเรือน",
         icon: "mdi-account-multiple",
         active: false,
         to: "/persons",
       },
       {
-        text: "แก้ไขบุคคลในครัวเรือน",
+        text: "แก้ไขประชากรครัวเรือน",
         icon: "mdi-account-wrench",
         active: false,
         to: "/persons/edit",
