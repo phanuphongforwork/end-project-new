@@ -3,27 +3,27 @@
     <div>
       <Breadcrumb :items="breadcrumbs" :title="title" />
     </div>
-    <v-card class="pb-4 mt-6">
+    <v-card class="mt-6" outlined>
       <v-data-table
         :headers="headers"
         :items="roles"
-        hide-default-footer
         disable-filtering
         disable-sort
         :itemsPerPage="5"
         class="elevation-1"
       >
+        <template v-slot:item.role="{ item }" class="d-flex justify-center">
+          <v-chip color="info" dark>
+            {{ item.role }}
+          </v-chip>
+        </template>
+
+        <template v-slot:item.Status="{ item }" class="d-flex justify-center">
+          <v-chip color="primary" dark>
+            {{ item.Status }}
+          </v-chip>
+        </template>
       </v-data-table>
-      <!-- <hr /> -->
-      <div class="px-4 py-4">
-        <v-pagination
-          v-if="roles.length / 10 > 1"
-          class="mt-4"
-          v-model="page"
-          :length="roles.length / 10"
-          total-visible="7"
-        ></v-pagination>
-      </div>
     </v-card>
   </div>
 </template>
@@ -36,7 +36,7 @@ export default {
   },
   data() {
     return {
-      title: "บทบาท",
+      title: "บัญชีผู้ใช้งาน",
       breadcrumbs: [
         {
           text: "หน้าแรก",
@@ -44,9 +44,9 @@ export default {
           href: "/",
         },
         {
-          text: "บทบาท",
+          text: "บัญชีผู้ใช้งาน",
           disabled: false,
-          href: "roles",
+          href: "accounts",
         },
       ],
       search: "",
@@ -55,18 +55,26 @@ export default {
         {
           text: "ลำดับที่",
           value: "index",
+          width: 100,
         },
         {
-          text: "ชื่อบทบาท",
+          text: "ชื่อผู้ใช้งาน",
           align: "start",
           sortable: false,
-          value: "LevelName",
+          value: "Username",
         },
-        { text: "สถานะ", value: "Status" },
+        {
+          text: "สิทธิ์",
+          align: "center",
+          sortable: false,
+          value: "role",
+        },
+        { text: "สถานะ", value: "Status", align: "center" },
       ],
-      roles: Array(5)
+      roles: Array(10)
         .fill({
-          LevelName: "แอดมิน",
+          Username: "microwave",
+          role: "แอดมิน",
           Status: "ใช้งาน",
         })
         .map((e, index) => {

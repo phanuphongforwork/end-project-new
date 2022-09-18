@@ -20,6 +20,9 @@
               <v-list-item
                 v-for="(menu, index) in item.subMenus"
                 :key="index"
+                :class="{
+                  'v-list-item--active': menu.active === true,
+                }"
                 nuxt
                 :to="menu.to"
               >
@@ -89,3 +92,10 @@ export default {
   watch: {},
 };
 </script>
+
+<style>
+.bg-active {
+  background-color: black;
+  color: white !important;
+}
+</style>
