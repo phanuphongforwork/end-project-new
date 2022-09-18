@@ -53,14 +53,13 @@
         :itemsPerPage="5"
         class="elevation-1"
       >
-        <template v-slot:[`item.actions`]="{ item }">
+        <template v-slot:[`item.actions`]>
           <a href="#">กดเพื่อเพิ่ม</a>
         </template>
       </v-data-table>
     </v-card>
     <v-dialog
       v-model="modalActive"
-      fullscreen
       hide-overlay
       transition="dialog-bottom-transition"
     >

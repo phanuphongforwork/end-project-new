@@ -3,6 +3,17 @@
     <div>
       <Breadcrumb :items="breadcrumbs" :title="title" />
     </div>
+    <div>
+      <v-btn
+        color="primary"
+        large
+        class="col-12 col-lg-2 mt-6"
+        @click="modalActive = true"
+      >
+        <v-icon left> mdi-plus-circle </v-icon>
+        สร้างสิทธิ์การใช้งาน
+      </v-btn>
+    </div>
     <v-card class="mt-6" outlined>
       <v-data-table
         :headers="headers"
@@ -12,25 +23,52 @@
         :itemsPerPage="5"
         class="elevation-1"
       >
-        <template v-slot:item.Status="{ item }" class="d-flex justify-center">
+        <template
+          v-slot:[`item.Status`]="{ item }"
+          class="d-flex justify-center"
+        >
           <v-chip color="primary" dark>
             {{ item.Status }}
           </v-chip>
         </template>
       </v-data-table>
     </v-card>
+
+    <v-dialog
+      v-model="modalActive"
+      hide-overlay
+      persistent
+      :fullscreen="true"
+      transition="dialog-bottom-transition"
+      max-width="800"
+    >
+      <v-card>
+        <v-toolbar dark color="primary">
+          <v-btn icon dark @click="closeModal()">
+            <v-icon>mdi-close</v-icon>
+          </v-btn>
+          <v-toolbar-title>สร้าง{{ title }}</v-toolbar-title>
+          <v-spacer></v-spacer>
+        </v-toolbar>
+        <div class="px-4 py-4">
+          <CreateForm />
+        </div>
+      </v-card>
+    </v-dialog>
   </div>
 </template>
 
 <script>
 import Breadcrumb from "@/components/Breadcrumbs";
+import CreateForm from "@/components/roles/CreateForm";
 export default {
   components: {
     Breadcrumb,
+    CreateForm,
   },
   data() {
     return {
-      title: "บทบาท",
+      title: "สิทธิ์การใช้งาน",
       breadcrumbs: [
         {
           text: "หน้าแรก",
@@ -38,7 +76,7 @@ export default {
           href: "/",
         },
         {
-          text: "บทบาท",
+          text: "สิทธิ์การใช้งาน",
           disabled: false,
           href: "roles",
         },
@@ -58,6 +96,7 @@ export default {
         },
         { text: "สถานะ", value: "Status", align: "center" },
       ],
+      modalActive: false,
       roles: Array(5)
         .fill({
           LevelName: "แอดมิน",
@@ -70,6 +109,11 @@ export default {
           };
         }),
     };
+  },
+  methods: {
+    closeModal() {
+      this.modalActive = false;
+    },
   },
 };
 </script>
