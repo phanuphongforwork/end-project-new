@@ -13,26 +13,25 @@
       <v-divider></v-divider>
 
       <v-list nav dense>
-        <div v-for="(item, i) in items" :key="i">
-          <v-subheader>{{ item.title }}</v-subheader>
-          <v-list-item-group color="primary">
-            <v-list-item
-              :class="{
-                'v-item--active': menu.active === true,
-                'v-list-item--active': menu.active === true,
-              }"
-              v-for="(menu, i) in item.subMenus"
-              :key="i"
-              :href="menu.to"
-            >
-              <v-list-item-icon>
-                <v-icon v-text="menu.icon"></v-icon>
-              </v-list-item-icon>
-              <v-list-item-content>
-                <v-list-item-title v-text="menu.text"></v-list-item-title>
-              </v-list-item-content>
-            </v-list-item>
-          </v-list-item-group>
+        <div v-for="(item, i) in menus" :key="i">
+          <div v-if="item && item.subMenus.length > 0">
+            <v-subheader>{{ item.title }}</v-subheader>
+            <v-list-item-group color="primary">
+              <v-list-item
+                v-for="(menu, index) in item.subMenus"
+                :key="index"
+                nuxt
+                :to="menu.to"
+              >
+                <v-list-item-icon>
+                  <v-icon v-text="menu.icon"></v-icon>
+                </v-list-item-icon>
+                <v-list-item-content>
+                  <v-list-item-title v-text="menu.text"></v-list-item-title>
+                </v-list-item-content>
+              </v-list-item>
+            </v-list-item-group>
+          </div>
         </div>
       </v-list>
     </v-navigation-drawer>
@@ -58,16 +57,6 @@
     <v-main>
       <!-- Provides the application the proper gutter -->
       <v-container fluid>
-        <v-row>
-          <v-col>
-            <Breadcrumbs class="mt-6" />
-          </v-col>
-        </v-row>
-
-        <v-row>
-          <v-col class="text-h4"> ทะเบียนครัวเรือน </v-col>
-        </v-row>
-
         <!-- If using vue-router -->
         <Nuxt></Nuxt>
       </v-container>
@@ -80,7 +69,9 @@
 </template>
 
 <script>
+import menus from "@/constants/menu";
 import Breadcrumbs from "@/components/Breadcrumbs";
+import menu from "../constants/menu";
 
 export default {
   components: {
@@ -89,97 +80,9 @@ export default {
   data() {
     return {
       drawer: true,
-
       lists: [{ text: "Log Out", icon: "mdi-logout" }],
       selectedItem: 1,
-      items: [
-        {
-          title: "จัดการบทบาท",
-          subMenus: [
-            {
-              text: "บทบาท",
-              icon: "mdi-shield-check",
-              active: false,
-              to: "/",
-            },
-            {
-              text: "แก้ไขบทบาท",
-              icon: "mdi-shield-edit ",
-              active: false,
-              to: "/",
-            },
-            {
-              text: "ลบบทบาท",
-              icon: "mdi-delete-forever ",
-              active: false,
-              to: "/",
-            },
-          ],
-        },
-        {
-          title: "จัดการผู้ใช้งาน",
-          subMenus: [
-            {
-              text: "บัญชีผู้ใช้งาน",
-              icon: "mdi-account-box ",
-              active: false,
-              to: "/",
-            },
-            {
-              text: "แก้ไขบัญชีผู้ใช้งาน",
-              icon: "mdi-account-edit  ",
-              active: false,
-              to: "/",
-            },
-            {
-              text: "ลบบัญชีผู้ใช้งาน",
-              icon: "mdi-delete-forever",
-              active: false,
-              to: "/",
-            },
-          ],
-        },
-        {
-          title: "จัดการทะเบียนครัวเรือน",
-          subMenus: [
-            {
-              text: "ทะเบียนครัวเรือน",
-              icon: "mdi-book-open-variant ",
-              active: true,
-              to: "/",
-            },
-            {
-              text: "แก้ไขทะเบียนครัวเรือน",
-              icon: "mdi-file-document-edit",
-              active: false,
-              to: "/",
-            },
-            { text: "ลบทะเบียนครัวเรือน", icon: "mdi-delete-forever", to: "/" },
-          ],
-        },
-        {
-          title: "จัดการบุคคลในครัวเรือน",
-          subMenus: [
-            {
-              text: "บุคคลในครัวเรือน",
-              icon: "mdi-account-multiple",
-              active: false,
-              to: "/",
-            },
-            {
-              text: "แก้ไขบุคคลในครัวเรือน",
-              icon: "mdi-account-wrench",
-              active: false,
-              to: "/",
-            },
-            {
-              text: "ลบบุคคลในครัวเรือน",
-              icon: "mdi-account-multiple-remove",
-              to: "/",
-            },
-          ],
-        },
-      ],
+      menus,
     };
   },
 
