@@ -10,14 +10,17 @@
         </v-col>
       </v-row>
 
-      <v-row class="mt-4">
-        <v-col cols="12">
-          <v-btn color="primary" class="col-12 col-lg-2" large>
-            <v-icon left> mdi-pencil </v-icon>
-            บันทึกข้อมูล
-          </v-btn>
-        </v-col>
-      </v-row>
+      <div class="mt-4">
+        <v-btn color="primary" class="col-12 col-lg-2" large>
+          <v-icon left> mdi-content-save </v-icon>
+          บันทึกข้อมูล
+        </v-btn>
+
+        <v-btn class="col-12 col-lg-2 ml-0 ml-lg-2 mt-4 mt-lg-0" large>
+          <v-icon left> mdi-refresh </v-icon>
+          ล้างข้อมูล
+        </v-btn>
+      </div>
     </v-container>
   </div>
 </template>

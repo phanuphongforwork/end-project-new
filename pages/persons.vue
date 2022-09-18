@@ -12,7 +12,10 @@
         :itemsPerPage="5"
         class="elevation-1"
       >
-        <template v-slot:item.Status="{ item }" class="d-flex justify-center">
+        <template
+          v-slot:[`item.Status`]="{ item }"
+          class="d-flex justify-center"
+        >
           <v-chip color="primary" dark>
             {{ item.Status }}
           </v-chip>

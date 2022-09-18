@@ -3,6 +3,17 @@
     <div>
       <Breadcrumb :items="breadcrumbs" :title="title" />
     </div>
+    <div>
+      <v-btn
+        color="primary"
+        large
+        class="col-12 col-lg-2 mt-6"
+        @click="modalActive = true"
+      >
+        <v-icon left> mdi-plus-circle </v-icon>
+        สร้างบัญชีผู้ใช้งาน
+      </v-btn>
+    </div>
     <v-card class="mt-6" outlined>
       <v-data-table
         :headers="headers"
@@ -12,30 +23,62 @@
         :itemsPerPage="5"
         class="elevation-1"
       >
-        <template v-slot:item.role="{ item }" class="d-flex justify-center">
+        <template v-slot:[`item.role`]="{ item }" class="d-flex justify-center">
           <v-chip color="info" dark>
             {{ item.role }}
           </v-chip>
         </template>
 
-        <template v-slot:item.Status="{ item }" class="d-flex justify-center">
+        <template
+          v-slot:[`item.Status`]="{ item }"
+          class="d-flex justify-center"
+        >
           <v-chip color="primary" dark>
             {{ item.Status }}
           </v-chip>
         </template>
+
+        <template v-slot:[`item.actions`]>
+          <a href="#" @click="modalActive = true">แก้ไขบัญชี</a>
+        </template>
       </v-data-table>
     </v-card>
+
+    <v-dialog
+      v-model="modalActive"
+      hide-overlay
+      persistent
+      :fullscreen="true"
+      transition="dialog-bottom-transition"
+      max-width="800"
+    >
+      <v-card>
+        <v-toolbar dark color="primary">
+          <v-btn icon dark @click="closeModal()">
+            <v-icon>mdi-close</v-icon>
+          </v-btn>
+          <v-toolbar-title>สร้าง{{ title }}</v-toolbar-title>
+          <v-spacer></v-spacer>
+        </v-toolbar>
+        <div class="px-4 py-4">
+          <CreateAccount @createAccount="handleCreateAccount()" />
+        </div>
+      </v-card>
+    </v-dialog>
   </div>
 </template>
 
 <script>
+import CreateAccount from "@/components/accounts/CreateAccount";
 import Breadcrumb from "@/components/Breadcrumbs";
 export default {
   components: {
     Breadcrumb,
+    CreateAccount,
   },
   data() {
     return {
+      modalActive: false,
       title: "บัญชีผู้ใช้งาน",
       breadcrumbs: [
         {
@@ -68,8 +111,10 @@ export default {
           align: "center",
           sortable: false,
           value: "role",
+          width: 150,
         },
-        { text: "สถานะ", value: "Status", align: "center" },
+        { text: "สถานะ", value: "Status", align: "center", width: 100 },
+        { text: "แก้ไขบัญชี", value: "actions", sortable: false, width: 100 },
       ],
       roles: Array(10)
         .fill({
@@ -84,6 +129,14 @@ export default {
           };
         }),
     };
+  },
+  methods: {
+    closeModal() {
+      this.modalActive = false;
+    },
+    handleCreateAccount() {
+      this.modalActive = false;
+    },
   },
 };
 </script>
