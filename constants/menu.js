@@ -78,4 +78,15 @@ export default [
       },
     ],
   },
+  {
+    title: "การใช้งาน",
+    subMenus: [
+      {
+        text: "ออกจากระบบ",
+        icon: "mdi-logout",
+        active: false,
+        to: "/login",
+      },
+    ],
+  },
 ];
