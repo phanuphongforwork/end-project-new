@@ -2,7 +2,7 @@
   <div>
     <v-stepper v-model="e1">
       <v-stepper-header>
-        <v-stepper-step :complete="e1 > 1" step="1">
+        <v-stepper-step :complete="isEdit || e1 > 1" step="1">
           ค้นหาประชากรในครัวเรือน
         </v-stepper-step>
 
@@ -14,7 +14,7 @@
 
         <v-divider></v-divider>
 
-        <v-stepper-step step="3">สร้างบัญชีผู้ใช้งาน</v-stepper-step>
+        <v-stepper-step step="3">{{ title }}บัญชีผู้ใช้งาน</v-stepper-step>
       </v-stepper-header>
 
       <v-stepper-items>
@@ -81,6 +81,7 @@
             </v-btn>
 
             <v-btn
+              v-if="!isEdit"
               large
               elevation="1"
               class="col-12 col-lg-2 ml-0 ml-lg-4 mt-4 mt-lg-0"
@@ -117,7 +118,7 @@
               @click="create()"
             >
               <v-icon left> mdi-content-save-check</v-icon>
-              สร้างบัญชีผู้ใช้งาน
+              {{ title }}บัญชีผู้ใช้งาน
             </v-btn>
 
             <v-btn
@@ -138,10 +139,21 @@
 
 <script>
 export default {
+  props: {
+    isEdit: {
+      type: Boolean,
+      default: false,
+    },
+  },
   data() {
     return {
-      e1: 1,
+      e1: this.isEdit ? 2 : 1,
     };
+  },
+  computed: {
+    title() {
+      return this.isEdit ? "แก้ไข" : "สร้าง";
+    },
   },
   methods: {
     create() {

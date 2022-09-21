@@ -46,13 +46,28 @@
 
       <v-spacer></v-spacer>
 
-      <v-menu bottom left class="d-md-none d-lg-flex">
+      <!-- <v-menu >
+        <template v-slot:activator="{ on }">
+
+          
+          <v-btn color="primary" depressed v-on="on">
+            <v-icon left> mdi-account-circle-outline </v-icon>
+            Admin
+          </v-btn>
+        </template>
+      </v-menu> -->
+      <v-menu bottom left class="d-md-none d-lg-flex" offset-y>
         <template v-slot:activator="{ on }">
           <v-btn color="primary" depressed v-on="on">
             <v-icon left> mdi-account-circle-outline </v-icon>
             Admin
           </v-btn>
         </template>
+        <v-list>
+          <v-list-item nuxt to="/login">
+            <v-list-item-title>ออกจากระบบ</v-list-item-title>
+          </v-list-item>
+        </v-list>
       </v-menu>
     </v-app-bar>
 
