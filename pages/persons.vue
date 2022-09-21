@@ -3,6 +3,17 @@
     <div>
       <Breadcrumb :items="breadcrumbs" :title="title" />
     </div>
+    <div>
+      <v-btn
+        color="primary"
+        large
+        class="col-12 col-lg-2 mt-6"
+        @click="modalActive = true"
+      >
+        <v-icon left> mdi-plus-circle </v-icon>
+        เพิ่มประชากร
+      </v-btn>
+    </div>
     <v-card class="mt-6" outlined>
       <v-data-table
         :headers="headers"
@@ -78,42 +89,6 @@ export default {
           sortable: false,
           value: "Phone",
         },
-        // {
-        //   text: "สถานะเด็กแรกเกิด",
-        //   align: "start",
-        //   sortable: false,
-        //   value: "Newborn",
-        // },
-        // {
-        //   text: "สถานะหญิงตั้งครรภ์",
-        //   align: "start",
-        //   sortable: false,
-        //   value: "Pregnant",
-        // },
-        // {
-        //   text: "สถานะหญิงหลังคลอด",
-        //   align: "start",
-        //   sortable: false,
-        //   value: "Postpartum",
-        // },
-        // {
-        //   text: "สถานะผู้พิการ",
-        //   align: "start",
-        //   sortable: false,
-        //   value: "Disabled",
-        // },
-        // {
-        //   text: "สถานะป่วยโรคเรื้อรัง",
-        //   align: "start",
-        //   sortable: false,
-        //   value: "ChronicDisease",
-        // },
-        // {
-        //   text: "มีพฤติกรรมเสี่ยงด้านความรุนแรง",
-        //   align: "start",
-        //   sortable: false,
-        //   value: "ViolentBehavior",
-        // },
         { text: "สถานะ", value: "Status", align: "center" },
       ],
       persons: Array(15)
