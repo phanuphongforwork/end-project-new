@@ -32,7 +32,7 @@
           </v-chip>
         </template>
         <template v-slot:[`item.actions`]>
-          <a href="#" @click="modalActive = true">แก้ไขสิทธิ์</a>
+          <a href="#" @click="editRole(item)">แก้ไขสิทธิ์</a>
         </template>
       </v-data-table>
     </v-card>
@@ -50,14 +50,24 @@
           <v-btn icon dark @click="closeModal()">
             <v-icon>mdi-close</v-icon>
           </v-btn>
-          <v-toolbar-title>สร้าง{{ title }}</v-toolbar-title>
+          <v-toolbar-title>{{
+            isEdit ? `แก้ไข${title}` : `สร้าง${title}`
+          }}</v-toolbar-title>
           <v-spacer></v-spacer>
         </v-toolbar>
         <div class="px-4 py-4">
-          <CreateForm />
+          <CreateForm @save="closeModal()" />
         </div>
       </v-card>
     </v-dialog>
+
+    <v-snackbar v-model="createSuccess" color="success" timeout="2000">
+      สร้างสิทธิ์การใช้งานเรียบร้อยแล้ว
+    </v-snackbar>
+
+    <v-snackbar v-model="updateSuccess" color="success" timeout="2000">
+      แก้ไขสิทธิ์การใช้งานเรียบร้อยแล้ว
+    </v-snackbar>
   </div>
 </template>
 
@@ -113,11 +123,25 @@ export default {
             index: Number(index) + 1,
           };
         }),
+      isEdit: false,
+      createSuccess: false,
+      updateSuccess: false,
     };
   },
   methods: {
     closeModal() {
       this.modalActive = false;
+
+      if (!this.isEdit) {
+        this.createSuccess = true;
+      } else {
+        this.updateSuccess = true;
+      }
+      this.isEdit = false;
+    },
+    editRole(item) {
+      this.isEdit = true;
+      this.modalActive = true;
     },
   },
 };
