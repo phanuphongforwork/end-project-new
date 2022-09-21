@@ -39,7 +39,7 @@
         </template>
 
         <template v-slot:[`item.actions`]>
-          <a href="#" @click="modalActive = true">แก้ไขบัญชี</a>
+          <a href="#" @click="editAccount()">แก้ไขบัญชี</a>
         </template>
       </v-data-table>
     </v-card>
@@ -57,11 +57,16 @@
           <v-btn icon dark @click="closeModal()">
             <v-icon>mdi-close</v-icon>
           </v-btn>
-          <v-toolbar-title>สร้าง{{ title }}</v-toolbar-title>
+          <v-toolbar-title
+            >{{ isEdit ? "แก้ไข" : "สร้าง" }}{{ title }}</v-toolbar-title
+          >
           <v-spacer></v-spacer>
         </v-toolbar>
         <div class="px-4 py-4">
-          <CreateAccount @createAccount="handleCreateAccount()" />
+          <CreateAccount
+            :isEdit="isEdit"
+            @createAccount="handleCreateAccount()"
+          />
         </div>
       </v-card>
     </v-dialog>
@@ -128,6 +133,7 @@ export default {
             index: Number(index) + 1,
           };
         }),
+      isEdit: false,
     };
   },
   methods: {
@@ -136,6 +142,11 @@ export default {
     },
     handleCreateAccount() {
       this.modalActive = false;
+      this.isEdit = false;
+    },
+    editAccount() {
+      this.modalActive = true;
+      this.isEdit = true;
     },
   },
 };

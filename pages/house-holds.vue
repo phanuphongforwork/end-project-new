@@ -61,22 +61,20 @@
     <v-dialog
       v-model="modalActive"
       hide-overlay
+      fullscreen
       transition="dialog-bottom-transition"
     >
       <v-card>
         <v-toolbar dark color="primary">
-          <v-btn icon dark @click="dialog = false">
+          <v-btn icon dark @click="modalActive = false">
             <v-icon>mdi-close</v-icon>
           </v-btn>
           <v-toolbar-title>สร้างทะเบียนครัวเรือน</v-toolbar-title>
           <v-spacer></v-spacer>
-          <!-- <v-toolbar-items>
-            <div class="pt-1 pt-md-3">
-              <v-btn outlined color="white" large> บันทึกข้อมูล </v-btn>
-            </div>
-          </v-toolbar-items> -->
         </v-toolbar>
-        <CreateHouseHold />
+        <div class="px-4 py-4">
+          <CreateHouseHold @save="save()" />
+        </div>
       </v-card>
     </v-dialog>
 
@@ -158,7 +156,14 @@ export default {
           };
         }),
       modalActive: false,
+      isEdit: false,
     };
+  },
+  methods: {
+    save() {
+      this.modalActive = false;
+      this.isEdit = false;
+    },
   },
 };
 </script>

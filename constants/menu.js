@@ -36,12 +36,6 @@ export default [
         active: false,
         to: "/accounts",
       },
-      //   {
-      //     text: "แก้ไขบัญชีผู้ใช้งาน",
-      //     icon: "mdi-account-edit  ",
-      //     active: false,
-      //     to: "/",
-      //   },
     ],
   },
   {
@@ -74,7 +68,7 @@ export default [
         text: "แก้ไขประชากรครัวเรือน",
         icon: "mdi-account-wrench",
         active: false,
-        to: "/persons/edit",
+        to: "/persons-edit",
       },
     ],
   },
