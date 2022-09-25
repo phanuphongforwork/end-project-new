@@ -33,17 +33,46 @@
         </template>
       </v-data-table>
     </v-card>
+
+    <v-dialog
+      v-model="modalActive"
+      hide-overlay
+      persistent
+      :fullscreen="true"
+      transition="dialog-bottom-transition"
+      max-width="800"
+    >
+      <v-card>
+        <v-toolbar dark color="primary">
+          <v-btn icon dark @click="closeModal()">
+            <v-icon>mdi-close</v-icon>
+          </v-btn>
+          <v-toolbar-title>{{
+            isEdit ? `แก้ไข${title}` : `สร้าง${title}`
+          }}</v-toolbar-title>
+          <v-spacer></v-spacer>
+        </v-toolbar>
+        <div class="px-4 py-4">
+          <CreatePersons @save="closeModal()" />
+        </div>
+      </v-card>
+    </v-dialog>
+
   </div>
 </template>
 
 <script>
 import Breadcrumb from "@/components/Breadcrumbs";
+import CreatePersons from "@/components/persons/CreatePersons";
+
 export default {
   components: {
     Breadcrumb,
+    CreatePersons,
   },
   data() {
     return {
+      modalActive: false,
       title: "ประชากรครัวเรือน",
       breadcrumbs: [
         {
@@ -113,6 +142,11 @@ export default {
         }),
     };
   },
+  methods:{
+    closeModal(){
+      this.modalActive = false
+    }
+  }
 };
 </script>
 
