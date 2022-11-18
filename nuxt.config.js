@@ -24,7 +24,7 @@ export default {
   css: [],
 
   // Plugins to run before rendering page: https://go.nuxtjs.dev/config-plugins
-  plugins: [],
+  plugins: ["@/plugins/vee-validate.js", "@/plugins/toast.js"],
 
   // Auto import components: https://go.nuxtjs.dev/config-components
   components: true,
@@ -39,12 +39,17 @@ export default {
   modules: [
     // https://go.nuxtjs.dev/axios
     "@nuxtjs/axios",
+    "@nuxtjs/auth",
   ],
 
   // Axios module configuration: https://go.nuxtjs.dev/config-axios
   axios: {
-    // Workaround to avoid enforcing hard-coded localhost:3000: https://github.com/nuxt-community/axios-module/issues/308
-    baseURL: "/",
+    baseURL: process.env.API_URL || "http://127.0.0.1:3335/api",
+    headers: {
+      common: {
+        Accept: "application/json",
+      },
+    },
   },
 
   // Vuetify module configuration: https://go.nuxtjs.dev/config-vuetify
@@ -63,6 +68,36 @@ export default {
     },
   },
 
-  // Build Configuration: https://go.nuxtjs.dev/config-build
-  build: {},
+  auth: {
+    localStorage: false,
+    strategies: {
+      local: {
+        endpoints: {
+          login: {
+            url: "/v1/auth/login",
+            method: "post",
+            propertyName: "data.token",
+          },
+          logout: false,
+          user: {
+            url: "/v1/users/me",
+            method: "get",
+            propertyName: "data",
+          },
+        },
+      },
+    },
+    router: {
+      middleware: ["auth"],
+    },
+
+    // Build Configuration: https://go.nuxtjs.dev/config-build
+    build: {},
+
+    toast: {
+      // timeout: 1500,
+      // closeOnClick: false,
+      // draggable: false,
+    },
+  },
 };

@@ -1,5 +1,5 @@
 <template>
-  <v-app>
+  <v-app v-if="person">
     <v-navigation-drawer v-model="drawer" app>
       <v-list-item class="d-lg-none d-lg-flex">
         <v-list-item-content>
@@ -56,11 +56,12 @@
           </v-btn>
         </template>
       </v-menu> -->
+
       <v-menu bottom left class="d-md-none d-lg-flex" offset-y>
         <template v-slot:activator="{ on }">
           <v-btn color="primary" depressed v-on="on">
             <v-icon left> mdi-account-circle-outline </v-icon>
-            Admin
+            {{ person.person_name || "-" }}
           </v-btn>
         </template>
         <v-list>
@@ -101,10 +102,9 @@ export default {
       lists: [{ text: "Log Out", icon: "mdi-logout" }],
       selectedItem: 1,
       menus,
+      person: this.$auth.user.person,
     };
   },
-
-  watch: {},
 };
 </script>
 

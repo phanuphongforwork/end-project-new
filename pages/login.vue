@@ -11,6 +11,7 @@
             outlined
             label="บัญชีผู้ใช้งาน"
             prepend-icon="mdi-account-circle"
+            v-model="username"
           ></v-text-field>
 
           <v-text-field
@@ -18,6 +19,7 @@
             type="password"
             label="รหัสผ่าน"
             prepend-icon="mdi-form-textbox-password"
+            v-model="password"
           ></v-text-field>
         </v-form>
 
@@ -27,8 +29,8 @@
             dark
             large
             class="col-12 col-lg-12"
-            nuxt
-            to="/"
+            @click="login()"
+            :loading="loading"
           >
             เข้าสู่ระบบ
             <v-icon right> mdi-login </v-icon>
@@ -42,6 +44,33 @@
 <script>
 export default {
   layout: "login",
+  data() {
+    return {
+      username: "",
+      password: "",
+      loading: false,
+    };
+  },
+  methods: {
+    async login() {
+      try {
+        this.loading = true;
+        await this.$auth.loginWith("local", {
+          data: {
+            username: this.username,
+            password: this.password,
+          },
+        });
+        this.loading = false;
+
+        // this.$router.push("/");
+      } catch (error) {
+        this.$toast.error("เข้าสู่ระบบไม่สำเร็จ กรุณาลองใหม่อีกครั้ง");
+      } finally {
+        this.loading = false;
+      }
+    },
+  },
 };
 </script>
 
