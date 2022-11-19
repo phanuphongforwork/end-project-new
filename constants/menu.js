@@ -1,40 +1,108 @@
 export default [
+  // {
+  //   title: "หน้าแรก",
+  //   subMenus: [
+  //     {
+  //       text: "หน้าแรก",
+  //       icon: "mdi-home",
+  //       active: false,
+  //       to: "/",
+  //       level: [1],
+  //     },
+  //   ],
+  // },
+  // {
+  //   title: "จัดการสิทธิ์การใช้งาน",
+  //   subMenus: [
+  //     {
+  //       text: "สิทธิ์การใช้งาน",
+  //       icon: "mdi-shield-check",
+  //       active: false,
+  //       to: "/roles",
+  //       level: [1],
+  //     },
+  //     //   {
+  //     //     text: "แก้ไขบทบาท",
+  //     //     icon: "mdi-shield-edit ",
+  //     //     active: false,
+  //     //     to: "/roles/edit",
+  //     //   },
+  //   ],
+  // },
   {
-    title: "หน้าแรก",
-    subMenus: [
-      {
-        text: "หน้าแรก",
-        icon: "mdi-home",
-        active: false,
-        to: "/",
-        level: [1],
-      },
-    ],
+    title: "แอดมิน",
+  subMenus: [
+    {
+      text: "ข้อมูลชุมชน",
+      icon: "mdi-home-group",
+      active: false,
+      to: "/accounts",
+      level: [1],
+    },
+    {
+      text: "ตรอก/ซอย",
+      icon: "mdi-source-repository-multiple",
+      active: false,
+      to: "/accounts",
+      level: [1],
+    },
+    {
+      text: "ถนน",
+      icon: "mdi-road",
+      active: false,
+      to: "/accounts",
+      level: [1],
+    },
+    {
+      text: "แขวง",
+      icon: "mdi-home-city",
+      active: false,
+      to: "/accounts",
+      level: [1],
+    },
+    {
+      text: "เขต",
+      icon: "mdi-home-city",
+      active: false,
+      to: "/accounts",
+      level: [1],
+    },
+  ],
   },
   {
-    title: "จัดการสิทธิ์การใช้งาน",
+    title: "จัดการครัวเรือน",
     subMenus: [
       {
-        text: "สิทธิ์การใช้งาน",
-        icon: "mdi-shield-check",
+        text: "ทะเบียนครัวเรือน",
+        icon: "mdi-home ",
         active: false,
-        to: "/roles",
+        to: "house-holds",
         level: [1],
       },
-      //   {
-      //     text: "แก้ไขบทบาท",
-      //     icon: "mdi-shield-edit ",
-      //     active: false,
-      //     to: "/roles/edit",
-      //   },
-    ],
-  },
-  {
-    title: "จัดการผู้ใช้งาน",
-    subMenus: [
       {
-        text: "บัญชีผู้ใช้งาน",
-        icon: "mdi-account-box ",
+        text: "เพิ่มทะเบียนครัวเรือน",
+        icon: "mdi-home-plus ",
+        active: false,
+        to: "add-house-holds",
+        level: [1],
+      },
+      {
+        text: "แก้ไขเบียนครัวเรือน",
+        icon: "mdi-home-edit ",
+        active: false,
+        to: "/edit-house-holds",
+        level: [1],
+      },
+      {
+        text: "เพิ่มหัวหน้าครัวเรือน",
+        icon: "mdi-home-account ",
+        active: false,
+        to: "/add-head-house-holds",
+        level: [1],
+      },
+      {
+        text: "เพิ่มอาสาสมัคร",
+        icon: "mdi-shield-account",
         active: false,
         to: "/accounts",
         level: [1],
@@ -42,39 +110,39 @@ export default [
     ],
   },
   {
-    title: "จัดการทะเบียนครัวเรือน",
+    title: "จัดการสมาชิกครัวเรือน",
     subMenus: [
       {
-        text: "ทะเบียนครัวเรือน",
+        text: "เพิ่มสมาชิกครัวเรือน",
         icon: "mdi-book-open-variant ",
         active: false,
         to: "/house-holds",
         level: [1],
       },
-      {
-        text: "แก้ไขทะเบียนครัวเรือน",
-        icon: "mdi-file-document-edit",
-        active: false,
-        to: "/house-holds-edit",
-        level: [1],
-      },
     ],
   },
   {
-    title: "จัดการประชากรครัวเรือน",
+    title: "จัดการคณะกรรมการชุมชน",
     subMenus: [
       {
-        text: "ประชากรครัวเรือน",
+        text: "คณะกรรมการชุมชน",
         icon: "mdi-account-multiple",
         active: false,
         to: "/persons",
         level: [1],
       },
       {
-        text: "แก้ไขประชากรครัวเรือน",
-        icon: "mdi-account-wrench",
+        text: "เพิ่มคณะกรรมการชุมชน",
+        icon: "mdi-account-multiple",
         active: false,
-        to: "/persons-edit",
+        to: "/persons",
+        level: [1],
+      },
+      {
+        text: "แก้ไขคณะกรรมการชุมชน",
+        icon: "mdi-account-multiple",
+        active: false,
+        to: "/persons",
         level: [1],
       },
     ],

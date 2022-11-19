@@ -21,29 +21,13 @@
           <v-text-field
             class="col-12"
             append-icon="mdi-magnify"
-            label="ค้นหาโดย บ้านเลขที่, รหัสไปรษณีย์"
+            label="ค้นหาบ้านเลขที่"
             single-line
             hide-details
             outlined
           ></v-text-field>
         </div>
 
-        <div class="col-12">
-          <v-row no-gutters>
-            <v-col lg="3" md="3" cols="12">
-              <v-select :items="[]" label="เขต" outlined></v-select>
-            </v-col>
-            <v-col lg="3" md="3" cols="12" class="pl-0 pl-md-2">
-              <v-select :items="[]" label="แขวง" outlined></v-select>
-            </v-col>
-            <v-col lg="3" md="3" cols="12" class="pl-0 pl-md-2">
-              <v-select :items="[]" label="ชุมชน" outlined></v-select>
-            </v-col>
-            <v-col lg="3" md="3" cols="12" class="pl-0 pl-md-2">
-              <v-select :items="[]" label="ถนน" outlined></v-select>
-            </v-col>
-          </v-row>
-        </div>
       </v-card-title>
       <v-data-table
         :headers="headers"
