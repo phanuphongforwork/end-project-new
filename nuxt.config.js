@@ -39,7 +39,7 @@ export default {
   modules: [
     // https://go.nuxtjs.dev/axios
     "@nuxtjs/axios",
-    "@nuxtjs/auth",
+    // "@nuxtjs/auth",
   ],
 
   // Axios module configuration: https://go.nuxtjs.dev/config-axios
@@ -68,36 +68,30 @@ export default {
     },
   },
 
-  auth: {
-    localStorage: false,
-    strategies: {
-      local: {
-        endpoints: {
-          login: {
-            url: "/v1/auth/login",
-            method: "post",
-            propertyName: "data.token",
-          },
-          logout: false,
-          user: {
-            url: "/v1/users/me",
-            method: "get",
-            propertyName: "data",
-          },
-        },
-      },
-    },
-    router: {
-      middleware: ["auth"],
-    },
+  // auth: {
+  //   localStorage: false,
+  //   strategies: {
+  //     local: {
+  //       endpoints: {
+  //         login: {
+  //           url: "/v1/auth/login",
+  //           method: "post",
+  //           propertyName: "data.token",
+  //         },
+  //         logout: false,
+  //         user: {
+  //           url: "/v1/users/me",
+  //           method: "get",
+  //           propertyName: "data",
+  //         },
+  //       },
+  //     },
+  //   },
+  //   router: {
+  //     // middleware: ["auth"],
+  //   },
 
-    // Build Configuration: https://go.nuxtjs.dev/config-build
-    build: {},
-
-    toast: {
-      // timeout: 1500,
-      // closeOnClick: false,
-      // draggable: false,
-    },
-  },
+  //   // Build Configuration: https://go.nuxtjs.dev/config-build
+  //   build: {},
+  // },
 };

@@ -1,5 +1,5 @@
 <template>
-  <v-app v-if="person">
+  <v-app>
     <v-navigation-drawer v-model="drawer" app>
       <v-list-item class="d-lg-none d-lg-flex">
         <v-list-item-content>
@@ -15,7 +15,7 @@
       <v-list nav dense>
         <div v-for="(item, i) in menus" :key="i">
           <div v-if="item && item.subMenus.length > 0">
-            <v-subheader>{{ item.title }}</v-subheader>
+            <v-subheader> {{ item.title }}</v-subheader>
             <v-list-item-group color="primary">
               <v-list-item
                 v-for="(menu, index) in item.subMenus"
@@ -61,7 +61,9 @@
         <template v-slot:activator="{ on }">
           <v-btn color="primary" depressed v-on="on">
             <v-icon left> mdi-account-circle-outline </v-icon>
-            {{ person.person_name || "-" }}
+            <!-- {{ person.person_name || "-" }} -->
+
+            Admin
           </v-btn>
         </template>
         <v-list>
@@ -102,7 +104,7 @@ export default {
       lists: [{ text: "Log Out", icon: "mdi-logout" }],
       selectedItem: 1,
       menus,
-      person: this.$auth.user.person,
+      // person: this.$auth.user.person,
     };
   },
 };
