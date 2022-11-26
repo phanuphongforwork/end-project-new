@@ -1,8 +1,8 @@
-// import colors from "vuetify/es5/util/colors"; 
+// import colors from "vuetify/es5/util/colors";
 
 export default {
   // Disable server-side rendering: https://go.nuxtjs.dev/ssr-mode
-  ssr: false,
+  ssr: true,
 
   // Global page headers: https://go.nuxtjs.dev/config-head
   head: {
@@ -24,7 +24,12 @@ export default {
   css: [],
 
   // Plugins to run before rendering page: https://go.nuxtjs.dev/config-plugins
-  plugins: ["@/plugins/vee-validate.js", "@/plugins/toast.js"],
+  plugins: [
+    { src: "@/plugins/vee-validate.js", ssr: false },
+    { src: "@/plugins/toast", ssr: false },
+    // "@/plugins/toast",
+    "@/plugins/axios",
+  ],
 
   // Auto import components: https://go.nuxtjs.dev/config-components
   components: true,
@@ -39,7 +44,7 @@ export default {
   modules: [
     // https://go.nuxtjs.dev/axios
     "@nuxtjs/axios",
-    // "@nuxtjs/auth",
+    "@nuxtjs/auth",
   ],
 
   // Axios module configuration: https://go.nuxtjs.dev/config-axios
@@ -68,33 +73,30 @@ export default {
     },
   },
 
-  // auth: {
-  //   localStorage: false,
-  //   strategies: {
-  //     local: {
-  //       endpoints: {
-  //         login: {
-  //           url: "/v1/auth/login",
-  //           method: "post",
-  //           propertyName: "data.token",
-  //         },
-  //         logout: false,
-  //         user: {
-  //           url: "/v1/users/me",
-  //           method: "get",
-  //           propertyName: "data",
-  //         },
-  //       },
-  //     },
-  //   },
-  //   router: {
-  //     // middleware: ["auth"],
-  //   },
+  auth: {
+    localStorage: false,
+    strategies: {
+      local: {
+        endpoints: {
+          login: {
+            url: "/v1/auth/login",
+            method: "post",
+            propertyName: "data.token",
+          },
+          logout: false,
+          user: {
+            url: "/v1/persons/me",
+            method: "get",
+            propertyName: "data",
+          },
+        },
+      },
+    },
+    router: {
+      middleware: ["auth"],
+    },
 
-  //   // Build Configuration: https://go.nuxtjs.dev/config-build
-  //   build: {},
-  // },
-  
-build: {}
+    // Build Configuration: https://go.nuxtjs.dev/config-build
+    build: {},
+  },
 };
-4

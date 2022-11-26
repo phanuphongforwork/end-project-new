@@ -61,9 +61,7 @@
         <template v-slot:activator="{ on }">
           <v-btn color="primary" depressed v-on="on">
             <v-icon left> mdi-account-circle-outline </v-icon>
-            <!-- {{ person.person_name || "-" }} -->
-
-            Admin
+            {{ (person && person.person_name) || "-" }}
           </v-btn>
         </template>
         <v-list>
@@ -104,8 +102,12 @@ export default {
       lists: [{ text: "Log Out", icon: "mdi-logout" }],
       selectedItem: 1,
       menus,
-      // person: this.$auth.user.person,
     };
+  },
+  computed: {
+    person() {
+      return this.$auth.user;
+    },
   },
 };
 </script>
