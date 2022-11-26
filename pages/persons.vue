@@ -4,27 +4,53 @@
       <Breadcrumb :items="breadcrumbs" :title="title" />
     </div>
     <div>
-      <v-btn color="primary" large class="col-12 col-lg-2 mt-6">
+      <v-btn
+        color="primary"
+        large
+        class="col-12 col-lg-2 mt-6"
+        nuxt
+        to="/add-persons"
+      >
         <v-icon left> mdi-plus-circle </v-icon>
         เพิ่มสมาชิกครัวเรือน
       </v-btn>
     </div>
     <v-card class="mt-6" outlined>
+      <v-card-title class="col-12">
+        <div class="col-12">
+          <v-text-field
+            v-model="search"
+            class="col-12"
+            append-icon="mdi-magnify"
+            label="ค้นหาด้วยบัตรประชาชน หรือ ชื่อ-นามสกุล"
+            single-line
+            hide-details
+            outlined
+          ></v-text-field>
+        </div>
+      </v-card-title>
+
       <v-data-table
+        :loading="loading"
         :headers="headers"
-        :items="persons"
+        :items="items"
         disable-filtering
         disable-sort
-        :itemsPerPage="5"
+        :page="meta.page"
+        :itemsPerPage="meta.perPage || 5"
+        :server-items-length="meta.total"
         class="elevation-1"
+        @update:items-per-page="changePerPage"
+        @update:page="changePage"
+        no-results-text="ไม่พบข้อมูล"
+        no-data-text="ไม่พบข้อมูล, ลองค้นหาใหม่อีกครั้ง"
       >
-        <template
-          v-slot:[`item.Status`]="{ item }"
-          class="d-flex justify-center"
-        >
-          <v-chip color="primary" dark>
-            {{ item.Status }}
-          </v-chip>
+        <template v-slot:[`item.date_of_birth`]>
+          {{ dayjs().add(543, "year").format("DD/MM/YYYY") }}
+        </template>
+
+        <template v-slot:[`item.actions`]>
+          <a href="#">ดูข้อมูลเพิ่มเติม</a>
         </template>
       </v-data-table>
     </v-card>
@@ -32,13 +58,16 @@
 </template>
 
 <script>
+import dayjs from "dayjs";
 import Breadcrumb from "@/components/Breadcrumbs";
-import CreatePersons from "@/components/persons/CreatePersons";
+import Person from "../services/apis/Person";
+
+require("dayjs/locale/th");
+dayjs.locale("th");
 
 export default {
   components: {
     Breadcrumb,
-    CreatePersons,
   },
   data() {
     return {
@@ -57,42 +86,123 @@ export default {
         },
       ],
       search: "",
-      page: 1,
+      meta: {},
+      param: {
+        page: 1,
+        perPage: 5,
+        q: "",
+        sort: "created_at",
+        order: "desc",
+        includes: "",
+      },
+      loading: false,
       headers: [
-        {
-          text: "ลำดับที่",
-          value: "index",
-          width: 100,
-        },
         {
           text: "ชื่อ - นามสกุล",
           align: "start",
           sortable: false,
-          value: "PersonName",
+          value: "person_name",
         },
         {
           text: "บัตรประชาชน",
           align: "start",
           sortable: false,
-          value: "IDcard",
+          value: "id_card",
         },
         {
-          text: "วันเดือนปีเกิด",
+          text: "บัญชีเข้าสู่ระบบ",
           align: "start",
           sortable: false,
-          value: "DateOfBirth",
+          value: "id_card",
+        },
+        {
+          text: "วัน/เดือน/ปีเกิด",
+          align: "start",
+          sortable: false,
+          value: "date_of_birth",
         },
         {
           text: "เบอร์โทรศัพท์",
           align: "start",
           sortable: false,
-          value: "Phone",
+          value: "phone",
         },
-        { text: "แก้ไข", value: "actions", sortable: false },
+        {
+          text: "บทบาท",
+          align: "start",
+          sortable: false,
+          value: "role",
+        },
+        { text: "ดูข้อมูลเพิ่มเติม", value: "actions", sortable: false },
       ],
+      items: [],
     };
   },
-  methods: {},
+  watch: {
+    search: {
+      handler(data) {
+        if (data) {
+          this.loadData();
+        } else {
+          this.search = undefined;
+          this.loadData();
+        }
+      },
+    },
+  },
+  mounted() {
+    this.loadData();
+  },
+  methods: {
+    dayjs,
+    async loadData() {
+      try {
+        this.loading = true;
+        const { data, meta } = await Person.getAll({
+          ...this.param,
+          q: this.search ?? undefined,
+        });
+        this.items = data;
+        this.meta = meta;
+
+        this.loading = false;
+      } catch {
+        this.$toast.error("เกิดข้อผิดพลาด, กรุณาลองใหม่อีกครั้ง");
+      } finally {
+        this.loading = false;
+      }
+    },
+    updateParam(paramName, value) {
+      this.param = {
+        ...this.param,
+        [paramName]: value,
+      };
+
+      if (this.pushState) {
+        this.$router.push({
+          query: this.param,
+          path: this.$route.path,
+        });
+      }
+    },
+    removeParam(paramName) {
+      delete this.param[paramName];
+    },
+    changePage(page) {
+      this.updateParam("page", page);
+      this.loadData();
+    },
+    changeSearch(keyword) {
+      this.updateParam("q", keyword);
+      this.updateParam("page", 1);
+      this.loadData();
+    },
+    changePerPage(perPage) {
+      this.updateParam("perPage", perPage);
+      this.updateParam("page", 1);
+      this.loadData();
+    },
+  },
 };
 </script>
 

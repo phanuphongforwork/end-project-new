@@ -40,6 +40,32 @@ export default [
     ],
   },
   {
+    title: "จัดการสมาชิก",
+    subMenus: [
+      {
+        text: "สมาชิกครัวเรือน",
+        icon: "mdi-account ",
+        active: false,
+        to: "persons",
+        level: [1],
+      },
+      {
+        text: "เพิ่มสมาชิกครัวเรือน",
+        icon: "mdi-account-plus ",
+        active: false,
+        to: "add-persons",
+        level: [1],
+      },
+      {
+        text: "แก้ไขสมาชิกครัวเรือน",
+        icon: "mdi-account-edit ",
+        active: false,
+        to: "/edit-persons",
+        level: [1],
+      },
+    ],
+  },
+  {
     title: "จัดการครัวเรือน",
     subMenus: [
       {
@@ -86,7 +112,7 @@ export default [
         text: "สมาชิกครัวเรือน",
         icon: "mdi-book-open-variant ",
         active: false,
-        to: "/persons",
+        // to: "/persons",
         level: [1],
       },
     ],

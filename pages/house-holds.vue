@@ -171,15 +171,6 @@ export default {
       this.updateParam("page", 1);
       this.loadData();
     },
-
-    save() {
-      this.modalActive = false;
-      this.isEdit = false;
-    },
-
-    test(page) {
-      alert(page);
-    },
   },
 };
 </script>

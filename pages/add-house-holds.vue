@@ -99,7 +99,7 @@
             name="phone"
             v-model="phone"
             data-vv-as="เบอร์โทรศัพท์"
-            v-validate="'required|numeric'"
+            v-validate="'required|numeric|length:10'"
             :error-messages="errors && errors.first('phone')"
             outlined
           ></v-text-field>
