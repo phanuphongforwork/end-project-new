@@ -5027,7 +5027,7 @@ __metadata:
     core-js: ^3.19.3
     lodash: ^4.17.21
     nuxt: ^2.15.8
-    vee-validate: <3.0.0
+    vee-validate: ^2.2.8
     vue: ^2.6.14
     vue-server-renderer: ^2.6.14
     vue-template-compiler: ^2.6.14
@@ -10775,7 +10775,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"vee-validate@npm:<3.0.0":
+"vee-validate@npm:^2.2.8":
   version: 2.2.15
   resolution: "vee-validate@npm:2.2.15"
   checksum: 64099fad7fdf4f493dbb977298eac668acf375dda4eadfbb8ea8f9493aa3ae1fa39a7facbcfe40e31fc0a093a92b8fee1699ff5733545d8aa1241bbc2e6ae4ab
