@@ -13,7 +13,7 @@
       <v-divider></v-divider>
 
       <v-list nav dense>
-        <div v-for="(item, i) in menus" :key="i">
+        <div v-for="(item, i) in menus" :key="i" v-if="active(item)">
           <div v-if="item && item.subMenus.length > 0">
             <v-subheader> {{ item.title }}</v-subheader>
             <v-list-item-group color="primary">
@@ -23,6 +23,7 @@
                 :class="{
                   'v-list-item--active': menu.active === true,
                 }"
+                v-if="show(menu)"
                 nuxt
                 :to="menu.to"
               >
@@ -107,6 +108,33 @@ export default {
   computed: {
     person() {
       return this.$auth.user;
+    },
+  },
+  methods: {
+    show(submenu) {
+      if (submenu && submenu.level && submenu.level.length > 0) {
+        const myLevel = this.$auth.user.role;
+        return submenu.level.some((item) => {
+          return item === Number(myLevel);
+        });
+      }
+
+      return false;
+    },
+    active(menu) {
+      let countActive = 0;
+      if (menu) {
+        if (menu.subMenus && menu.subMenus.length > 0) {
+          menu.subMenus.forEach((sub) => {
+            const isShow = this.show(sub);
+
+            if (isShow) {
+              countActive += 1;
+            }
+          });
+        }
+      }
+      return countActive === 0 ? false : true;
     },
   },
 };

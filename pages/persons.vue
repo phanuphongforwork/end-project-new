@@ -4,12 +4,7 @@
       <Breadcrumb :items="breadcrumbs" :title="title" />
     </div>
     <div>
-      <v-btn
-        color="primary"
-        large
-        class="col-12 col-lg-2 mt-6"
-        @click="modalActive = true"
-      >
+      <v-btn color="primary" large class="col-12 col-lg-2 mt-6">
         <v-icon left> mdi-plus-circle </v-icon>
         เพิ่มสมาชิกครัวเรือน
       </v-btn>
@@ -33,31 +28,6 @@
         </template>
       </v-data-table>
     </v-card>
-
-    <v-dialog
-      v-model="modalActive"
-      hide-overlay
-      persistent
-      :fullscreen="true"
-      transition="dialog-bottom-transition"
-      max-width="800"
-    >
-      <v-card>
-        <v-toolbar dark color="primary">
-          <v-btn icon dark @click="closeModal()">
-            <v-icon>mdi-close</v-icon>
-          </v-btn>
-          <v-toolbar-title>
-              เพิ่มสมาชิกครัวเรือน
-          </v-toolbar-title>
-          <v-spacer></v-spacer>
-        </v-toolbar>
-        <div class="px-4 py-4">
-          <CreatePersons @save="closeModal()" />
-        </div>
-      </v-card>
-    </v-dialog>
-
   </div>
 </template>
 
@@ -118,15 +88,11 @@ export default {
           sortable: false,
           value: "Phone",
         },
-        { text: "แก้ไข", value: "actions", sortable: false},
+        { text: "แก้ไข", value: "actions", sortable: false },
       ],
     };
   },
-  methods:{
-    closeModal(){
-      this.modalActive = false
-    }
-  }
+  methods: {},
 };
 </script>
 

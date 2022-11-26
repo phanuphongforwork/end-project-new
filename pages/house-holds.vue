@@ -31,12 +31,19 @@
         </div>
       </v-card-title>
       <v-data-table
+        :loading="loading"
         :headers="headers"
         :items="houseHolds"
         disable-filtering
         disable-sort
-        :itemsPerPage="5"
+        :page="meta.page"
+        :itemsPerPage="meta.perPage || 5"
+        :server-items-length="meta.total"
         class="elevation-1"
+        @update:items-per-page="changePerPage"
+        @update:page="changePage"
+        no-results-text="ไม่พบข้อมูล"
+        no-data-text="ไม่พบข้อมูล, ลองค้นหาทะเบียนบ้านใหม่อีกครั้ง"
       >
         <template v-slot:[`item.actions`]>
           <a href="#">เพิ่มสมาชิก</a>
@@ -56,6 +63,7 @@ export default {
 
   data() {
     return {
+      loading: false,
       title: "ทะเบียนครัวเรือน",
       breadcrumbs: [
         {
@@ -91,7 +99,7 @@ export default {
       meta: {},
       param: {
         page: 1,
-        perPage: 10,
+        perPage: 5,
         q: "",
         sort: "created_at",
         order: "desc",
@@ -118,14 +126,19 @@ export default {
   methods: {
     async loadData() {
       try {
+        this.loading = true;
         const { data, meta } = await HouseHold.getAll({
           ...this.param,
           "filters[house_number]": this.house_number ?? undefined,
         });
         this.houseHolds = data;
         this.meta = meta;
+
+        this.loading = false;
       } catch {
         this.$toast.error("เกิดข้อผิดพลาด, กรุณาลองใหม่อีกครั้ง");
+      } finally {
+        this.loading = false;
       }
     },
     updateParam(paramName, value) {
@@ -158,18 +171,14 @@ export default {
       this.updateParam("page", 1);
       this.loadData();
     },
-    changeSorter(sort, order) {
-      if (sort) {
-        this.updateParam("sort", sort);
-        this.updateParam("order", order);
-        this.updateParam("page", 1);
-        this.loadData();
-      }
-    },
 
     save() {
       this.modalActive = false;
       this.isEdit = false;
+    },
+
+    test(page) {
+      alert(page);
     },
   },
 };

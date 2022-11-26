@@ -131,10 +131,11 @@
 
     <v-dialog
       v-model="showResult"
-      hide-overlay
       :fullscreen="false"
       transition="dialog-bottom-transition"
       width="800px"
+      persistent
+      @click:outside="closeModal()"
     >
       <v-card>
         <v-toolbar dark color="primary">
@@ -281,6 +282,7 @@ export default {
     },
   },
   mounted() {
+    this.clear();
     this.loadCommunity();
     this.loadAlley();
     this.loadRoad();

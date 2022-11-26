@@ -1,73 +1,43 @@
 export default [
-  // {
-  //   title: "หน้าแรก",
-  //   subMenus: [
-  //     {
-  //       text: "หน้าแรก",
-  //       icon: "mdi-home",
-  //       active: false,
-  //       to: "/",
-  //       level: [1],
-  //     },
-  //   ],
-  // },
-  // {
-  //   title: "จัดการสิทธิ์การใช้งาน",
-  //   subMenus: [
-  //     {
-  //       text: "สิทธิ์การใช้งาน",
-  //       icon: "mdi-shield-check",
-  //       active: false,
-  //       to: "/roles",
-  //       level: [1],
-  //     },
-  //     //   {
-  //     //     text: "แก้ไขบทบาท",
-  //     //     icon: "mdi-shield-edit ",
-  //     //     active: false,
-  //     //     to: "/roles/edit",
-  //     //   },
-  //   ],
-  // },
   {
     title: "แอดมิน",
-  subMenus: [
-    {
-      text: "ข้อมูลชุมชน",
-      icon: "mdi-home-group",
-      active: false,
-      to: "/community-info",
-      level: [1],
-    },
-    {
-      text: "ตรอก/ซอย",
-      icon: "mdi-source-repository-multiple",
-      active: false,
-      to: "/accounts",
-      level: [1],
-    },
-    {
-      text: "ถนน",
-      icon: "mdi-road",
-      active: false,
-      to: "/accounts",
-      level: [1],
-    },
-    {
-      text: "แขวง",
-      icon: "mdi-home-city",
-      active: false,
-      to: "/accounts",
-      level: [1],
-    },
-    {
-      text: "เขต",
-      icon: "mdi-home-city",
-      active: false,
-      to: "/accounts",
-      level: [1],
-    },
-  ],
+    subMenus: [
+      {
+        text: "ข้อมูลชุมชน",
+        icon: "mdi-home-group",
+        active: false,
+        to: "/community-info",
+        level: [1],
+      },
+      {
+        text: "ตรอก/ซอย",
+        icon: "mdi-source-repository-multiple",
+        active: false,
+        to: "/accounts",
+        level: [1],
+      },
+      {
+        text: "ถนน",
+        icon: "mdi-road",
+        active: false,
+        to: "/accounts",
+        level: [1],
+      },
+      {
+        text: "แขวง",
+        icon: "mdi-home-city",
+        active: false,
+        to: "/accounts",
+        level: [1],
+      },
+      {
+        text: "เขต",
+        icon: "mdi-home-city",
+        active: false,
+        to: "/accounts",
+        level: [1],
+      },
+    ],
   },
   {
     title: "จัดการครัวเรือน",
@@ -113,7 +83,7 @@ export default [
     title: "จัดการสมาชิกครัวเรือน",
     subMenus: [
       {
-        text: "เพิ่มสมาชิกครัวเรือน",
+        text: "สมาชิกครัวเรือน",
         icon: "mdi-book-open-variant ",
         active: false,
         to: "/persons",
