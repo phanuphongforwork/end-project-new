@@ -11,7 +11,7 @@
         @click="modalActive = true"
       >
         <v-icon left> mdi-plus-circle </v-icon>
-        เพิ่มประชากร
+        เพิ่มสมาชิกครัวเรือน
       </v-btn>
     </div>
     <v-card class="mt-6" outlined>
@@ -47,9 +47,9 @@
           <v-btn icon dark @click="closeModal()">
             <v-icon>mdi-close</v-icon>
           </v-btn>
-          <v-toolbar-title>{{
-            isEdit ? `แก้ไข${title}` : `สร้าง${title}`
-          }}</v-toolbar-title>
+          <v-toolbar-title>
+              เพิ่มสมาชิกครัวเรือน
+          </v-toolbar-title>
           <v-spacer></v-spacer>
         </v-toolbar>
         <div class="px-4 py-4">
@@ -73,7 +73,7 @@ export default {
   data() {
     return {
       modalActive: false,
-      title: "ประชากรครัวเรือน",
+      title: "สมาชิกครัวเรือน",
       breadcrumbs: [
         {
           text: "หน้าแรก",
@@ -81,7 +81,7 @@ export default {
           href: "/",
         },
         {
-          text: "ประชากรครัวเรือน",
+          text: "สมาชิกครัวเรือน",
           disabled: false,
           href: "persons",
         },
@@ -95,7 +95,7 @@ export default {
           width: 100,
         },
         {
-          text: "ชื่อบทบาท",
+          text: "ชื่อ - นามสกุล",
           align: "start",
           sortable: false,
           value: "PersonName",
@@ -118,28 +118,8 @@ export default {
           sortable: false,
           value: "Phone",
         },
-        { text: "สถานะ", value: "Status", align: "center" },
+        { text: "แก้ไข", value: "actions", sortable: false},
       ],
-      persons: Array(15)
-        .fill({
-          PersonName: "ภานุพงศ์ มะชัย",
-          IDcard: "1254376587653",
-          DateOfBirth: "20 ธันวาคม 2543",
-          Phone: "0881247654",
-          Newborn: "ต่ำกว่า 6 เดือน",
-          Pregnant: "-",
-          Postpartum: "-",
-          Disabled: "-",
-          ChronicDisease: "-",
-          ViolentBehavior: "-",
-          Status: "ใช้งาน",
-        })
-        .map((e, index) => {
-          return {
-            ...e,
-            index: Number(index) + 1,
-          };
-        }),
     };
   },
   methods:{

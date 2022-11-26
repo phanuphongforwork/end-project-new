@@ -13,7 +13,7 @@
         to="/add-house-holds"
       >
         <v-icon left> mdi-plus-circle </v-icon>
-        เพิ่มทะเบียนครัวเรือน
+        สร้างทะเบียนครัวเรือน
       </v-btn>
     </div>
     <v-card class="mt-6" outlined>
