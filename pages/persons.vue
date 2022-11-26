@@ -38,7 +38,6 @@
       v-model="modalActive"
       hide-overlay
       persistent
-      :fullscreen="true"
       transition="dialog-bottom-transition"
       max-width="800"
     >

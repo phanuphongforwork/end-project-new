@@ -4,76 +4,37 @@
         <Breadcrumb :items="breadcrumbs" :title="title" />
       </div>
   
-      <v-card class="mt-6 col-12 " outlined>
+      <div>
+          <v-btn
+            color="primary"
+            large
+            class="col-12 col-lg-2 mt-6"
+            @click="modalActive = true">
+            <v-icon left> mdi-plus-circle </v-icon>
+            เพิ่มแขวง
+          </v-btn>
+        </div>
+      <v-card class="mt-6" outlined>
         <v-card-title class="col-12">
-          <v-container>
-            <v-row no-gutters  cols="12">
-            
-            <v-col cols="12" md="2" lg="2">
-                <label for="">ปีที่ค้นหา :</label>
-            </v-col>
-            <v-col cols="12" md="12" lg="5">
-              <v-select
-                :items="items"
-                class="col-12"
-                outlined
-            ></v-select> 
-            </v-col>
-          </v-row>
-          </v-container>
-          
-          <v-container>
-            <v-row no-gutters  cols="12">
-            <v-col cols="12" md="12" lg="2">
-                <label for="">ตำแหน่ง :</label>
-            </v-col>
-            <v-col cols="12" md="12" lg="5">
-              <v-select
-                :items="items"
-                class="col-12"
-                outlined
-            ></v-select> 
-            </v-col>
-        
-            <v-col class="ml-lg-4 mt-lg-2">
-              <v-btn
-                class="col-12 col-md-12 col-lg-4"
-                @click="modalActive = true"
-                color="success">
-                <v-icon left >
-                    mdi-plus
-                </v-icon>
-                เพิ่มตำแหน่ง
-            </v-btn>
-            </v-col>
-          </v-row>
-          </v-container>
-          
-          <v-container>
-          <v-row no-gutters  cols="12">
-            <v-col cols="12" md="12" lg="2">
-                <label for="">สมาชิก :</label>
-            </v-col>
+          <div class="col-12">
             <v-text-field
-              class="col-12  col-md-12 col-lg-5"
+              class="col-12"
               append-icon="mdi-magnify"
-              label="เลขบัตรประชน"
+              label="ค้นหาแขวง"
               single-line
               hide-details
               outlined
             ></v-text-field>
-          </v-row>
-          </v-container>
+          </div>
+  
         </v-card-title>
-
         <v-data-table
-        
           :headers="headers"
           :items="desserts"
           disable-filtering
           disable-sort
           :itemsPerPage="5"
-          class="elevation-1 col-12"
+          class="elevation-1"
         >
           <template v-slot:[`item.actions`]>
             <a href="#">กดเพื่อเพิ่ม</a>
@@ -91,29 +52,42 @@
             <v-btn icon dark @click="modalActive = false">
               <v-icon>mdi-close</v-icon>
             </v-btn>
-            <v-toolbar-title>เพิ่มตำแหน่ง</v-toolbar-title>
+            <v-toolbar-title>เพิ่มแขวง</v-toolbar-title>
             <v-spacer></v-spacer>
           </v-toolbar>
           <div class="px-4 py-4">
-            <AddCommunity @save="save()" />
+            <AddDistrict @save="save()" />
           </div>
         </v-card>
       </v-dialog>
+  
+      <v-btn
+        fab
+        dark
+        large
+        color="primary"
+        fixed
+        right
+        bottom
+        class="d-block d-lg-none"
+      >
+        <v-icon dark>mdi-plus</v-icon>
+      </v-btn>
     </div>
   </template>
   
   <script>
-  import AddCommunity from "@/components/community/AddCommunity";
+  import AddDistrict from "@/components/basic/AddDistrict";
   import Breadcrumb from "@/components/Breadcrumbs";
   export default {
     components: {
       Breadcrumb,
-      AddCommunity,
+      AddDistrict,
     },
   
     data() {
       return {
-        title: "คณะกรรมการชุมชน",
+        title: "แขวง",
         breadcrumbs: [
           {
             text: "หน้าแรก",
@@ -121,9 +95,9 @@
             href: "/",
           },
           {
-            text: "คณะกรรมการชุมชน",
+            text: "แขวง",
             disabled: false,
-            href: "community-board",
+            href: "house-holds",
           },
         ],
         search: "",
@@ -135,12 +109,12 @@
             width: 100,
           },
           {
-            text: "ชื่อ-นามสกุล",
+            text: "ชื่อแขวง",
             align: "start",
             sortable: false,
             value: "1",
           },
-          { text: "ตำแหน่ง", value: "2" },
+          { text: "แก้ไข", value: "actions", sortable: false },
         ],
         modalActive: false,
         isEdit: false,

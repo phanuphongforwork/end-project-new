@@ -30,7 +30,7 @@ export default [
   //   ],
   // },
   {
-    title: "แอดมิน",
+    title: "ข้อมูลพื้นฐาน",
   subMenus: [
     {
       text: "ข้อมูลชุมชน",
@@ -43,28 +43,28 @@ export default [
       text: "ตรอก/ซอย",
       icon: "mdi-source-repository-multiple",
       active: false,
-      to: "/accounts",
+      to: "/alley",
       level: [1],
     },
     {
       text: "ถนน",
       icon: "mdi-road",
       active: false,
-      to: "/accounts",
+      to: "/road",
       level: [1],
     },
     {
       text: "แขวง",
       icon: "mdi-home-city",
       active: false,
-      to: "/accounts",
+      to: "/district",
       level: [1],
     },
     {
       text: "เขต",
       icon: "mdi-home-city",
       active: false,
-      to: "/accounts",
+      to: "/zone",
       level: [1],
     },
   ],
@@ -131,13 +131,13 @@ export default [
         to: "/community-board",
         level: [1],
       },
-      {
-        text: "แก้ไขคณะกรรมการชุมชน",
-        icon: "mdi-account-multiple",
-        active: false,
-        to: "/edit-community-board",
-        level: [1],
-      },
+      // {
+      //   text: "แก้ไขคณะกรรมการชุมชน",
+      //   icon: "mdi-account-multiple",
+      //   active: false,
+      //   to: "/edit-community-board",
+      //   level: [1],
+      // },
     ],
   },
   {
