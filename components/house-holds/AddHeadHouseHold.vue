@@ -48,16 +48,7 @@
   </template>
   
   <script>
-  import AlleyForm from "@/components/house-holds/alley/AlleyForm";
   export default {
-    components: {
-      AlleyForm,
-    },
-    data() {
-      return {
-        addAlley: false,
-      };
-    },
     methods: {
       submit() {
         this.$emit("save");

@@ -11,7 +11,7 @@
           class="col-12 col-lg-2 mt-6"
           @click="modalActive = true">
           <v-icon left> mdi-plus-circle </v-icon>
-          เพิ่มชุมชน
+          เพิ่มตรอก/ซอย
         </v-btn>
       </div>
     <v-card class="mt-6" outlined>
@@ -20,7 +20,7 @@
           <v-text-field
             class="col-12"
             append-icon="mdi-magnify"
-            label="ค้นหาชุมชน"
+            label="ค้นหาตรอก/ซอย"
             single-line
             hide-details
             outlined
@@ -52,11 +52,11 @@
           <v-btn icon dark @click="modalActive = false">
             <v-icon>mdi-close</v-icon>
           </v-btn>
-          <v-toolbar-title>เพิ่มชุมชน</v-toolbar-title>
+          <v-toolbar-title>เพิ่มตรอก/ซอย</v-toolbar-title>
           <v-spacer></v-spacer>
         </v-toolbar>
         <div class="px-4 py-4">
-          <AddCommunityInfo @save="save()" />
+          <AddAlley @save="save()" />
         </div>
       </v-card>
     </v-dialog>
@@ -77,17 +77,17 @@
 </template>
 
 <script>
-import AddCommunityInfo from "@/components/basic/AddCommunityInfo";
+import AddAlley from "@/components/basic/AddAlley";
 import Breadcrumb from "@/components/Breadcrumbs";
 export default {
   components: {
     Breadcrumb,
-    AddCommunityInfo,
+    AddAlley,
   },
 
   data() {
     return {
-      title: "ข้อมูลชุมชน",
+      title: "ตรอก/ซอย",
       breadcrumbs: [
         {
           text: "หน้าแรก",
@@ -95,7 +95,7 @@ export default {
           href: "/",
         },
         {
-          text: "ข้อมูลชุมชน",
+          text: "ตรอก/ซอย",
           disabled: false,
           href: "house-holds",
         },
@@ -109,7 +109,7 @@ export default {
           width: 100,
         },
         {
-          text: "ชื่อชุมชน",
+          text: "ชื่อตรอก/ซอย",
           align: "start",
           sortable: false,
           value: "1",
