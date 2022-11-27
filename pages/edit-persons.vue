@@ -3,18 +3,7 @@
     <div>
       <Breadcrumb :items="breadcrumbs" :title="title" />
     </div>
-    <div>
-      <v-btn
-        color="primary"
-        large
-        class="col-12 col-lg-2 mt-6"
-        nuxt
-        to="/add-persons"
-      >
-        <v-icon left> mdi-plus-circle </v-icon>
-        เพิ่มสมาชิกครัวเรือน
-      </v-btn>
-    </div>
+
     <v-card class="mt-6" outlined>
       <v-card-title class="col-12">
         <div class="col-12">
@@ -54,7 +43,7 @@
         </template>
 
         <template v-slot:[`item.actions`]>
-          <a href="#">ดูข้อมูลเพิ่มเติม</a>
+          <a href="#">แก้ไขสมาชิกครัวเรือน</a>
         </template>
       </v-data-table>
     </v-card>
@@ -62,6 +51,7 @@
 </template>
 
 <script>
+import debounce from "lodash/debounce";
 import dayjs from "dayjs";
 import Breadcrumb from "@/components/Breadcrumbs";
 import Person from "../services/apis/Person";
@@ -78,7 +68,7 @@ export default {
   data() {
     return {
       modalActive: false,
-      title: "สมาชิกครัวเรือน",
+      title: "แก้ไขสมาชิกครัวเรือน",
       breadcrumbs: [
         {
           text: "หน้าแรก",
@@ -86,9 +76,9 @@ export default {
           href: "/",
         },
         {
-          text: "สมาชิกครัวเรือน",
+          text: "แก้ไขสมาชิกครัวเรือน",
           disabled: false,
-          href: "persons",
+          href: "edit-persons",
         },
       ],
       search: "",
@@ -139,7 +129,7 @@ export default {
           sortable: false,
           value: "role",
         },
-        { text: "ดูข้อมูลเพิ่มเติม", value: "actions", sortable: false },
+        { text: "แก้ไขสมาชิกครัวเรือน", value: "actions", sortable: false },
       ],
       items: [],
     };
@@ -202,6 +192,9 @@ export default {
       this.updateParam("q", keyword);
       this.updateParam("page", 1);
       this.loadData();
+    },
+    delay(ms) {
+      return new Promise((resolve) => setTimeout(resolve, ms));
     },
     changePerPage(perPage) {
       this.updateParam("perPage", perPage);

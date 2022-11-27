@@ -5,6 +5,51 @@
     </div>
     <v-container fluid class="mt-4">
       <v-row>
+        <v-col cols="12">
+          <v-alert type="info">ส่วนสำหรับจัดการบทบาทของบุคคล</v-alert>
+        </v-col>
+        <v-col cols="12" md="3" lg="4">
+          <v-select
+            v-model="role"
+            :items="roleOptions"
+            label="บทบาท"
+            name="role"
+            data-vv-as="บทบาท"
+            v-validate="''"
+            :error-messages="errors && errors.first('role')"
+            outlined
+          >
+          </v-select>
+        </v-col>
+        <v-col v-if="showUserPassword" cols="12" md="3" lg="4">
+          <v-text-field
+            v-model="username"
+            label="บัญชีผู้ใช้งาน"
+            name="username"
+            data-vv-as="บัตรประชาชน"
+            v-validate="'required'"
+            :error-messages="errors && errors.first('username')"
+            outlined
+          >
+          </v-text-field>
+        </v-col>
+        <v-col v-if="showUserPassword" cols="12" md="3" lg="4">
+          <v-text-field
+            v-model="password"
+            label="รหัสผ่านเข้าสู่ระบบ"
+            name="password"
+            data-vv-as="รหัสผ่านเข้าสู่ระบบ"
+            v-validate="'required'"
+            :error-messages="errors && errors.first('password')"
+            outlined
+          >
+          </v-text-field>
+        </v-col>
+      </v-row>
+      <v-row>
+        <v-col cols="12">
+          <v-alert type="info">ส่วนสำหรับจัดการข้อมูลส่วนตัวของบุคคล</v-alert>
+        </v-col>
         <v-col cols="12" md="3" lg="4">
           <v-text-field
             v-model="personName"
@@ -70,6 +115,12 @@
           >
           </v-text-field>
         </v-col>
+      </v-row>
+
+      <v-row>
+        <v-col cols="12">
+          <v-alert type="info">ส่วนสำหรับจัดการสถานะของบุคคล</v-alert>
+        </v-col>
         <v-col cols="12" md="4" lg="4">
           <v-select
             v-model="newborn"
@@ -95,6 +146,28 @@
             outlined
           >
           </v-select>
+        </v-col>
+      </v-row>
+
+      <v-row>
+        <v-col cols="12" md="3">
+          <v-switch v-model="postpartum" label="สถานะหญิงหลังคลอด"></v-switch>
+        </v-col>
+        <v-col cols="12" md="3">
+          <v-switch v-model="disabled" label="สถานะผู้พิการ"></v-switch>
+        </v-col>
+
+        <v-col cols="12" md="3">
+          <v-switch
+            v-model="chronicDisease"
+            label="สถานะป่วยโรคเรื้อรัง"
+          ></v-switch>
+        </v-col>
+        <v-col cols="12" md="3">
+          <v-switch
+            v-model="violentBehavior"
+            label="มีพฤติกรรมเสี่ยงด้านความรุนแรง"
+          ></v-switch>
         </v-col>
       </v-row>
 
@@ -129,14 +202,16 @@
       persistent
       @click:outside="closeModal()"
     >
-      <v-card>
+      <v-card v-if="resultData">
         <v-toolbar dark color="primary">
-          <v-toolbar-title>รายละเอียดทะเบียนครัวเรือน</v-toolbar-title>
+          <v-toolbar-title
+            >รายละเอียดของ {{ resultData?.person_name || "-" }}</v-toolbar-title
+          >
           <v-spacer></v-spacer>
         </v-toolbar>
         <div class="px-4 py-4">
           <v-alert type="success" outlined>
-            สร้างทะเบียนครัวเรือน บ้านเลขที่ {{ house_number }} สำเร็จ!
+            สร้างสมาชิก {{ resultData?.person_name || "-" }} สำเร็จ!
           </v-alert>
 
           <div class="mt-4">
@@ -145,57 +220,80 @@
 
               <div class="px-4">
                 <div class="d-flex">
-                  <div>บ้านเลขที่ :</div>
+                  <div class="mt-3">บทบาท :</div>
                   <div class="pl-4 font-weight-bold">
-                    {{ resultData?.house_number || "-" }}
+                    <Role :role="resultData.role" />
                   </div>
                 </div>
-                <div class="d-flex mt-2">
-                  <div>เขต :</div>
+                <div class="d-flex">
+                  <div>ชื่อ-นามสกุล :</div>
                   <div class="pl-4 font-weight-bold">
-                    {{ resultData?.district?.district_name || "-" }}
+                    {{ resultData?.person_name || "-" }}
                   </div>
                 </div>
-                <div class="d-flex mt-2">
-                  <div>แขวง :</div>
+                <div v-if="resultData?.username" class="d-flex">
+                  <div>ชื่อบัญชีเข้าสู่ระบบ :</div>
                   <div class="pl-4 font-weight-bold">
-                    {{ resultData?.subdistrict?.subdistrict_name || "-" }}
+                    {{ resultData?.username || "-" }}
                   </div>
                 </div>
-                <div class="d-flex mt-2">
-                  <div>ถนน :</div>
+                <div class="d-flex">
+                  <div>วัน/เดือน/ปีเกิด :</div>
                   <div class="pl-4 font-weight-bold">
-                    {{ resultData?.road?.road_name || "-" }}
+                    {{ getDOB(resultData?.date_of_birth) || "-" }}
                   </div>
                 </div>
-                <div class="d-flex mt-2">
-                  <div>ซอย :</div>
-                  <div class="pl-4 font-weight-bold">
-                    {{ resultData?.alley?.alley_name || "-" }}
-                  </div>
-                </div>
-                <div class="d-flex mt-2">
-                  <div>รหัสไปรษณีย์ :</div>
-                  <div class="pl-4 font-weight-bold">
-                    {{ resultData?.subdistrict?.post_code || "-" }}
-                  </div>
-                </div>
-                <div class="d-flex mt-2">
+                <div class="d-flex">
                   <div>เบอร์โทรศัพท์ :</div>
                   <div class="pl-4 font-weight-bold">
                     {{ resultData?.phone || "-" }}
                   </div>
                 </div>
-                <div class="d-flex mt-2">
-                  <div>หัวหน้าครัวเรือน :</div>
+
+                <v-divider class="my-4"> </v-divider>
+
+                <div class="d-flex">
+                  <div>สถานะเด็กแรกเกิด :</div>
                   <div class="pl-4 font-weight-bold">
-                    {{ resultData?.person?.person_name || "-" }}
+                    {{
+                      newbornText[resultData?.newborn] ||
+                      "ไม่ได้เป็นเด็กแรกเกิด"
+                    }}
                   </div>
                 </div>
-                <div class="d-flex mt-2 mb-4">
-                  <div>อาสาสมัคร :</div>
+                <div class="d-flex">
+                  <div>สถานะหญิงตั้งครรภ์ :</div>
                   <div class="pl-4 font-weight-bold">
-                    {{ resultData?.volunteer?.person_name || "-" }}
+                    {{
+                      pregnantText[resultData?.pregnant] ||
+                      "ไม่ได้เป็นหญิงตั้งครรภ์"
+                    }}
+                  </div>
+                </div>
+                <div class="d-flex">
+                  <div>สถานะหญิงหลังคลอด :</div>
+                  <div class="pl-4 font-weight-bold">
+                    {{ getPostpartum(resultData?.postpartum) || "-" }}
+                  </div>
+                </div>
+                <div class="d-flex">
+                  <div>สถานะผู้พิการ :</div>
+                  <div class="pl-4 font-weight-bold">
+                    {{ getDisabled(resultData?.disabled) || "-" }}
+                  </div>
+                </div>
+                <div class="d-flex">
+                  <div>สถานะป่วยโรคเรื้อรัง :</div>
+                  <div class="pl-4 font-weight-bold">
+                    {{ getChronicDisease(resultData?.chronic_disease) || "-" }}
+                  </div>
+                </div>
+                <div class="d-flex">
+                  <div>มีพฤติกรรมเสี่ยงด้านความรุนแรง :</div>
+                  <div class="pl-4 font-weight-bold">
+                    {{
+                      getViolentBehavior(resultData?.violent_behavior) || "-"
+                    }}
                   </div>
                 </div>
               </div>
@@ -220,17 +318,21 @@
 import dayjs from "dayjs";
 import Breadcrumb from "@/components/Breadcrumbs";
 import Person from "../services/apis/Person";
+import Role from "../components/persons/Role";
 
 require("dayjs/locale/th");
 dayjs.locale("th");
 
-import { NEWBORN_OPTIONS } from "../constants/newborn";
-import { PREGNANT_OPTIONS } from "../constants/pregnant";
+import { NEWBORN_OPTIONS, NEWBORN_TEXT } from "../constants/newborn";
+import { PREGNANT_OPTIONS, PREGNANT_TEXT } from "../constants/pregnant";
+import { ROLE_OPTIONS } from "../constants/role";
 
 export default {
-  components: { Breadcrumb },
+  components: { Breadcrumb, Role },
   data() {
     return {
+      newbornText: NEWBORN_TEXT,
+      pregnantText: PREGNANT_TEXT,
       loading: false,
       showResult: false,
       datepick: false,
@@ -248,7 +350,7 @@ export default {
         },
       ],
 
-      resultData: {},
+      resultData: null,
       personName: "",
       idCard: "",
       dateOfBirth: "",
@@ -258,7 +360,7 @@ export default {
       postpartum: false,
       disabled: false,
       chronicDisease: false,
-      ViolentBehavior: false,
+      violentBehavior: false,
       username: "",
       password: "",
       role: "",
@@ -269,6 +371,9 @@ export default {
     this.clear();
   },
   computed: {
+    showUserPassword() {
+      return this.role === "1" || this.role === "2";
+    },
     computedDateFormatted() {
       return this.dateOfBirth
         ? dayjs(this.dateOfBirth).add(543, "year").format("DD MMMM YYYY")
@@ -279,7 +384,7 @@ export default {
       return [
         {
           value: "",
-          text: "ไม่ได้มีสถานะแรกเกิด",
+          text: "ไม่ได้เป็นเด็กแรกเกิด",
         },
         ...NEWBORN_OPTIONS,
       ];
@@ -288,13 +393,23 @@ export default {
       return [
         {
           value: "",
-          text: "ไม่ได้มีสถานะตั้งครรภ์",
+          text: "ไม่ได้เป็นหญิงตั้งครรภ์",
         },
         ...PREGNANT_OPTIONS,
       ];
     },
+    roleOptions() {
+      return [
+        {
+          value: "",
+          text: "สมาชิก",
+        },
+        ...ROLE_OPTIONS,
+      ];
+    },
   },
   methods: {
+    dayjs,
     getPayload() {
       let payload = {
         person_name: this.personName,
@@ -306,7 +421,7 @@ export default {
         postpartum: this.postpartum,
         disabled: this.disabled,
         chronic_disease: this.chronicDisease,
-        violent_behavior: this.ViolentBehavior,
+        violent_behavior: this.violentBehavior,
         username: this.username,
         role: this.role,
       };
@@ -333,7 +448,7 @@ export default {
         this.resultData = data;
         this.loading = false;
 
-        // this.showResult = true;
+        this.showResult = true;
       } catch (e) {
         this.$toast.error("เกิดข้อผิดพลาด, กรุณาลองใหม่อีกครั้ง");
       } finally {
@@ -351,7 +466,7 @@ export default {
       this.postpartum = false;
       this.disabled = false;
       this.chronicDisease = false;
-      this.ViolentBehavior = false;
+      this.violentBehavior = false;
       this.username = "";
       this.password = "";
       this.role = "";
@@ -359,8 +474,28 @@ export default {
       window.scrollTo(0, 0);
     },
     closeModal() {
+      this.resultData = null;
       this.showResult = false;
       this.clear();
+    },
+    getDisabled(disableStatus) {
+      return disableStatus ? "เป็นผู้พิการ" : "ไม่ได้เป็นผู้พิการ";
+    },
+    getPostpartum(postpartum) {
+      return postpartum ? "เป็นหญิงหลังคลอด" : "ไม่ได้เป็นหญิงหลังคลอด";
+    },
+    getChronicDisease(chronicDisease) {
+      return chronicDisease
+        ? "เป็นผู้ป่วยโรคเรื้อรัง"
+        : "ไม่ได้เป็นผู้ป่วยโรคเรื้อรัง";
+    },
+    getViolentBehavior(ViolentBehavior) {
+      return ViolentBehavior
+        ? "มีพฤติกรรมเสี่ยงด้านความรุนแรง"
+        : "ไม่ได้มีพฤติกรรมเสี่ยงด้านความรุนแรง";
+    },
+    getDOB(dob) {
+      return dayjs(dob).add(543, "year").format("DD MMMM YYYY");
     },
   },
 };
