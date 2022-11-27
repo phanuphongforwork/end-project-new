@@ -68,7 +68,7 @@
             label="บัตรประชาชน"
             name="idCard"
             data-vv-as="บัตรประชาชน"
-            v-validate="'required'"
+            v-validate="'required|length:13|numeric'"
             :error-messages="errors && errors.first('idCard')"
             outlined
           >
