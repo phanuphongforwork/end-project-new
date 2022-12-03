@@ -19,7 +19,6 @@
         </div>
       </v-card-title>
       <v-data-table
-        :loading="loading"
         :headers="headers"
         :items="houseHolds"
         disable-filtering
@@ -34,14 +33,14 @@
         no-data-text="ไม่พบข้อมูล, ลองค้นหาทะเบียนบ้านใหม่อีกครั้ง"
       >
         <template v-slot:item.actions="{ item }">
-          <a @click="showAddHead(item)" href="#">เพิ่มหัวหน้าครัวเรือน</a>
+          <a @click="showAddHead(item)" href="#">เพิ่มสมาชิกครัวเรือน</a>
         </template>
       </v-data-table>
     </v-card>
 
     <v-dialog
       v-model="showEditData"
-      :fullscreen="false"
+      :fullscreen="true"
       transition="dialog-bottom-transition"
       width="800px"
       persistent
@@ -49,8 +48,11 @@
     >
       <v-card v-if="editData">
         <v-toolbar dark color="primary">
+          <v-btn icon dark @click="closeModal()">
+            <v-icon>mdi-close</v-icon>
+          </v-btn>
           <v-toolbar-title
-            >เพิ่มหัวหน้าครัวเรือน บ้านเลขที่
+            >เพิ่มสมาชิกครัวเรือน บ้านเลขที่
             {{ editData.house_number }}</v-toolbar-title
           >
           <v-spacer></v-spacer>
@@ -117,16 +119,99 @@
                 </div>
               </div>
             </v-card>
-            <v-btn
-              color="primary"
-              class="col-12 mt-4"
-              large
-              @click="closeModal()"
-            >
-              <v-icon left> mdi-content-save </v-icon>
-              เพิ่มหัวหน้าครัวเรือน
-            </v-btn>
+
+            <v-card outlined class="mt-4">
+              <v-card-title class="d-flex">
+                <div class="mt-4">
+                  สมาชิก ({{ members && members.length }}) คน
+                </div>
+                <v-btn
+                  color="primary"
+                  class="col-2 mt-4 ml-4"
+                  medium
+                  depressed
+                  @click="showAddMember()"
+                >
+                  <v-icon left> mdi-plus </v-icon>
+                  เพิ่มสมาชิก
+                </v-btn></v-card-title
+              >
+
+              <div class="px-4">
+                <div>
+                  <div
+                    class="d-flex mb-8 mt-4"
+                    v-if="members && members.length === 0"
+                  >
+                    ไม่มีสมาชิกในครัวเรือน
+                  </div>
+
+                  <v-simple-table
+                    v-if="members && members.length > 0"
+                    fixed-header
+                    height="300px"
+                  >
+                    <template v-slot:default>
+                      <thead>
+                        <tr>
+                          <th class="text-left">ชื่อ-นามสกุล</th>
+                          <th class="text-left">บัตรประชาชน</th>
+                          <th class="text-left">วัน/เดือน/ปีเกิด</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr v-for="item in members" :key="item">
+                          <td>{{ item?.person?.person_name || "-" }}</td>
+                          <td>{{ item?.person?.id_card || "-" }}</td>
+                          <td>
+                            {{
+                              dayjs(item?.person?.date_of_birth)
+                                .add(543, "year")
+                                .format("DD MMMM YYYY") || "-"
+                            }}
+                          </td>
+                        </tr>
+                      </tbody>
+                    </template>
+                  </v-simple-table>
+                </div>
+              </div>
+            </v-card>
+            <div class="d-flex justify-center">
+              <v-btn @click="closeModal()" class="col-12 mt-4" large>
+                <v-icon left> mdi-close </v-icon>
+                ปิดหน้านี้
+              </v-btn>
+            </div>
           </div>
+        </div>
+      </v-card>
+    </v-dialog>
+
+    <v-dialog
+      v-model="addMember"
+      :fullscreen="true"
+      transition="dialog-bottom-transition"
+      width="800px"
+      persistent
+      @click:outside="closeModalAddMem()"
+    >
+      <v-card>
+        <v-toolbar dark color="primary">
+          <v-btn icon dark @click="closeModalAddMem()">
+            <v-icon>mdi-close</v-icon>
+          </v-btn>
+          <v-toolbar-title
+            >เลือกสมาชิกที่จะเพิ่มใน บ้านเลขที่
+            {{ editData?.house_number }}</v-toolbar-title
+          >
+          <v-spacer></v-spacer>
+        </v-toolbar>
+        <div class="px-4 py-4">
+          <AddMember
+            :house-id="editData?.house_id"
+            @success="addMemberSuccess"
+          />
         </div>
       </v-card>
     </v-dialog>
@@ -134,17 +219,25 @@
 </template>
 
 <script>
+import dayjs from "dayjs";
 import Breadcrumb from "@/components/Breadcrumbs";
 import HouseHold from "../services/apis/HouseHold";
+import Person from "../services/apis/Person";
+import HouseHoldMember from "../services/apis/HouseHoldMember";
+import AddMember from "../components/house-hold-members/AddMember";
+require("dayjs/locale/th");
+dayjs.locale("th");
+
 export default {
   components: {
     Breadcrumb,
+    AddMember,
   },
 
   data() {
     return {
-      loading: false,
-      title: "เพิ่มหัวหน้าครัวเรือน",
+      title: "สมาชิกครัวเรือน",
+
       breadcrumbs: [
         {
           text: "หน้าแรก",
@@ -152,9 +245,9 @@ export default {
           href: "/",
         },
         {
-          text: "เพิ่มหัวหน้าครัวเรือน",
+          text: "สมาชิกครัวเรือน",
           disabled: false,
-          href: "add-head-house-holds",
+          href: "house-hold-members",
         },
       ],
       search: "",
@@ -172,9 +265,9 @@ export default {
         { text: "เขต", value: "district.district_name" },
         { text: "แขวง", value: "subdistrict.subdistrict_name" },
         { text: "รหัสไปรษณีย์", value: "subdistrict.post_code" },
-        { text: "เพิ่มหัวหน้าครัวเรือน", value: "actions", sortable: false },
+        { text: "เพิ่มสมาชิกครัวเรือน", value: "actions", sortable: false },
       ],
-
+      members: [],
       houseHolds: [],
       meta: {},
       param: {
@@ -185,9 +278,13 @@ export default {
         order: "desc",
         includes: "community,road,alley,volunteer,person,subdistrict,district",
       },
+
       house_number: undefined,
       showEditData: false,
       editData: null,
+
+      volunteer: null,
+      addMember: false,
     };
   },
   watch: {
@@ -206,23 +303,20 @@ export default {
     this.loadData();
   },
   methods: {
+    dayjs,
     async loadData() {
       try {
-        this.loading = true;
         const { data, meta } = await HouseHold.getAll({
           ...this.param,
           "filters[house_number]": this.house_number ?? undefined,
         });
         this.houseHolds = data;
         this.meta = meta;
-
-        this.loading = false;
       } catch {
         this.$toast.error("เกิดข้อผิดพลาด, กรุณาลองใหม่อีกครั้ง");
-      } finally {
-        this.loading = false;
       }
     },
+
     updateParam(paramName, value) {
       this.param = {
         ...this.param,
@@ -253,9 +347,36 @@ export default {
       this.updateParam("page", 1);
       this.loadData();
     },
-    showAddHead(house) {
+    async loadMember(houseId = null) {
+      const { data } = await HouseHoldMember.getAll({
+        "filters[house_id]": houseId,
+        perPage: 100,
+        includes: "person",
+      });
+      this.members = data;
+    },
+    async showAddHead(house) {
+      await this.loadMember(house.house_id);
+
       this.editData = house;
       this.showEditData = true;
+    },
+    closeModal() {
+      this.members = [];
+      this.editData = null;
+      this.showEditData = false;
+      this.volunteer = null;
+    },
+    closeModalAddMem() {
+      this.addMember = false;
+    },
+    showAddMember() {
+      this.addMember = true;
+    },
+
+    async addMemberSuccess(houseId) {
+      this.addMember = false;
+      await this.loadMember(houseId);
     },
   },
 };

@@ -33,8 +33,12 @@
         no-results-text="ไม่พบข้อมูล"
         no-data-text="ไม่พบข้อมูล, ลองค้นหาทะเบียนบ้านใหม่อีกครั้ง"
       >
+        <template v-slot:item.volunteer.person_name="{ item }">
+          {{ item?.volunteer?.person_name || "-" }}
+        </template>
+
         <template v-slot:item.actions="{ item }">
-          <a @click="showAddHead(item)" href="#">เพิ่มหัวหน้าครัวเรือน</a>
+          <a @click="showAddHead(item)" href="#">เพิ่มอาสาสมัคร</a>
         </template>
       </v-data-table>
     </v-card>
@@ -49,6 +53,9 @@
     >
       <v-card v-if="editData">
         <v-toolbar dark color="primary">
+          <v-btn icon dark @click="closeModal()">
+            <v-icon>mdi-close</v-icon>
+          </v-btn>
           <v-toolbar-title
             >เพิ่มหัวหน้าครัวเรือน บ้านเลขที่
             {{ editData.house_number }}</v-toolbar-title
@@ -117,14 +124,28 @@
                 </div>
               </div>
             </v-card>
-            <v-btn
-              color="primary"
-              class="col-12 mt-4"
-              large
-              @click="closeModal()"
-            >
+
+            <v-card outlined class="mt-4">
+              <v-card-title>เลือกอาสาสมัคร</v-card-title>
+              <div class="px-4">
+                <div>
+                  <v-select
+                    v-model="editData.volunteer_id"
+                    :items="volunteerOptions"
+                    label="เลือกอาสาสมัคร"
+                    name="volunteer"
+                    data-vv-as="อาสาสมัคร"
+                    v-validate="''"
+                    :error-messages="errors && errors.first('volunteer')"
+                    outlined
+                  >
+                  </v-select>
+                </div>
+              </div>
+            </v-card>
+            <v-btn color="primary" class="col-12 mt-4" large @click="submit()">
               <v-icon left> mdi-content-save </v-icon>
-              เพิ่มหัวหน้าครัวเรือน
+              เพิ่มอาสาสมัคร
             </v-btn>
           </div>
         </div>
@@ -136,6 +157,7 @@
 <script>
 import Breadcrumb from "@/components/Breadcrumbs";
 import HouseHold from "../services/apis/HouseHold";
+import Person from "../services/apis/Person";
 export default {
   components: {
     Breadcrumb,
@@ -144,7 +166,7 @@ export default {
   data() {
     return {
       loading: false,
-      title: "เพิ่มหัวหน้าครัวเรือน",
+      title: "เพิ่มอาสาสมัคร",
       breadcrumbs: [
         {
           text: "หน้าแรก",
@@ -152,9 +174,9 @@ export default {
           href: "/",
         },
         {
-          text: "เพิ่มหัวหน้าครัวเรือน",
+          text: "เพิ่มอาสาสมัคร",
           disabled: false,
-          href: "add-head-house-holds",
+          href: "add-volunteer-house-holds",
         },
       ],
       search: "",
@@ -172,7 +194,8 @@ export default {
         { text: "เขต", value: "district.district_name" },
         { text: "แขวง", value: "subdistrict.subdistrict_name" },
         { text: "รหัสไปรษณีย์", value: "subdistrict.post_code" },
-        { text: "เพิ่มหัวหน้าครัวเรือน", value: "actions", sortable: false },
+        { text: "อาสาสมัคร", value: "volunteer.person_name" },
+        { text: "เพิ่มอาสาสมัคร", value: "actions", sortable: false },
       ],
 
       houseHolds: [],
@@ -188,6 +211,8 @@ export default {
       house_number: undefined,
       showEditData: false,
       editData: null,
+      volunteerOptions: [],
+      volunteer: null,
     };
   },
   watch: {
@@ -203,6 +228,7 @@ export default {
     },
   },
   mounted() {
+    this.loadPerson();
     this.loadData();
   },
   methods: {
@@ -222,6 +248,31 @@ export default {
       } finally {
         this.loading = false;
       }
+    },
+    async loadPerson() {
+      try {
+        const { data: persons } = await Person.getAll({
+          perPage: 1000,
+          "filters[role]": "2",
+        });
+
+        const personMap = persons.map((data) => {
+          return {
+            value: data.person_id,
+            text: data.person_name,
+          };
+        });
+
+        this.volunteerOptions = personMap;
+
+        this.volunteerOptions = [
+          {
+            value: "",
+            text: "ยังไม่ได้เลือกอาสาสมัคร",
+          },
+          ...personMap,
+        ];
+      } catch {}
     },
     updateParam(paramName, value) {
       this.param = {
@@ -256,6 +307,29 @@ export default {
     showAddHead(house) {
       this.editData = house;
       this.showEditData = true;
+    },
+    closeModal() {
+      this.editData = null;
+      this.showEditData = false;
+      this.volunteer = null;
+    },
+    async submit() {
+      const validate = await this.$validator.validateAll();
+      if (!validate) return;
+
+      try {
+        const { data } = await HouseHold.update(this.editData.house_id, {
+          volunteer_id: this.editData.volunteer_id,
+        });
+
+        this.$toast.success("เพิ่มอาสาสมัคร สำเร็จ!");
+
+        this.closeModal();
+      } catch (e) {
+        this.$toast.error("เกิดข้อผิดพลาด, กรุณาลองใหม่อีกครั้ง");
+      } finally {
+        this.loading = false;
+      }
     },
   },
 };

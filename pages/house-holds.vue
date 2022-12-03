@@ -45,9 +45,6 @@
         no-results-text="ไม่พบข้อมูล"
         no-data-text="ไม่พบข้อมูล, ลองค้นหาทะเบียนบ้านใหม่อีกครั้ง"
       >
-        <template v-slot:[`item.actions`]>
-          <a href="#">เพิ่มสมาชิก</a>
-        </template>
       </v-data-table>
     </v-card>
   </div>
@@ -92,7 +89,6 @@ export default {
         { text: "เขต", value: "district.district_name" },
         { text: "แขวง", value: "subdistrict.subdistrict_name" },
         { text: "รหัสไปรษณีย์", value: "subdistrict.post_code" },
-        { text: "เพิ่มสมาชิก", value: "actions", sortable: false },
       ],
 
       houseHolds: [],
