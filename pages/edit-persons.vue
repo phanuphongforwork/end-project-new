@@ -34,6 +34,10 @@
         no-results-text="ไม่พบข้อมูล"
         no-data-text="ไม่พบข้อมูล, ลองค้นหาใหม่อีกครั้ง"
       >
+        <template v-slot:item.prefix="{ item }">
+          {{ prefixText[item?.prefix] || "-" }}
+        </template>
+
         <template v-slot:item.date_of_birth="{ item }">
           {{ dayjs(item.date_of_birth).add(543, "year").format("DD/MM/YYYY") }}
         </template>
@@ -43,7 +47,7 @@
         </template>
 
         <template v-slot:item.actions="{ item }">
-          <a @click="showEdit(item)" href="#">แก้ไขสมาชิกครัวเรือน</a>
+          <a @click="showEdit(item)" href="#">แก้ไขสมาชิกชุมชน</a>
         </template>
       </v-data-table>
     </v-card>
@@ -92,6 +96,7 @@
                   v-validate="'required'"
                   :error-messages="errors && errors.first('username')"
                   outlined
+                  :disabled="isVolunteer"
                 >
                 </v-text-field>
               </v-col>
@@ -101,9 +106,10 @@
                   label="รหัสผ่านเข้าสู่ระบบ"
                   name="password"
                   data-vv-as="รหัสผ่านเข้าสู่ระบบ"
-                  v-validate="'required'"
+                  v-validate=""
                   :error-messages="errors && errors.first('password')"
                   outlined
+                  :disabled="isVolunteer"
                 >
                 </v-text-field>
               </v-col>
@@ -113,6 +119,19 @@
                 <v-alert type="info"
                   >ส่วนสำหรับจัดการข้อมูลส่วนตัวของบุคคล</v-alert
                 >
+              </v-col>
+              <v-col cols="12" md="3" lg="4">
+                <v-select
+                  v-model="editData.prefix"
+                  :items="prefixOptions"
+                  label="คำนำหน้า"
+                  name="prefix"
+                  data-vv-as="คำนำหน้า"
+                  v-validate="'required'"
+                  :error-messages="errors && errors.first('prefix')"
+                  outlined
+                >
+                </v-select>
               </v-col>
               <v-col cols="12" md="3" lg="4">
                 <v-text-field
@@ -135,6 +154,7 @@
                   v-validate="'required|length:13|numeric'"
                   :error-messages="errors && errors.first('idCard')"
                   outlined
+                  :disabled="isVolunteer"
                 >
                 </v-text-field>
               </v-col>
@@ -155,6 +175,7 @@
                       @click:clear="editData.date_of_birth = null"
                       :error-messages="errors && errors.first('dob')"
                       outlined
+                      :disabled="isVolunteer"
                     ></v-text-field>
                   </template>
                   <v-date-picker
@@ -164,6 +185,7 @@
                     data-vv-as="วัน/เดือน/ปีเกิด"
                     v-validate="'required'"
                     locale="th-TH"
+                    :disabled="isVolunteer"
                   ></v-date-picker>
                 </v-menu>
               </v-col>
@@ -270,6 +292,7 @@ import Role from "../components/persons/Role";
 import { NEWBORN_OPTIONS, NEWBORN_TEXT } from "../constants/newborn";
 import { PREGNANT_OPTIONS, PREGNANT_TEXT } from "../constants/pregnant";
 import { ROLE_OPTIONS } from "../constants/role";
+import { PREFIX_OPTIONS, PREFIX_TEXT } from "../constants/prefix";
 
 require("dayjs/locale/th");
 dayjs.locale("th");
@@ -281,12 +304,13 @@ export default {
   },
   data() {
     return {
+      prefixText: PREFIX_TEXT,
       newbornText: NEWBORN_TEXT,
       pregnantText: PREGNANT_TEXT,
       loading: false,
       datepick: false,
       modalActive: false,
-      title: "แก้ไขสมาชิกครัวเรือน",
+      title: "แก้ไขสมาชิกชุมชน",
       breadcrumbs: [
         {
           text: "หน้าแรก",
@@ -294,7 +318,7 @@ export default {
           href: "/",
         },
         {
-          text: "แก้ไขสมาชิกครัวเรือน",
+          text: "แก้ไขสมาชิกชุมชน",
           disabled: false,
           href: "edit-persons",
         },
@@ -312,10 +336,22 @@ export default {
       loading: false,
       headers: [
         {
+          text: "คำนำหน้า",
+          align: "start",
+          sortable: false,
+          value: "prefix",
+        },
+        {
           text: "ชื่อ - นามสกุล",
           align: "start",
           sortable: false,
           value: "person_name",
+        },
+        {
+          text: "บัญชีเข้าสู่ระบบ",
+          align: "start",
+          sortable: false,
+          value: "username",
         },
         {
           text: "บัตรประชาชน",
@@ -323,12 +359,7 @@ export default {
           sortable: false,
           value: "id_card",
         },
-        {
-          text: "บัญชีเข้าสู่ระบบ",
-          align: "start",
-          sortable: false,
-          value: "id_card",
-        },
+
         {
           text: "วัน/เดือน/ปีเกิด",
           align: "start",
@@ -347,13 +378,14 @@ export default {
           sortable: false,
           value: "role",
         },
-        { text: "แก้ไขสมาชิกครัวเรือน", value: "actions", sortable: false },
+        { text: "แก้ไขสมาชิกชุมชน", value: "actions", sortable: false },
       ],
       items: [],
       showEditData: false,
       editData: null,
       resultData: null,
       showResult: false,
+      prefix: "",
     };
   },
   watch: {
@@ -369,8 +401,14 @@ export default {
     },
   },
   computed: {
+    isVolunteer() {
+      return this.$auth.user.role === "2" ? true : false;
+    },
+    prefixOptions() {
+      return [...PREFIX_OPTIONS];
+    },
     showUserPassword() {
-      return this.editData.role === "1" || this.editData.role === "2";
+      return true;
     },
     computedDateFormatted() {
       return this.editData?.date_of_birth
@@ -426,6 +464,7 @@ export default {
         violent_behavior: this.editData.violent_behavior,
         username: this.editData.username,
         role: this.editData.role,
+        prefix: this.editData.prefix,
       };
 
       if (this.editData.password) {
@@ -506,7 +545,8 @@ export default {
         const { data } = await Person.update(this.editData.person_id, payload);
         this.resultData = data;
         this.loading = false;
-        this.$toast.success("แก้ไขข้อมูลสมาชิกครัวเรือน สำเร็จ!");
+        this.$toast.success("แก้ไขข้อมูลสมาชิก สำเร็จ!");
+        this.closeModal();
       } catch (e) {
         this.$toast.error("เกิดข้อผิดพลาด, กรุณาลองใหม่อีกครั้ง");
       } finally {

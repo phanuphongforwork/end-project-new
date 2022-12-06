@@ -1,7 +1,9 @@
 <template>
-  <v-chip class="ma-2" :color="roleColor()">
+  <div>
     {{ roleText() }}
-  </v-chip>
+  </div>
+  <!-- <v-chip class="ma-2" :color="roleColor()"> -->
+  <!-- </v-chip> -->
 </template>
 
 <script>

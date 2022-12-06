@@ -14,8 +14,12 @@
 
       <v-list nav dense>
         <div v-for="(item, i) in menus" :key="i" v-if="active(item)">
-          <div v-if="item && item.subMenus.length > 0">
-            <v-subheader> {{ item.title }}</v-subheader>
+          <div v-if="item && item.subMenus.length > 0" class="mt-4">
+            <v-subheader>
+              <h2>
+                <p class="font-weight-black">{{ item.title }}</p>
+              </h2>
+            </v-subheader>
             <v-list-item-group color="primary">
               <v-list-item
                 v-for="(menu, index) in item.subMenus"

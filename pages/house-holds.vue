@@ -104,6 +104,7 @@ export default {
       house_number: undefined,
     };
   },
+  computed: {},
   watch: {
     house_number: {
       handler(data) {

@@ -33,14 +33,10 @@
           {{ dayjs(item.date_of_birth).add(543, "year").format("DD/MM/YYYY") }}
         </template>
 
-        <template v-slot:item.role="{ item }">
-          <Role :role="item.role" />
-        </template>
-
         <template v-slot:item.actions="{ item }">
           <v-btn @click="addItem(item)" color="info">
             <v-icon left> mdi-plus </v-icon>
-            กดเพื่อเพิ่ม
+            เพิ่มสมาชิก
           </v-btn>
         </template>
       </v-data-table>
@@ -103,6 +99,7 @@
                   v-validate="'required'"
                   :error-messages="errors.first('memberStatus')"
                   outlined
+                  disabled
                 >
                 </v-select>
               </v-col>
@@ -110,6 +107,7 @@
                 <v-select
                   v-model="member.status"
                   :items="statusOptions"
+                  disabled
                   label="สถานะ"
                   name="status"
                   data-vv-as="สถานะ"
@@ -123,7 +121,7 @@
 
             <v-btn color="primary" class="col-12 mt-4" large @click="submit()">
               <v-icon left> mdi-content-save </v-icon>
-              เพิ่มเข้าครัวเรือน
+              ยืนยันการเพิ่ม
             </v-btn>
           </v-container>
         </div>
@@ -215,12 +213,7 @@ export default {
           sortable: false,
           value: "phone",
         },
-        {
-          text: "บทบาท",
-          align: "center",
-          sortable: false,
-          value: "role",
-        },
+
         { text: "กดเพื่อเพิ่ม", value: "actions", sortable: false },
       ],
       items: [],
@@ -228,28 +221,28 @@ export default {
       detail: null,
       member: null,
       memberStatusOptions: [
-        {
-          value: "1",
-          text: "หัวหน้าครัวเรือน",
-        },
+        // {
+        //   value: "1",
+        //   text: "หัวหน้าครัวเรือน",
+        // },
         {
           value: "2",
           text: "สมาชิกครัวเรือน",
         },
       ],
       statusOptions: [
-        {
-          value: "0",
-          text: "เสียชีวิต",
-        },
+        // {
+        //   value: "0",
+        //   text: "เสียชีวิต",
+        // },
         {
           value: "1",
           text: "อยู่ในครัวเรือน",
         },
-        {
-          value: "2",
-          text: "ย้าย",
-        },
+        // {
+        //   value: "2",
+        //   text: "ย้าย",
+        // },
       ],
       showAddStatus: false,
     };
@@ -347,11 +340,15 @@ export default {
           status: this.member.status || "1",
           member_status: this.member.member_status || "2",
         });
+
+        this.loadData();
         this.closeModalAddStatus();
         this.$emit("success", this.houseId);
 
         this.member = null;
         this.items = [];
+
+        this.$toast.success("เพิ่มสมาชิก สำเร็จ!");
       } catch (e) {
         this.$toast.error("เกิดข้อผิดพลาด, กรุณาลองใหม่อีกครั้ง");
       }

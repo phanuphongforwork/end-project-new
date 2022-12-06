@@ -8,11 +8,10 @@
         color="primary"
         large
         class="col-12 col-lg-2 mt-6"
-        nuxt
-        to="/add-persons"
+        @click="showCreatePerson = true"
       >
         <v-icon left> mdi-plus-circle </v-icon>
-        เพิ่มสมาชิกครัวเรือน
+        เพิ่มสมาชิกชุมชน
       </v-btn>
     </div>
     <v-card class="mt-6" outlined>
@@ -45,8 +44,16 @@
         no-results-text="ไม่พบข้อมูล"
         no-data-text="ไม่พบข้อมูล, ลองค้นหาใหม่อีกครั้ง"
       >
+        <template v-slot:item.prefix="{ item }">
+          {{ prefixText[item?.prefix] || "-" }}
+        </template>
+
         <template v-slot:item.date_of_birth="{ item }">
           {{ dayjs(item.date_of_birth).add(543, "year").format("DD/MM/YYYY") }}
+        </template>
+
+        <template v-slot:item.age="{ item }">
+          {{ getAge(item.date_of_birth) }}
         </template>
 
         <template v-slot:item.role="{ item }">
@@ -58,6 +65,28 @@
         </template>
       </v-data-table>
     </v-card>
+
+    <v-dialog
+      v-model="showCreatePerson"
+      :fullscreen="true"
+      transition="dialog-bottom-transition"
+      width="800px"
+      persistent
+      @click:outside="closeCreatePerson()()"
+    >
+      <v-card>
+        <v-toolbar dark color="primary">
+          <v-btn icon dark @click="closeCreatePerson()">
+            <v-icon>mdi-close</v-icon>
+          </v-btn>
+          <v-toolbar-title>เพิ่มสมาชิกชุมชน</v-toolbar-title>
+          <v-spacer></v-spacer>
+        </v-toolbar>
+        <div class="px-4 py-4">
+          <CreateAccount @success="closeCreatePerson()" />
+        </div>
+      </v-card>
+    </v-dialog>
 
     <v-dialog
       v-model="showDetailData"
@@ -87,6 +116,12 @@
                   </div>
                 </div>
                 <div class="d-flex">
+                  <div>คำนำหน้า :</div>
+                  <div class="pl-4 font-weight-bold">
+                    {{ prefixText[detail?.prefix] || "-" }}
+                  </div>
+                </div>
+                <div class="d-flex">
                   <div>ชื่อ-นามสกุล :</div>
                   <div class="pl-4 font-weight-bold">
                     {{ detail?.person_name || "-" }}
@@ -102,6 +137,12 @@
                   <div>วัน/เดือน/ปีเกิด :</div>
                   <div class="pl-4 font-weight-bold">
                     {{ getDOB(detail?.date_of_birth) || "-" }}
+                  </div>
+                </div>
+                <div class="d-flex">
+                  <div>อายุ :</div>
+                  <div class="pl-4 font-weight-bold">
+                    {{ getAge(detail?.date_of_birth) || "-" }} ปี
                   </div>
                 </div>
                 <div class="d-flex">
@@ -161,9 +202,10 @@
               class="col-12 mt-4"
               large
               @click="closeModal()"
+              outlined
             >
               <v-icon left> mdi-progress-clock </v-icon>
-              ดำเนินการต่อ
+              ปิดหน้าต่าง
             </v-btn>
           </div>
         </div>
@@ -177,24 +219,28 @@ import dayjs from "dayjs";
 import Breadcrumb from "@/components/Breadcrumbs";
 import Person from "../services/apis/Person";
 import Role from "../components/persons/Role";
+import CreateAccount from "@/components/accounts/CreateAccount";
 
 require("dayjs/locale/th");
 dayjs.locale("th");
 
 import { NEWBORN_TEXT } from "../constants/newborn";
 import { PREGNANT_TEXT } from "../constants/pregnant";
+import { PREFIX_TEXT } from "../constants/prefix";
 
 export default {
   components: {
     Breadcrumb,
     Role,
+    CreateAccount,
   },
   data() {
     return {
+      prefixText: PREFIX_TEXT,
       newbornText: NEWBORN_TEXT,
       pregnantText: PREGNANT_TEXT,
       modalActive: false,
-      title: "สมาชิกครัวเรือน",
+      title: "สมาชิกชุมชน",
       breadcrumbs: [
         {
           text: "หน้าแรก",
@@ -202,7 +248,7 @@ export default {
           href: "/",
         },
         {
-          text: "สมาชิกครัวเรือน",
+          text: "สมาชิกชุมชน",
           disabled: false,
           href: "persons",
         },
@@ -219,6 +265,12 @@ export default {
       },
       loading: false,
       headers: [
+        {
+          text: "คำนำหน้า",
+          align: "start",
+          sortable: false,
+          value: "prefix",
+        },
         {
           text: "ชื่อ - นามสกุล",
           align: "start",
@@ -244,6 +296,12 @@ export default {
           value: "date_of_birth",
         },
         {
+          text: "อายุ (ปี)",
+          align: "center",
+          sortable: false,
+          value: "age",
+        },
+        {
           text: "เบอร์โทรศัพท์",
           align: "start",
           sortable: false,
@@ -260,6 +318,7 @@ export default {
       items: [],
       showDetailData: false,
       detail: null,
+      showCreatePerson: false,
     };
   },
   watch: {
@@ -352,6 +411,13 @@ export default {
     },
     getDOB(dob) {
       return dayjs(dob).add(543, "year").format("DD MMMM YYYY");
+    },
+    getAge(dob) {
+      return dayjs().diff(dob, "year");
+    },
+    closeCreatePerson() {
+      this.showCreatePerson = false;
+      this.loadData();
     },
   },
 };
