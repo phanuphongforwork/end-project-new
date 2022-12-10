@@ -4,90 +4,64 @@
       <Breadcrumb :items="breadcrumbs" :title="title" />
     </div>
 
-    <div>
-        <v-btn
-          color="primary"
-          large
-          class="col-12 col-lg-2 mt-6"
-          @click="modalActive = true">
-          <v-icon left> mdi-plus-circle </v-icon>
-          เพิ่มชุมชน
-        </v-btn>
-      </div>
+    <!-- <div>
+      <v-btn
+        color="primary"
+        large
+        class="col-12 col-lg-2 mt-6"
+        nuxt
+        to="/add-house-holds"
+      >
+        <v-icon left> mdi-plus-circle </v-icon>
+        สร้างทะเบียนครัวเรือน
+      </v-btn>
+    </div> -->
     <v-card class="mt-6" outlined>
-      <v-card-title class="col-12">
+      <!-- <v-card-title class="col-12">
         <div class="col-12">
           <v-text-field
+            v-model="house_number"
             class="col-12"
             append-icon="mdi-magnify"
-            label="ค้นหาชุมชน"
+            label="ค้นหาบ้านเลขที่"
             single-line
             hide-details
             outlined
           ></v-text-field>
         </div>
-
-      </v-card-title>
+      </v-card-title> -->
       <v-data-table
+        :loading="loading"
         :headers="headers"
-        :items="desserts"
+        :items="items"
         disable-filtering
         disable-sort
-        :itemsPerPage="5"
+        :page="meta.page"
+        :itemsPerPage="meta.perPage || 5"
+        :server-items-length="meta.total"
         class="elevation-1"
+        @update:items-per-page="changePerPage"
+        @update:page="changePage"
+        no-results-text="ไม่พบข้อมูล"
+        no-data-text="ไม่พบข้อมูล, ลองค้นหาทะเบียนบ้านใหม่อีกครั้ง"
       >
-        <template v-slot:[`item.actions`]>
-          <a href="#">กดเพื่อเพิ่ม</a>
-        </template>
       </v-data-table>
     </v-card>
-    <v-dialog
-      v-model="modalActive"
-      hide-overlay
-      transition="dialog-bottom-transition"
-      max-width="800"
-    >
-      <v-card>
-        <v-toolbar dark color="primary">
-          <v-btn icon dark @click="modalActive = false">
-            <v-icon>mdi-close</v-icon>
-          </v-btn>
-          <v-toolbar-title>เพิ่มชุมชน</v-toolbar-title>
-          <v-spacer></v-spacer>
-        </v-toolbar>
-        <div class="px-4 py-4">
-          <AddCommunityInfo @save="save()" />
-        </div>
-      </v-card>
-    </v-dialog>
-
-    <v-btn
-      fab
-      dark
-      large
-      color="primary"
-      fixed
-      right
-      bottom
-      class="d-block d-lg-none"
-    >
-      <v-icon dark>mdi-plus</v-icon>
-    </v-btn>
   </div>
 </template>
 
 <script>
-import AddCommunityInfo from "@/components/basic/AddCommunityInfo";
 import Breadcrumb from "@/components/Breadcrumbs";
+import CommunityApi from "../services/apis/Community";
 export default {
   components: {
     Breadcrumb,
-    AddCommunityInfo,
   },
 
   data() {
     return {
-      title: "ข้อมูลชุมชน",
+      loading: false,
+      title: "ชุมชน",
       breadcrumbs: [
         {
           text: "หน้าแรก",
@@ -95,35 +69,104 @@ export default {
           href: "/",
         },
         {
-          text: "ข้อมูลชุมชน",
+          text: "ชุมชน",
           disabled: false,
-          href: "house-holds",
+          href: "community-info",
         },
       ],
       search: "",
       page: 1,
       headers: [
         {
-          text: "ลำดับที่",
-          value: "index",
-          width: 100,
-        },
-        {
           text: "ชื่อชุมชน",
           align: "start",
           sortable: false,
-          value: "1",
+          value: "comm_name",
         },
-        { text: "แก้ไข", value: "actions", sortable: false },
+        {
+          text: "แขวง",
+          align: "start",
+          sortable: false,
+          value: "subdistrict.subdistrict_name",
+        },
       ],
-      modalActive: false,
-      isEdit: false,
+
+      items: [],
+      meta: {},
+      param: {
+        page: 1,
+        perPage: 5,
+        q: "",
+        sort: "created_at",
+        order: "desc",
+        includes: "subdistrict",
+      },
     };
   },
+  computed: {},
+  watch: {
+    house_number: {
+      handler(data) {
+        if (data) {
+          this.loadData();
+        } else {
+          this.house_number = undefined;
+          this.loadData();
+        }
+      },
+    },
+  },
+  mounted() {
+    this.loadData();
+  },
   methods: {
-    save() {
-      this.modalActive = false;
-      this.isEdit = false;
+    async loadData() {
+      try {
+        this.loading = true;
+        const { data, meta } = await CommunityApi.getAll({
+          ...this.param,
+          includes: "subdistrict",
+          // "filters[house_number]": this.house_number ?? undefined,
+        });
+        this.items = data;
+        this.meta = meta;
+
+        this.loading = false;
+      } catch {
+        this.$toast.error("เกิดข้อผิดพลาด, กรุณาลองใหม่อีกครั้ง");
+      } finally {
+        this.loading = false;
+      }
+    },
+    updateParam(paramName, value) {
+      this.param = {
+        ...this.param,
+        [paramName]: value,
+      };
+
+      if (this.pushState) {
+        this.$router.push({
+          query: this.param,
+          path: this.$route.path,
+        });
+      }
+    },
+    removeParam(paramName) {
+      delete this.param[paramName];
+    },
+    changePage(page) {
+      this.updateParam("page", page);
+      this.loadData();
+    },
+    changeSearch(keyword) {
+      this.updateParam("q", keyword);
+      this.updateParam("page", 1);
+      this.loadData();
+    },
+    changePerPage(perPage) {
+      this.updateParam("perPage", perPage);
+      this.updateParam("page", 1);
+      this.loadData();
     },
   },
 };
