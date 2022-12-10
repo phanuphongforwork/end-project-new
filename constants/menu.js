@@ -44,15 +44,8 @@ export default [
         text: "เลือกหัวหน้าครัวเรือน",
         icon: "mdi-book-open-variant ",
         active: false,
-        to: "/add-house-hold-members",
+        to: "/add-head-house-holds",
         level: [1],
-      },
-      {
-        text: "แก้ไขเบียนครัวเรือน",
-        icon: "mdi-home-edit ",
-        active: false,
-        to: "/edit-house-holds",
-        level: [1, 2],
       },
 
       {
@@ -63,12 +56,19 @@ export default [
         level: [1],
       },
       {
-        text: "ออกรายงาน",
-        icon: "mdi-shield-account",
+        text: "แก้ไขเบียนครัวเรือน",
+        icon: "mdi-home-edit ",
         active: false,
-        to: "/reports",
-        level: [1],
+        to: "/edit-house-holds",
+        level: [1, 2],
       },
+      // {
+      //   text: "ออกรายงาน",
+      //   icon: "mdi-shield-account",
+      //   active: false,
+      //   to: "/reports",
+      //   level: [1],
+      // },
     ],
   },
   {
@@ -89,13 +89,13 @@ export default [
         to: "/edit-persons",
         level: [1, 2],
       },
-      {
-        text: "ออกรายงาน",
-        icon: "mdi-shield-account",
-        active: false,
-        to: "/reports",
-        level: [1],
-      },
+      // {
+      //   text: "ออกรายงาน",
+      //   icon: "mdi-shield-account",
+      //   active: false,
+      //   to: "/reports",
+      //   level: [1],
+      // },
     ],
   },
 

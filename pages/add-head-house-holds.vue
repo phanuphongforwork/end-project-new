@@ -41,7 +41,7 @@
 
     <v-dialog
       v-model="showEditData"
-      :fullscreen="false"
+      :fullscreen="true"
       transition="dialog-bottom-transition"
       width="800px"
       persistent
@@ -49,6 +49,9 @@
     >
       <v-card v-if="editData">
         <v-toolbar dark color="primary">
+          <v-btn icon dark @click="closeModal()">
+            <v-icon>mdi-close</v-icon>
+          </v-btn>
           <v-toolbar-title
             >เพิ่มหัวหน้าครัวเรือน บ้านเลขที่
             {{ editData.house_number }}</v-toolbar-title
@@ -117,15 +120,65 @@
                 </div>
               </div>
             </v-card>
-            <v-btn
-              color="primary"
-              class="col-12 mt-4"
-              large
-              @click="closeModal()"
-            >
-              <v-icon left> mdi-content-save </v-icon>
-              เพิ่มหัวหน้าครัวเรือน
-            </v-btn>
+
+            <v-card outlined class="mt-4">
+              <v-card-title class="d-flex">
+                <div class="mt-4">เลือกหัวหน้าครัวเรือน</div>
+              </v-card-title>
+
+              <div class="px-4">
+                <div>
+                  <div
+                    class="d-flex mb-8 mt-4"
+                    v-if="members && members.length === 0"
+                  >
+                    ไม่มีสมาชิกในครัวเรือน
+                  </div>
+
+                  <v-simple-table
+                    v-if="members && members.length > 0"
+                    fixed-header
+                    height="300px"
+                  >
+                    <template v-slot:default>
+                      <thead>
+                        <tr>
+                          <th class="text-left">ชื่อ-นามสกุล</th>
+                          <th class="text-left">บัตรประชาชน</th>
+                          <th class="text-left">วัน/เดือน/ปีเกิด</th>
+                          <th class="text-left">สถานะในครัวเรือน</th>
+                          <th class="text-left">สถานะ</th>
+                          <th class="text-left">ตั้งเป็นหัวหน้าครัวเรือน</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr v-for="item in members" :key="item">
+                          <td>{{ item?.person?.person_name || "-" }}</td>
+                          <td>{{ item?.person?.id_card || "-" }}</td>
+                          <td>
+                            {{
+                              dayjs(item?.person?.date_of_birth)
+                                .add(543, "year")
+                                .format("DD MMMM YYYY") || "-"
+                            }}
+                          </td>
+                          <td>
+                            {{ getMemberStatus(item?.member_status) || "-" }}
+                          </td>
+                          <td>{{ getStatus(item?.status) || "-" }}</td>
+                          <td>
+                            <v-btn @click="handleSetHead(item)" color="primary">
+                              <v-icon left> mdi-crown-outline </v-icon>
+                              ตั้งเป็นหัวหน้าครัวเรือน
+                            </v-btn>
+                          </td>
+                        </tr>
+                      </tbody>
+                    </template>
+                  </v-simple-table>
+                </div>
+              </div>
+            </v-card>
           </div>
         </div>
       </v-card>
@@ -134,8 +187,14 @@
 </template>
 
 <script>
+import dayjs from "dayjs";
 import Breadcrumb from "@/components/Breadcrumbs";
 import HouseHold from "../services/apis/HouseHold";
+import HouseHoldMember from "../services/apis/HouseHoldMember";
+
+require("dayjs/locale/th");
+dayjs.locale("th");
+
 export default {
   components: {
     Breadcrumb,
@@ -144,7 +203,7 @@ export default {
   data() {
     return {
       loading: false,
-      title: "เพิ่มหัวหน้าครัวเรือน",
+      title: "เลือกหัวหน้าครัวเรือน",
       breadcrumbs: [
         {
           text: "หน้าแรก",
@@ -152,7 +211,7 @@ export default {
           href: "/",
         },
         {
-          text: "เพิ่มหัวหน้าครัวเรือน",
+          text: "เลือกหัวหน้าครัวเรือน",
           disabled: false,
           href: "add-head-house-holds",
         },
@@ -172,7 +231,7 @@ export default {
         { text: "เขต", value: "district.district_name" },
         { text: "แขวง", value: "subdistrict.subdistrict_name" },
         { text: "รหัสไปรษณีย์", value: "subdistrict.post_code" },
-        { text: "เพิ่มหัวหน้าครัวเรือน", value: "actions", sortable: false },
+        { text: "เลือกหัวหน้าครัวเรือน", value: "actions", sortable: false },
       ],
 
       houseHolds: [],
@@ -188,6 +247,31 @@ export default {
       house_number: undefined,
       showEditData: false,
       editData: null,
+      members: [],
+      memberStatusOptions: [
+        {
+          value: "1",
+          text: "หัวหน้าครัวเรือน",
+        },
+        {
+          value: "2",
+          text: "สมาชิกครัวเรือน",
+        },
+      ],
+      statusOptions: [
+        {
+          value: "0",
+          text: "เสียชีวิต",
+        },
+        {
+          value: "1",
+          text: "อยู่ในครัวเรือน",
+        },
+        {
+          value: "2",
+          text: "ย้าย",
+        },
+      ],
     };
   },
   watch: {
@@ -206,6 +290,17 @@ export default {
     this.loadData();
   },
   methods: {
+    dayjs,
+    async loadPerson() {
+      try {
+        const { data } = await HouseHold.getUserInHouse(this.editData.house_id);
+
+        this.members = data || [];
+      } catch (e) {
+        console.log(e);
+        this.$toast.error("เกิดข้อผิดพลาด, กรุณาลองใหม่อีกครั้ง");
+      }
+    },
     async loadData() {
       try {
         this.loading = true;
@@ -256,6 +351,55 @@ export default {
     showAddHead(house) {
       this.editData = house;
       this.showEditData = true;
+      this.loadPerson();
+    },
+    closeModal() {
+      this.editData = null;
+      this.showEditData = false;
+    },
+    getMemberStatus(status) {
+      const memberStatus = this.memberStatusOptions.find((e) => {
+        return e.value === status;
+      });
+
+      if (memberStatus) {
+        return memberStatus.text;
+      }
+
+      return "-";
+    },
+    getStatus(status) {
+      const findStatus = this.statusOptions.find((e) => {
+        return e.value === status;
+      });
+
+      if (findStatus) {
+        return findStatus.text;
+      }
+
+      return "-";
+    },
+    async handleSetHead(item) {
+      const id = item?.person?.person_id || null;
+
+      if (id) {
+        try {
+          await HouseHoldMember.create({
+            person_id: item?.person?.person_id,
+            house_id: item?.house_id,
+            status: item?.status,
+            member_status: "1",
+          });
+          this.$toast.success(
+            `แต่งตั้ง ${item?.person?.person_name} เป็นหัวหน้าครอบครัวแล้ว !`
+          );
+          this.editData.person.person_name = item?.person?.person_name;
+        } catch (e) {
+          this.$toast.error("ผิดพลาด, แต่งตั้งไม่สำเร็จ");
+        } finally {
+          this.loadPerson();
+        }
+      }
     },
   },
 };
