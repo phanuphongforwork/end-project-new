@@ -84,6 +84,7 @@
                   v-validate="''"
                   :error-messages="errors && errors.first('role')"
                   outlined
+                  :disabled="isVolunteer"
                 >
                 </v-select>
               </v-col>
