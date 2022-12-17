@@ -15,7 +15,6 @@
               <v-select
                 v-model="yearNow"
                 :items="years"
-                disabled
                 class="col-12"
                 outlined
               ></v-select>
@@ -37,7 +36,7 @@
               ></v-select>
             </v-col>
 
-            <v-col class="ml-lg-4 mt-lg-2">
+            <!-- <v-col class="ml-lg-4 mt-lg-2">
               <v-btn
                 class="col-12 col-md-12 col-lg-4"
                 @click="modalActive = true"
@@ -46,7 +45,7 @@
                 <v-icon left> mdi-plus </v-icon>
                 เพิ่มตำแหน่ง
               </v-btn>
-            </v-col>
+            </v-col> -->
           </v-row>
         </v-container>
 
@@ -69,7 +68,7 @@
               ></v-text-field>
             </v-col>
 
-            <v-col class="ml-lg-4 mt-lg-2">
+            <!-- <v-col class="ml-lg-4 mt-lg-2">
               <v-btn
                 class="col-12 col-md-12 col-lg-4 mt-8 mt-lg-0"
                 @click="handleAdd()"
@@ -79,7 +78,7 @@
                 <v-icon left> mdi-plus </v-icon>
                 เพิ่มคณะกรรมการ
               </v-btn>
-            </v-col>
+            </v-col> -->
           </v-row>
         </v-container>
       </v-card-title>
@@ -107,6 +106,10 @@
         >
           {{ dayjs(item.start_date).add(543, "year").format("YYYY") }}
         </template>
+
+        <template v-slot:[`item.edit`]="{ item }" class="d-flex justify-center">
+          <a @click="handleEditData(item)" href="#">แก้ไขข้อมูล</a>
+        </template>
       </v-data-table>
     </v-card>
     <v-dialog
@@ -115,46 +118,117 @@
       transition="dialog-bottom-transition"
       max-width="800"
     >
-      <v-card>
+      <v-card v-if="editData">
         <v-toolbar dark color="primary">
-          <v-btn icon dark @click="closeAddCommiee()">
+          <v-btn icon dark @click="closeEditData()">
             <v-icon>mdi-close</v-icon>
           </v-btn>
-          <v-toolbar-title>เพิ่มตำแหน่ง</v-toolbar-title>
+          <v-toolbar-title
+            >แก้ไข {{ editData?.person?.person_name || "-" }}</v-toolbar-title
+          >
           <v-spacer></v-spacer>
         </v-toolbar>
         <div class="px-4 py-4">
-          <AddCommitee @success="createCommiteeSuccess()" />
+          <v-card outlined>
+            <v-card-title>รายละเอียด</v-card-title>
+
+            <div class="px-4">
+              <div class="d-flex">
+                <div>บัตรประชาชน :</div>
+                <div class="pl-4 font-weight-bold">
+                  {{ editData.person?.id_card || "-" }}
+                </div>
+              </div>
+              <div class="d-flex">
+                <div>ชื่อ-นามสกุล :</div>
+                <div class="pl-4 font-weight-bold">
+                  {{ editData.person?.person_name || "-" }}
+                </div>
+              </div>
+              <div class="d-flex">
+                <div>ตำแหน่ง :</div>
+                <div class="pl-4 font-weight-bold">
+                  {{ editData?.committee?.committee_name || "-" }}
+                </div>
+              </div>
+            </div>
+          </v-card>
+          <div class="mt-4">
+            <v-select
+              v-model="editData.status"
+              :items="committeeOptions"
+              label="สถานะ"
+              name="status"
+              data-vv-as="สถานะ"
+              v-validate="'required'"
+              :error-messages="errors.first('status')"
+              outlined
+            ></v-select>
+          </div>
+          <div class="">
+            <v-btn class="col-12" color="primary" large @click="onEditData()">
+              <v-icon left> mdi-content-save </v-icon>
+              บันทึก
+            </v-btn>
+          </div>
         </div>
       </v-card>
     </v-dialog>
 
     <v-dialog
-      v-model="modalAddActive"
+      v-model="showResult"
       hide-overlay
       transition="dialog-bottom-transition"
       max-width="800"
     >
-      <v-card>
+      <v-card v-if="resultData">
         <v-toolbar dark color="primary">
-          <v-btn icon dark @click="closeAdd()">
+          <!-- <v-btn icon dark @click="closeEditData()">
             <v-icon>mdi-close</v-icon>
-          </v-btn>
-          <v-toolbar-title>เพิ่มคณะกรรมการ</v-toolbar-title>
+          </v-btn> -->
+          <v-toolbar-title
+            >แก้ไข {{ editData?.person?.person_name || "-" }}</v-toolbar-title
+          >
           <v-spacer></v-spacer>
         </v-toolbar>
         <div class="px-4 py-4">
-          <v-card v-if="payloadAdd" outlined>
+          <v-card outlined>
             <v-card-title>รายละเอียด</v-card-title>
 
             <div class="px-4">
-              <AddCommunityBoard
-                :idCard="idcard"
-                :comittee="commitee"
-                @success="closeAdd()"
-              />
+              <div class="d-flex">
+                <div>บัตรประชาชน :</div>
+                <div class="pl-4 font-weight-bold">
+                  {{ editData.person?.id_card || "-" }}
+                </div>
+              </div>
+              <div class="d-flex">
+                <div>ชื่อ-นามสกุล :</div>
+                <div class="pl-4 font-weight-bold">
+                  {{ editData.person?.person_name || "-" }}
+                </div>
+              </div>
+              <div class="d-flex">
+                <div>ตำแหน่ง :</div>
+                <div class="pl-4 font-weight-bold">
+                  {{ editData?.committee?.committee_name || "-" }}
+                </div>
+              </div>
+
+              <div class="d-flex">
+                <div>สถานะ :</div>
+                <div class="pl-4 font-weight-bold">
+                  {{ committeeText[resultData?.status] || "-" }}
+                </div>
+              </div>
             </div>
           </v-card>
+          <div class="">
+            <v-btn class="col-12" large @click="closeResult()">
+              <!-- <v-icon left> mdi-content-save </v-icon> -->
+              ปิดหน้าต่าง
+            </v-btn>
+          </div>
         </div>
       </v-card>
     </v-dialog>
@@ -167,7 +241,7 @@ import AddCommitee from "@/components/commitee/AddCommitee";
 import CommiteeApi from "../services/apis/Commitee";
 import CommunityBoardApi from "../services/apis/CommunityBoard";
 import AddCommunityBoard from "../components/community-boards/AddCommunityBoard";
-import { COMMITTEE_TEXT } from "../constants/committee";
+import { COMMITTEE_TEXT, COMMITTEE_OPTIONS } from "../constants/committee";
 
 require("dayjs/locale/th");
 dayjs.locale("th");
@@ -182,6 +256,7 @@ export default {
 
   data() {
     return {
+      committeeOptions: COMMITTEE_OPTIONS,
       committeeText: COMMITTEE_TEXT,
       title: "คณะกรรมการชุมชน",
       breadcrumbs: [
@@ -207,10 +282,9 @@ export default {
           value: "person.person_name",
         },
         { text: "ปีที่รับตำแหน่ง", value: "start_date" },
-        // { text: "สถานะ", value: "status" },
-
         { text: "ตำแหน่ง", value: "committee.committee_name" },
         { text: "สถานะ", value: "status" },
+        { text: "แก้ไข", value: "edit" },
       ],
       modalActive: false,
       isEdit: false,
@@ -218,23 +292,33 @@ export default {
       commitee: null,
 
       yearNow: dayjs().add(543, "year").format("YYYY"),
-      years: [
-        {
-          value: dayjs().add(543, "year").format("YYYY"),
-          text: dayjs().add(543, "year").format("YYYY"),
-        },
-      ],
       idcard: "",
       items: [],
       meta: {},
       modalAddActive: false,
       payloadAdd: null,
       rules: [(v) => v.length <= 13 || "บัตรประชาชน 13 หลัก"],
+      years: [],
+      editData: null,
+      resultData: null,
+      showResult: false,
     };
   },
+
   mounted() {
     this.loadAvailable();
     this.loadCommitee();
+
+    const startYear = dayjs().add(543, "year").format("YYYY");
+
+    this.years = [];
+    let i = 0;
+    for (i; i < 20; i++) {
+      this.years.push({
+        value: dayjs(startYear).subtract(i, "year").format("YYYY"),
+        text: dayjs(startYear).subtract(i, "year").format("YYYY"),
+      });
+    }
   },
   watch: {
     idcard: {
@@ -244,13 +328,47 @@ export default {
         }
       },
     },
+    commitee: {
+      handler(data) {
+        if (data) {
+          this.loadAvailable(this.idcard, data);
+        }
+      },
+    },
+    yearNow: {
+      handler(data) {
+        if (data) {
+          this.loadAvailable(this.idcard, this.commitee, data);
+        }
+      },
+    },
   },
   methods: {
     dayjs,
-    async loadAvailable(idCard = "", committeeId = "") {
+    async onEditData() {
+      const validate = await this.$validator.validateAll();
+
+      if (!validate) return;
+
+      try {
+        const { data } = await CommunityBoardApi.update(
+          this.editData.community_board_id,
+          {
+            status: this.editData.status,
+          }
+        );
+        this.resultData = data;
+        this.showResult = true;
+        this.$toast.success("แก้ไขข้อมูล สำเร็จ!");
+      } catch (e) {
+        this.$toast.error("เกิดข้อผิดพลาด, กรุณาลองใหม่อีกครั้ง");
+      }
+    },
+    async loadAvailable(idCard = "", committeeId = "", year = "") {
       const { data, meta } = await CommunityBoardApi.getAvailable(
         idCard,
-        committeeId
+        committeeId,
+        year
       );
 
       (this.items = data), (this.meta = meta);
@@ -269,26 +387,22 @@ export default {
         }) || [];
     },
 
-    closeAddCommiee() {
-      this.modalActive = false;
+    handleEditData(data) {
+      this.editData = data;
+      this.modalActive = true;
     },
-    createCommiteeSuccess() {
-      this.modalActive = false;
-      this.loadCommitee();
-    },
-    handleAdd() {
-      this.payloadAdd = {
-        id_card: this.idcard,
-        committee_id: this.commitee,
-        status: "1",
-      };
 
-      this.modalAddActive = true;
+    closeEditData() {
+      this.modalActive = false;
+
+      this.editData = null;
     },
-    closeAdd() {
-      this.modalAddActive = false;
-      this.payloadAdd = null;
+    closeResult() {
       this.loadAvailable();
+      this.showResult = false;
+      this.resultData = null;
+      this.modalActive = false;
+      this.editData = null;
     },
   },
 };

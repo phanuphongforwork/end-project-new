@@ -109,6 +109,16 @@ export default {
       menus,
     };
   },
+  watch: {
+    "$auth.user": {
+      immediate: true,
+      handler(data) {
+        if (!data) {
+          this.$router.push("/login");
+        }
+      },
+    },
+  },
   computed: {
     person() {
       return this.$auth.user;
