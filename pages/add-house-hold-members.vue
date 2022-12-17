@@ -33,10 +33,157 @@
         no-data-text="ไม่พบข้อมูล, ลองค้นหาทะเบียนบ้านใหม่อีกครั้ง"
       >
         <template v-slot:item.actions="{ item }">
-          <a @click="showAddHead(item)" href="#">แสดงรายละเอียด</a>
+          <a @click="showAddHead(item)" href="#">แก้ไขสมาชิกครัวเรือน</a>
+        </template>
+        <template v-slot:item.preview="{ item }">
+          <a @click="showPreview(item)" href="#">แสดงรายละเอียด</a>
         </template>
       </v-data-table>
     </v-card>
+
+    <v-dialog
+      v-model="isShowPreview"
+      :fullscreen="true"
+      transition="dialog-bottom-transition"
+      width="800px"
+      persistent
+      @click:outside="closePreview()"
+    >
+      <v-card v-if="preview">
+        <v-toolbar dark color="primary">
+          <v-btn icon dark @click="closePreview()">
+            <v-icon>mdi-close</v-icon>
+          </v-btn>
+          <v-toolbar-title
+            >สมาชิกครัวเรือน บ้านเลขที่
+            {{ preview.house_number }}</v-toolbar-title
+          >
+          <v-spacer></v-spacer>
+        </v-toolbar>
+        <div class="px-4 py-4">
+          <div class="mt-4">
+            <v-card outlined>
+              <v-card-title>รายละเอียด</v-card-title>
+
+              <div class="px-4">
+                <div class="d-flex">
+                  <div>บ้านเลขที่ :</div>
+                  <div class="pl-4 font-weight-bold">
+                    {{ preview?.house_number || "-" }}
+                  </div>
+                </div>
+                <div class="d-flex mt-2">
+                  <div>เขต :</div>
+                  <div class="pl-4 font-weight-bold">
+                    {{ preview?.district?.district_name || "-" }}
+                  </div>
+                </div>
+                <div class="d-flex mt-2">
+                  <div>แขวง :</div>
+                  <div class="pl-4 font-weight-bold">
+                    {{ preview?.subdistrict?.subdistrict_name || "-" }}
+                  </div>
+                </div>
+                <div class="d-flex mt-2">
+                  <div>ถนน :</div>
+                  <div class="pl-4 font-weight-bold">
+                    {{ preview?.road?.road_name || "-" }}
+                  </div>
+                </div>
+                <div class="d-flex mt-2">
+                  <div>ซอย :</div>
+                  <div class="pl-4 font-weight-bold">
+                    {{ preview?.alley?.alley_name || "-" }}
+                  </div>
+                </div>
+                <div class="d-flex mt-2">
+                  <div>รหัสไปรษณีย์ :</div>
+                  <div class="pl-4 font-weight-bold">
+                    {{ preview?.subdistrict?.post_code || "-" }}
+                  </div>
+                </div>
+                <div class="d-flex mt-2">
+                  <div>เบอร์โทรศัพท์ :</div>
+                  <div class="pl-4 font-weight-bold">
+                    {{ preview?.phone || "-" }}
+                  </div>
+                </div>
+                <div class="d-flex mt-2">
+                  <div>หัวหน้าครัวเรือน :</div>
+                  <div class="pl-4 font-weight-bold">
+                    {{ preview?.person?.person_name || "-" }}
+                  </div>
+                </div>
+                <div class="d-flex mt-2 mb-4">
+                  <div>อาสาสมัคร :</div>
+                  <div class="pl-4 font-weight-bold">
+                    {{ preview?.volunteer?.person_name || "-" }}
+                  </div>
+                </div>
+              </div>
+            </v-card>
+
+            <v-card outlined class="mt-4">
+              <v-card-title class="d-flex">
+                <div class="mt-4">สมาชิก ({{ getMemberCount }}) คน</div>
+              </v-card-title>
+
+              <div class="px-4">
+                <div>
+                  <div
+                    class="d-flex mb-8 mt-4"
+                    v-if="members && members.length === 0"
+                  >
+                    ไม่มีสมาชิกในครัวเรือน
+                  </div>
+
+                  <v-simple-table
+                    v-if="members && members.length > 0"
+                    fixed-header
+                    height="300px"
+                  >
+                    <template v-slot:default>
+                      <thead>
+                        <tr>
+                          <th class="text-left">ชื่อ-นามสกุล</th>
+                          <th class="text-left">บัตรประชาชน</th>
+                          <th class="text-left">วัน/เดือน/ปีเกิด</th>
+                          <th class="text-left">สถานะในครัวเรือน</th>
+                          <th class="text-left">สถานะ</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr v-for="item in members" :key="item">
+                          <td>{{ item?.person?.person_name || "-" }}</td>
+                          <td>{{ item?.person?.id_card || "-" }}</td>
+                          <td>
+                            {{
+                              dayjs(item?.person?.date_of_birth)
+                                .add(543, "year")
+                                .format("DD MMMM YYYY") || "-"
+                            }}
+                          </td>
+                          <td>
+                            {{ getMemberStatus(item?.member_status) || "-" }}
+                          </td>
+                          <td>{{ getStatus(item?.status) || "-" }}</td>
+                        </tr>
+                      </tbody>
+                    </template>
+                  </v-simple-table>
+                </div>
+              </div>
+            </v-card>
+            <div class="d-flex justify-center">
+              <v-btn @click="closePreview()" class="col-12 mt-4" large>
+                <v-icon left> mdi-close </v-icon>
+                ปิดหน้านี้
+              </v-btn>
+            </div>
+          </div>
+        </div>
+      </v-card>
+    </v-dialog>
 
     <v-dialog
       v-model="showEditData"
@@ -368,7 +515,8 @@ export default {
         { text: "เขต", value: "district.district_name" },
         { text: "แขวง", value: "subdistrict.subdistrict_name" },
         { text: "รหัสไปรษณีย์", value: "subdistrict.post_code" },
-        { text: "แสดงรายละเอียด", value: "actions", sortable: false },
+        { text: "แสดงรายละเอียด", value: "preview", sortable: false },
+        { text: "แก้ไขสมาชิกครัวเรือน", value: "actions", sortable: false },
       ],
       members: [],
       houseHolds: [],
@@ -414,6 +562,8 @@ export default {
       ],
       editDataMember: null,
       showEditDataMember: false,
+      isShowPreview: false,
+      preview: null,
     };
   },
   computed: {
@@ -502,6 +652,7 @@ export default {
       this.editData = house;
       this.showEditData = true;
     },
+
     closeModal() {
       this.members = [];
       this.editData = null;
@@ -572,6 +723,16 @@ export default {
       } catch (e) {
         this.$toast.error("เกิดข้อผิดพลาด, กรุณาลองใหม่อีกครั้ง");
       }
+    },
+    async showPreview(item) {
+      await this.loadMember(item?.house_id);
+      this.preview = item;
+      this.isShowPreview = true;
+    },
+    closePreview() {
+      this.isShowPreview = false;
+
+      this.preview = null;
     },
   },
 };
