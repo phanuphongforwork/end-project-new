@@ -13,6 +13,13 @@ export default {
   components: {
     Breadcrumb,
   },
+  mounted() {
+    if (this.$auth.user) {
+      if (this.$auth.user.role === "3") {
+        this.$router.push("my-house");
+      }
+    }
+  },
   data() {
     return {
       title: "หน้าแรก",

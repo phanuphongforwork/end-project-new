@@ -12,6 +12,12 @@ class HouseHold extends Api {
 
     return response;
   }
+
+  static async getMyHouse() {
+    const response = await ApiUtil.$axios.$get(`${this.url}/get-my-house`);
+
+    return response;
+  }
 }
 
 export default HouseHold;

@@ -4,7 +4,7 @@
       <Breadcrumb :items="breadcrumbs" :title="title" />
     </div>
 
-    <div>
+    <div v-if="isAdmin">
       <v-btn
         color="primary"
         large
@@ -288,7 +288,14 @@ export default {
       ],
     };
   },
-  computed: {},
+  computed: {
+    isAdmin() {
+      if (this.$auth?.user?.role === "1") {
+        return true;
+      }
+      return false;
+    },
+  },
   watch: {
     house_number: {
       handler(data) {
