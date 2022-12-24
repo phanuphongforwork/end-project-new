@@ -45,14 +45,22 @@
         no-results-text="ไม่พบข้อมูล"
         no-data-text="ไม่พบข้อมูล, ลองค้นหาทะเบียนบ้านใหม่อีกครั้ง"
       >
+        <template v-slot:item.created_at="{ item }">
+          {{ dayjs(item.created_at).add(543, "year").format("DD MMMM YYYY") }}
+        </template>
       </v-data-table>
     </v-card>
   </div>
 </template>
 
 <script>
+import dayjs from "dayjs";
 import Breadcrumb from "@/components/Breadcrumbs";
 import DistrictApi from "../services/apis/District";
+
+require("dayjs/locale/th");
+dayjs.locale("th");
+
 export default {
   components: {
     Breadcrumb,
@@ -83,6 +91,12 @@ export default {
           sortable: false,
           value: "district_name",
         },
+        {
+          text: "วันที่สร้าง",
+          align: "start",
+          sortable: false,
+          value: "created_at",
+        },
       ],
 
       items: [],
@@ -103,6 +117,7 @@ export default {
     this.loadData();
   },
   methods: {
+    dayjs,
     async loadData() {
       try {
         this.loading = true;

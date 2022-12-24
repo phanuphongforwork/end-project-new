@@ -78,22 +78,22 @@ export default {
       page: 1,
       headers: [
         {
-          text: "ชื่อถนน",
+          text: "ชื่อแขวง",
           align: "start",
           sortable: false,
           value: "subdistrict_name",
-        },
-        {
-          text: "ชื่อถนน",
-          align: "start",
-          sortable: false,
-          value: "post_code",
         },
         {
           text: "เขต",
           align: "start",
           sortable: false,
           value: "district.district_name",
+        },
+        {
+          text: "รหัสไปรษณีย์",
+          align: "start",
+          sortable: false,
+          value: "post_code",
         },
       ],
 
