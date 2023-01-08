@@ -62,13 +62,6 @@ export default [
         to: "/edit-house-holds",
         level: [1],
       },
-      // {
-      //   text: "ออกรายงาน",
-      //   icon: "mdi-shield-account",
-      //   active: false,
-      //   to: "/reports",
-      //   level: [1],
-      // },
     ],
   },
   {
@@ -89,13 +82,6 @@ export default [
         to: "/edit-persons",
         level: [1, 2],
       },
-      // {
-      //   text: "ออกรายงาน",
-      //   icon: "mdi-shield-account",
-      //   active: false,
-      //   to: "/reports",
-      //   level: [1],
-      // },
     ],
   },
 
@@ -119,6 +105,25 @@ export default [
     ],
   },
 
+  {
+    title: "กิจกรรม",
+    subMenus: [
+      {
+        text: "เพิ่มกิจกรรม",
+        icon: "mdi-coffee",
+        active: false,
+        to: "/activities",
+        level: [1],
+      },
+      {
+        text: "ผู้เข้าร่วมกิจกรรม",
+        icon: "mdi-coffee-to-go",
+        active: false,
+        to: "/edit-activity-members",
+        level: [1],
+      },
+    ],
+  },
   {
     title: "ข้อมูลพื้นฐาน",
     subMenus: [

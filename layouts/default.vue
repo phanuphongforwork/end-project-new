@@ -47,20 +47,7 @@
     <v-app-bar color="primary" dark dense app>
       <v-app-bar-nav-icon @click="drawer = !drawer"></v-app-bar-nav-icon>
 
-      <!-- <v-toolbar-title>ระบบทะเบียนครัวเรือน</v-toolbar-title> -->
-
       <v-spacer></v-spacer>
-
-      <!-- <v-menu >
-        <template v-slot:activator="{ on }">
-
-          
-          <v-btn color="primary" depressed v-on="on">
-            <v-icon left> mdi-account-circle-outline </v-icon>
-            Admin
-          </v-btn>
-        </template>
-      </v-menu> -->
 
       <v-menu bottom left class="d-md-none d-lg-flex" offset-y>
         <template v-slot:activator="{ on }">
@@ -126,8 +113,11 @@ export default {
   },
   methods: {
     show(submenu) {
+      if (!this.$auth?.user?.role) {
+        this.$router.push("/login");
+      }
       if (submenu && submenu.level && submenu.level.length > 0) {
-        const myLevel = this.$auth.user.role;
+        const myLevel = this.$auth?.user?.role;
         return submenu.level.some((item) => {
           return item === Number(myLevel);
         });

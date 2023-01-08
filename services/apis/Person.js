@@ -13,6 +13,18 @@ class Person extends Api {
 
     return response;
   }
+  static async getNotInActivity(params = {}, userIds = []) {
+    const query = queryStringStringify(params);
+
+    const response = await ApiUtil.$axios.$post(
+      `${this.url}/not-in-activity?${query}`,
+      {
+        userIds,
+      }
+    );
+
+    return response;
+  }
 }
 
 export default Person;
