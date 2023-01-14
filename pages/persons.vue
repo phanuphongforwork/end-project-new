@@ -56,10 +56,6 @@
           {{ getAge(item.date_of_birth) }}
         </template>
 
-        <template v-slot:item.role="{ item }">
-          <Role :role="item.role" />
-        </template>
-
         <template v-slot:item.actions="{ item }">
           <a @click="showDetail(item)" href="#">ดูข้อมูลเพิ่มเติม</a>
         </template>
@@ -109,12 +105,6 @@
               <v-card-title>รายละเอียด</v-card-title>
 
               <div class="px-4">
-                <div class="d-flex">
-                  <div class="mt-3">บทบาท :</div>
-                  <div class="pl-4 font-weight-bold">
-                    <Role :role="detail.role" />
-                  </div>
-                </div>
                 <div class="d-flex">
                   <div>คำนำหน้า :</div>
                   <div class="pl-4 font-weight-bold">
@@ -307,12 +297,7 @@ export default {
           sortable: false,
           value: "phone",
         },
-        {
-          text: "บทบาท",
-          align: "center",
-          sortable: false,
-          value: "role",
-        },
+
         { text: "ดูข้อมูลเพิ่มเติม", value: "actions", sortable: false },
       ],
       items: [],

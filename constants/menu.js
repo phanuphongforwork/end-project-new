@@ -106,17 +106,17 @@ export default [
   },
 
   {
-    title: "กิจกรรม",
+    title: "กิจกรรมชุมชน",
     subMenus: [
       {
-        text: "เพิ่มกิจกรรม",
+        text: "กิจกรรมชุมชน",
         icon: "mdi-coffee",
         active: false,
         to: "/activities",
         level: [1],
       },
       {
-        text: "ผู้เข้าร่วมกิจกรรม",
+        text: "การเข้าร่วมกิจกรรม",
         icon: "mdi-coffee-to-go",
         active: false,
         to: "/edit-activity-members",

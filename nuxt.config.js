@@ -92,6 +92,13 @@ export default {
         },
       },
     },
+    // rewriteRedirects: false,
+    redirect: {
+      login: "/login",
+      logout: "/",
+      callback: "/login",
+      home: "/landing-page",
+    },
     router: {
       middleware: ["auth"],
     },

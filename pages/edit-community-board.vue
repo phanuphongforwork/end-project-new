@@ -12,12 +12,12 @@
               <label for="">ปีที่ค้นหา :</label>
             </v-col>
             <v-col cols="12" md="12" lg="5">
-              <v-select
+              <v-text-field
                 v-model="yearNow"
-                :items="years"
-                class="col-12"
+                single-line
+                hide-details
                 outlined
-              ></v-select>
+              ></v-text-field>
             </v-col>
           </v-row>
         </v-container>

@@ -42,10 +42,6 @@
           {{ dayjs(item.date_of_birth).add(543, "year").format("DD/MM/YYYY") }}
         </template>
 
-        <template v-slot:item.role="{ item }">
-          <Role :role="item.role" />
-        </template>
-
         <template v-slot:item.actions="{ item }">
           <a @click="showEdit(item)" href="#">แก้ไขสมาชิกชุมชน</a>
         </template>
@@ -373,12 +369,7 @@ export default {
           sortable: false,
           value: "phone",
         },
-        {
-          text: "บทบาท",
-          align: "center",
-          sortable: false,
-          value: "role",
-        },
+
         { text: "แก้ไขสมาชิกชุมชน", value: "actions", sortable: false },
       ],
       items: [],

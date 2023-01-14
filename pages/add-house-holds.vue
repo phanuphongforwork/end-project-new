@@ -296,6 +296,7 @@ export default {
         const { data } = await District.getAll({
           page: 1,
           perPage: 1000,
+          "filters[district_id]": 1023,
         });
 
         this.districtOptions = data.map((value) => {
@@ -313,6 +314,7 @@ export default {
         const { data } = await SubDistrict.getAll({
           page: 1,
           perPage: 1000,
+          "filters[subdistrict_id]": 102303,
         });
 
         this.subdistrictOptions = data.map((value) => {

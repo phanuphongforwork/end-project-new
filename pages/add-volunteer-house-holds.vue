@@ -45,7 +45,7 @@
 
     <v-dialog
       v-model="showEditData"
-      :fullscreen="false"
+      :fullscreen="true"
       transition="dialog-bottom-transition"
       width="800px"
       persistent
@@ -129,23 +129,63 @@
               <v-card-title>เลือกอาสาสมัคร</v-card-title>
               <div class="px-4">
                 <div>
-                  <v-select
-                    v-model="editData.volunteer_id"
-                    :items="volunteerOptions"
-                    label="เลือกอาสาสมัคร"
-                    name="volunteer"
-                    data-vv-as="อาสาสมัคร"
-                    v-validate="''"
-                    :error-messages="errors && errors.first('volunteer')"
-                    outlined
-                  >
-                  </v-select>
+                  <v-card-title class="col-12">
+                    <div class="col-12">
+                      <v-text-field
+                        v-model="search"
+                        class="col-12"
+                        append-icon="mdi-magnify"
+                        label="ค้นหาบัตรประชาชน"
+                        single-line
+                        hide-details
+                        outlined
+                      ></v-text-field>
+                    </div>
+                  </v-card-title>
+                  <v-simple-table fixed-header height="300px">
+                    <template v-slot:default>
+                      <thead>
+                        <tr>
+                          <th class="text-left">ชื่อ-นามสกุล</th>
+                          <th class="text-left">บัตรประชาชน</th>
+
+                          <th class="text-left">ตั้งเป็นอาสา</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr v-for="item in volunteerOptions" :key="item">
+                          <td>{{ item?.person_name || "-" }}</td>
+                          <td>{{ item?.id_card || "-" }}</td>
+
+                          <td>
+                            <v-btn
+                              v-if="
+                                editData &&
+                                editData.volunteer_id !== item.person_id
+                              "
+                              @click="submit(item.person_id)"
+                              color="primary"
+                            >
+                              <v-icon left> mdi-account </v-icon>
+                              ตั้งเป็นอาสา
+                            </v-btn>
+                          </td>
+                        </tr>
+                      </tbody>
+                    </template>
+                  </v-simple-table>
                 </div>
               </div>
             </v-card>
-            <v-btn color="primary" class="col-12 mt-4" large @click="submit()">
-              <v-icon left> mdi-content-save </v-icon>
-              เพิ่มอาสาสมัคร
+            <v-btn
+              color="primary"
+              outlined
+              class="col-12 mt-4"
+              large
+              @click="closeModal()"
+            >
+              <!-- <v-icon left> mdi-account </v-icon> -->
+              ปิดหน้าต่าง
             </v-btn>
           </div>
         </div>
@@ -155,9 +195,13 @@
 </template>
 
 <script>
+import dayjs from "dayjs";
 import Breadcrumb from "@/components/Breadcrumbs";
 import HouseHold from "../services/apis/HouseHold";
 import Person from "../services/apis/Person";
+
+require("dayjs/locale/th");
+dayjs.locale("th");
 export default {
   components: {
     Breadcrumb,
@@ -213,16 +257,17 @@ export default {
       editData: null,
       volunteerOptions: [],
       volunteer: null,
+      search: undefined,
     };
   },
   watch: {
-    house_number: {
+    search: {
       handler(data) {
         if (data) {
-          this.loadData();
+          this.loadPerson();
         } else {
-          this.house_number = undefined;
-          this.loadData();
+          this.search = undefined;
+          this.loadPerson();
         }
       },
     },
@@ -232,6 +277,7 @@ export default {
     this.loadData();
   },
   methods: {
+    dayjs,
     async loadData() {
       try {
         this.loading = true;
@@ -254,24 +300,10 @@ export default {
         const { data: persons } = await Person.getAll({
           perPage: 1000,
           "filters[role]": "2",
+          "filters[id_card]": this.search ?? undefined,
         });
 
-        const personMap = persons.map((data) => {
-          return {
-            value: data.person_id,
-            text: data.person_name,
-          };
-        });
-
-        this.volunteerOptions = personMap;
-
-        this.volunteerOptions = [
-          {
-            value: "",
-            text: "ยังไม่ได้เลือกอาสาสมัคร",
-          },
-          ...personMap,
-        ];
+        this.volunteerOptions = persons;
       } catch {}
     },
     updateParam(paramName, value) {
@@ -313,18 +345,19 @@ export default {
       this.showEditData = false;
       this.volunteer = null;
     },
-    async submit() {
+    async submit(person_id) {
       const validate = await this.$validator.validateAll();
       if (!validate) return;
 
       try {
         const { data } = await HouseHold.update(this.editData.house_id, {
-          volunteer_id: this.editData.volunteer_id,
+          volunteer_id: person_id,
         });
 
         this.$toast.success("เพิ่มอาสาสมัคร สำเร็จ!");
 
         this.closeModal();
+        this.loadData();
       } catch (e) {
         this.$toast.error("เกิดข้อผิดพลาด, กรุณาลองใหม่อีกครั้ง");
       } finally {
