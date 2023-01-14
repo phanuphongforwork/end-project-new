@@ -25,6 +25,12 @@ class Person extends Api {
 
     return response;
   }
+
+  static async updateLevels(payload) {
+    const response = await ApiUtil.$axios.$post(`${this.url}/levels`, payload);
+
+    return response;
+  }
 }
 
 export default Person;

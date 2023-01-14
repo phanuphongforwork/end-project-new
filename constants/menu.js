@@ -114,7 +114,13 @@ export default [
         to: "persons",
         level: [1],
       },
-
+      {
+        text: "จัดการบัญชีผู้ใช้งาน",
+        icon: "mdi-shield-check ",
+        active: false,
+        to: "/person-roles",
+        level: [1],
+      },
       {
         text: "แก้ไขสมาชิกชุมชน",
         icon: "mdi-account-edit ",
