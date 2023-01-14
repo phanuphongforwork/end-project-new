@@ -15,7 +15,7 @@
       <v-list nav dense>
         <div v-for="(item, i) in menus" :key="i" v-if="active(item)">
           <div v-if="item && item.subMenus.length > 0" class="mt-4">
-            <v-subheader>
+            <v-subheader v-if="item?.title">
               <h2>
                 <p class="font-weight-black">{{ item.title }}</p>
               </h2>

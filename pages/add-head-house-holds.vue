@@ -34,7 +34,7 @@
         no-data-text="ไม่พบข้อมูล, ลองค้นหาทะเบียนบ้านใหม่อีกครั้ง"
       >
         <template v-slot:item.actions="{ item }">
-          <a @click="showAddHead(item)" href="#">เพิ่มหัวหน้าครัวเรือน</a>
+          <a @click="showAddHead(item)" href="#">เลือกหัวหน้าครัวเรือน</a>
         </template>
       </v-data-table>
     </v-card>

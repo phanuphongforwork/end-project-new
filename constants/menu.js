@@ -1,24 +1,64 @@
 export default [
   {
-    title: "หน้าแรก",
+    // title: "หน้าแรก",
+    // subMenus: [
+    //   {
+    //     text: "หน้าแรก",
+    //     icon: "mdi-home ",
+    //     active: false,
+    //     to: "/",
+    //     level: [3],
+    //   },
+    // ],
+  },
+  {
+    head: "อาสาสมัคร",
     subMenus: [
       {
-        text: "หน้าแรก",
+        text: "ครัวเรือนที่รับผิดชอบ",
         icon: "mdi-home ",
         active: false,
-        to: "/",
-        level: [1, 2],
+        to: "house-holds",
+        level: [2],
+      },
+      {
+        text: "แก้ไขเบียนครัวเรือน",
+        icon: "mdi-home-edit ",
+        active: false,
+        to: "/edit-house-holds",
+        level: [2],
+      },
+      {
+        text: "แก้ไขข้อมูลสมาชิกครัวเรือน",
+        icon: "mdi-account-edit ",
+        active: false,
+        to: "/edit-persons",
+        level: [2],
+      },
+      {
+        text: "เลือกหัวหน้าครัวเรือน",
+        icon: "mdi-book-open-variant ",
+        active: false,
+        to: "/add-head-house-holds",
+        level: [2],
       },
     ],
   },
   {
-    title: "ข้อมูลของฉัน",
+    head: "ชาวบ้าน",
     subMenus: [
       {
-        text: "ทะเบียนบครัวเรือนของฉัน",
+        text: "ทะเบียนครัวเรือนของฉัน",
         icon: "mdi-home ",
         active: false,
         to: "/my-house",
+        level: [3],
+      },
+      {
+        text: "การเข้าร่วมกิจกรรม",
+        icon: "mdi-coffee-to-go",
+        active: false,
+        to: "/edit-activity-members",
         level: [3],
       },
     ],
@@ -31,7 +71,7 @@ export default [
         icon: "mdi-home ",
         active: false,
         to: "house-holds",
-        level: [1, 2],
+        level: [1],
       },
       {
         text: "เพิ่มสมาชิกครัวเรือน",
@@ -80,7 +120,7 @@ export default [
         icon: "mdi-account-edit ",
         active: false,
         to: "/edit-persons",
-        level: [1, 2],
+        level: [1],
       },
     ],
   },
