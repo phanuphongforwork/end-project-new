@@ -290,7 +290,8 @@ export default {
   },
   computed: {
     isAdmin() {
-      if (this.$auth?.user?.role === "1") {
+      const myLevel = localStorage.getItem("user_level") || null;
+      if (Number(myLevel) === 1) {
         return true;
       }
       return false;

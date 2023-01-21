@@ -97,7 +97,7 @@ export default {
       login: "/login",
       logout: "/",
       callback: "/login",
-      home: "/landing-page",
+      // home: "/landing-page",
     },
     router: {
       middleware: ["auth"],

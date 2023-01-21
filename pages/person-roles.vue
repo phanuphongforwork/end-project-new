@@ -135,7 +135,7 @@
                     <td>{{ item?.level.level_name || "-" }}</td>
                     <!-- <td>นำออก</td> -->
                   </tr>
-                  <tr v-if="!detail?.levels?.length">
+                  <tr v-if="!myLevel.length">
                     ไม่มีสิทธ์ใดๆ
                   </tr>
                 </tbody>
@@ -300,7 +300,7 @@ export default {
           text: "บัญชีเข้าสู่ระบบ",
           align: "start",
           sortable: false,
-          value: "id_card",
+          value: "username",
         },
         {
           text: "วัน/เดือน/ปีเกิด",

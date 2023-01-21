@@ -15,7 +15,9 @@ export default {
   },
   mounted() {
     if (this.$auth.user) {
-      if (this.$auth.user.role === "3") {
+      const myLevel = localStorage.getItem("user_level") || null;
+
+      if (Number(myLevel) === 3) {
         this.$router.push("my-house");
       }
     }

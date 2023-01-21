@@ -23,7 +23,15 @@
           ></v-text-field>
         </v-form>
 
-        <v-row justify="end" class="mt-2">
+        <v-row justify="center">
+          <v-radio-group v-model="radioGroup" row>
+            <v-radio label="ผู้ดูแลระบบ" :value="1"></v-radio>
+            <v-radio label="อาสาสมัคร" :value="2"></v-radio>
+            <v-radio label="สมาชิกชุมชน" :value="3"></v-radio>
+          </v-radio-group>
+        </v-row>
+
+        <v-row justify="end" class="mt-4">
           <v-btn
             color="primary"
             dark
@@ -49,6 +57,7 @@ export default {
       username: "",
       password: "",
       loading: false,
+      radioGroup: 1,
     };
   },
   methods: {
@@ -59,13 +68,18 @@ export default {
           data: {
             username: this.username,
             password: this.password,
+            role: this.radioGroup,
           },
         });
 
-        this.loading = false;
+        localStorage.setItem("user_level", this.radioGroup);
 
-        // this.$router.push("/");
+        this.loading = false;
       } catch (error) {
+        const level = localStorage.getItem("user_level") || null;
+        if (level) {
+          localStorage.removeItem("user_level");
+        }
         this.$toast.error("เข้าสู่ระบบไม่สำเร็จ กรุณาลองใหม่อีกครั้ง");
       } finally {
         this.loading = false;

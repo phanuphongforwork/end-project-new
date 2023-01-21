@@ -199,7 +199,7 @@ export default {
           this.previewData = data[0];
         }
       } catch {
-        this.$toast.error("เกิดข้อผิดพลาด, กรุณาลองใหม่อีกครั้ง");
+        // this.$toast.error("เกิดข้อผิดพลาด, กรุณาลองใหม่อีกครั้ง");
       }
     },
     updateParam(paramName, value) {

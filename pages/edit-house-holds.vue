@@ -61,7 +61,7 @@
                   name="house_number"
                   data-vv-as="บ้านเลขที่"
                   v-validate="'required'"
-                  :disabled="!isAdmin"
+                  :disabled="true"
                   :error-messages="errors && errors.first('house_number')"
                   outlined
                 >
@@ -75,7 +75,7 @@
                   name="community"
                   data-vv-as="ชุมชน"
                   v-validate="'required'"
-                  :disabled="!isAdmin"
+                  :disabled="true"
                   :error-messages="errors && errors.first('community')"
                   outlined
                 ></v-select>
@@ -88,7 +88,7 @@
                   name="alley"
                   data-vv-as="ซอย"
                   v-validate="'required'"
-                  :disabled="!isAdmin"
+                  :disabled="true"
                   :error-messages="errors && errors.first('alley')"
                   outlined
                 >
@@ -102,7 +102,7 @@
                   name="road"
                   data-vv-as="ถนน"
                   v-validate="'required'"
-                  :disabled="!isAdmin"
+                  :disabled="true"
                   :error-messages="errors && errors.first('road')"
                   outlined
                 >
@@ -116,7 +116,7 @@
                   name="district"
                   data-vv-as="เขต"
                   v-validate="'required'"
-                  :disabled="!isAdmin"
+                  :disabled="true"
                   :error-messages="errors && errors.first('district')"
                   outlined
                 >
@@ -130,7 +130,7 @@
                   name="subdistrict"
                   data-vv-as="แขวง"
                   v-validate="'required'"
-                  :disabled="!isAdmin"
+                  :disabled="true"
                   :error-messages="errors && errors.first('subdistrict')"
                   outlined
                 >
@@ -346,7 +346,8 @@ export default {
   },
   computed: {
     isAdmin() {
-      return this.$auth.user.role === "1";
+      const level = localStorage.getItem("user_level") || null;
+      return Number(level) === 1;
     },
   },
   watch: {

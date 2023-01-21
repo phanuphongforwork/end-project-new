@@ -220,12 +220,6 @@
 
               <div class="px-4">
                 <div class="d-flex">
-                  <div class="mt-3">บทบาท :</div>
-                  <div class="pl-4 font-weight-bold">
-                    <Role :role="resultData.role" />
-                  </div>
-                </div>
-                <div class="d-flex">
                   <div>ชื่อ-นามสกุล :</div>
                   <div class="pl-4 font-weight-bold">
                     {{ resultData?.person_name || "-" }}

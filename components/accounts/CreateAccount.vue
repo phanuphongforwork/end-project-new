@@ -5,19 +5,6 @@
         <v-col cols="12">
           <v-alert type="info">ส่วนสำหรับจัดการบทบาทของบุคคล</v-alert>
         </v-col>
-        <v-col cols="12" md="3" lg="4">
-          <v-select
-            v-model="role"
-            :items="roleOptions"
-            label="บทบาท"
-            name="role"
-            data-vv-as="บทบาท"
-            v-validate="'required'"
-            :error-messages="errors && errors.first('role')"
-            outlined
-          >
-          </v-select>
-        </v-col>
         <v-col v-if="showUserPassword" cols="12" md="3" lg="4">
           <v-text-field
             v-model="username"
@@ -230,12 +217,6 @@
 
               <div class="px-4">
                 <div class="d-flex">
-                  <div>บทบาท :</div>
-                  <div class="pl-4 font-weight-bold">
-                    <Role :role="resultData.role" />
-                  </div>
-                </div>
-                <div class="d-flex">
                   <div>คำนำหน้า :</div>
                   <div class="pl-4 font-weight-bold">
                     {{ prefixText[resultData?.prefix] || "-" }}
@@ -438,7 +419,6 @@ export default {
         chronic_disease: this.chronicDisease,
         violent_behavior: this.violentBehavior,
         username: this.username,
-        role: this.role,
         prefix: this.prefix,
       };
 

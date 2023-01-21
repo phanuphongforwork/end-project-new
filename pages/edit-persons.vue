@@ -70,20 +70,6 @@
               <v-col cols="12">
                 <v-alert type="info">ส่วนสำหรับจัดการบทบาทของบุคคล</v-alert>
               </v-col>
-              <v-col cols="12" md="3" lg="4">
-                <v-select
-                  v-model="editData.role"
-                  :items="roleOptions"
-                  label="สมาชิก"
-                  name="role"
-                  data-vv-as="บทบาท"
-                  v-validate="''"
-                  :error-messages="errors && errors.first('role')"
-                  outlined
-                  :disabled="isVolunteer"
-                >
-                </v-select>
-              </v-col>
               <v-col v-if="showUserPassword" cols="12" md="3" lg="4">
                 <v-text-field
                   v-model="editData.username"
@@ -93,7 +79,7 @@
                   v-validate="'required'"
                   :error-messages="errors && errors.first('username')"
                   outlined
-                  :disabled="isVolunteer"
+                  :disabled="isVolunteer || isAdmin"
                 >
                 </v-text-field>
               </v-col>
@@ -127,6 +113,7 @@
                   v-validate="'required'"
                   :error-messages="errors && errors.first('prefix')"
                   outlined
+                  :disabled="isAdmin || isVolunteer"
                 >
                 </v-select>
               </v-col>
@@ -139,6 +126,7 @@
                   v-validate="'required'"
                   :error-messages="errors && errors.first('personName')"
                   outlined
+                  :disabled="isAdmin || isVolunteer"
                 >
                 </v-text-field>
               </v-col>
@@ -151,7 +139,7 @@
                   v-validate="'required|length:13|numeric'"
                   :error-messages="errors && errors.first('idCard')"
                   outlined
-                  :disabled="isVolunteer"
+                  :disabled="isVolunteer || isAdmin"
                 >
                 </v-text-field>
               </v-col>
@@ -172,7 +160,7 @@
                       @click:clear="editData.date_of_birth = null"
                       :error-messages="errors && errors.first('dob')"
                       outlined
-                      :disabled="isVolunteer"
+                      :disabled="isVolunteer || isAdmin"
                     ></v-text-field>
                   </template>
                   <v-date-picker
@@ -182,7 +170,7 @@
                     data-vv-as="วัน/เดือน/ปีเกิด"
                     v-validate="'required'"
                     locale="th-TH"
-                    :disabled="isVolunteer"
+                    :disabled="isVolunteer || isAdmin"
                   ></v-date-picker>
                 </v-menu>
               </v-col>
@@ -195,6 +183,7 @@
                   v-validate="'required|numeric|length:10'"
                   :error-messages="errors && errors.first('phone')"
                   outlined
+                  :disabled="isVolunteer"
                 >
                 </v-text-field>
               </v-col>
@@ -214,6 +203,7 @@
                   v-validate="''"
                   :error-messages="errors && errors.first('newborn')"
                   outlined
+                  :disabled="isAdmin"
                 >
                 </v-select>
               </v-col>
@@ -227,6 +217,7 @@
                   v-validate="''"
                   :error-messages="errors && errors.first('pregnant')"
                   outlined
+                  :disabled="isAdmin"
                 >
                 </v-select>
               </v-col>
@@ -237,12 +228,14 @@
                 <v-switch
                   v-model="editData.postpartum"
                   label="สถานะหญิงหลังคลอด"
+                  :disabled="isAdmin"
                 ></v-switch>
               </v-col>
               <v-col cols="12" md="3">
                 <v-switch
                   v-model="editData.disabled"
                   label="สถานะผู้พิการ"
+                  :disabled="isAdmin"
                 ></v-switch>
               </v-col>
 
@@ -250,12 +243,14 @@
                 <v-switch
                   v-model="editData.chronic_disease"
                   label="สถานะป่วยโรคเรื้อรัง"
+                  :disabled="isAdmin"
                 ></v-switch>
               </v-col>
               <v-col cols="12" md="3">
                 <v-switch
                   v-model="editData.violent_behavior"
                   label="มีพฤติกรรมเสี่ยงด้านความรุนแรง"
+                  :disabled="isAdmin"
                 ></v-switch>
               </v-col>
             </v-row>
@@ -394,8 +389,14 @@ export default {
   },
   computed: {
     isVolunteer() {
-      return this.$auth.user.role === "2" ? true : false;
+      const myLevel = localStorage.getItem("user_level") || null;
+      return Number(myLevel) === 2 ? true : false;
     },
+    isAdmin() {
+      const myLevel = localStorage.getItem("user_level") || null;
+      return Number(myLevel) === 1 ? true : false;
+    },
+
     prefixOptions() {
       return [...PREFIX_OPTIONS];
     },
@@ -455,7 +456,6 @@ export default {
         chronic_disease: this.editData.chronic_disease,
         violent_behavior: this.editData.violent_behavior,
         username: this.editData.username,
-        role: this.editData.role,
         prefix: this.editData.prefix,
       };
 
