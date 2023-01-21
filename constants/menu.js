@@ -135,12 +135,20 @@ export default [
     title: "คณะกรรมการชุมชน",
     subMenus: [
       {
+        text: "ตำแหน่ง",
+        icon: "mdi-order-alphabetical-ascending",
+        active: false,
+        to: "/committees",
+        level: [1],
+      },
+      {
         text: "เพิ่มกรรมการชุมชน",
         icon: "mdi-account-multiple",
         active: false,
         to: "/community-board",
         level: [1],
       },
+
       {
         text: "แก้ไขคณะกรรมการชุมชน",
         icon: "mdi-account-multiple",

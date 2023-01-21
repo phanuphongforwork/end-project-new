@@ -3,7 +3,6 @@
     <div>
       <Breadcrumb :items="breadcrumbs" :title="title" />
     </div>
-
     <div>
       <v-btn
         color="primary"
@@ -12,7 +11,7 @@
         @click="modalActive = true"
       >
         <v-icon left> mdi-plus-circle </v-icon>
-        สร้างซอย
+        สร้างตำแหน่ง
       </v-btn>
     </div>
     <v-card class="mt-6" outlined>
@@ -29,7 +28,7 @@
         @update:items-per-page="changePerPage"
         @update:page="changePage"
         no-results-text="ไม่พบข้อมูล"
-        no-data-text="ไม่พบข้อมูล, ลองค้นหาทะเบียนบ้านใหม่อีกครั้ง"
+        no-data-text="ไม่พบข้อมูล, ลองค้นหาใหม่อีกครั้ง"
       >
       </v-data-table>
     </v-card>
@@ -47,18 +46,18 @@
           <v-btn icon dark @click="closeModal()">
             <v-icon>mdi-close</v-icon>
           </v-btn>
-          <v-toolbar-title>สร้างซอย</v-toolbar-title>
+          <v-toolbar-title>สร้างตำแหน่ง</v-toolbar-title>
           <v-spacer></v-spacer>
         </v-toolbar>
         <div class="px-4 py-4">
           <div>
             <v-text-field
-              v-model="alley"
-              label="ชื่อซอย"
-              name="alley"
-              data-vv-as="ชื่อซอย"
+              v-model="committee"
+              label="ชื่อตำแหน่ง"
+              name="committee"
+              data-vv-as="ชื่อตำแหน่ง"
               v-validate="'required'"
-              :error-messages="errors && errors.first('alley')"
+              :error-messages="errors && errors.first('committee')"
               outlined
             >
             </v-text-field>
@@ -80,16 +79,16 @@
 
 <script>
 import Breadcrumb from "@/components/Breadcrumbs";
-import AlleyApi from "../services/apis/Alley";
+import Commitee from "../services/apis/Commitee";
+
 export default {
   components: {
     Breadcrumb,
   },
-
   data() {
     return {
-      loading: false,
-      title: "ซอย",
+      modalActive: false,
+      title: "ตำแหน่ง",
       breadcrumbs: [
         {
           text: "หน้าแรก",
@@ -97,29 +96,12 @@ export default {
           href: "/",
         },
         {
-          text: "ซอย",
+          text: "ตำแหน่ง",
           disabled: false,
-          href: "alley",
+          href: "/committees",
         },
       ],
       search: "",
-      page: 1,
-      headers: [
-        {
-          text: "ชื่อซอย",
-          align: "start",
-          sortable: false,
-          value: "alley_name",
-        },
-        {
-          text: "แขวง",
-          align: "start",
-          sortable: false,
-          value: "subdistrict.subdistrict_name",
-        },
-      ],
-
-      items: [],
       meta: {},
       param: {
         page: 1,
@@ -127,14 +109,21 @@ export default {
         q: "",
         sort: "created_at",
         order: "desc",
-        includes: "subdistrict",
+        includes: "",
       },
-      alley: "",
-      modalActive: false,
+      loading: false,
+      headers: [
+        {
+          text: "ชื่อตำแหน่ง",
+          align: "start",
+          sortable: false,
+          value: "committee_name",
+        },
+      ],
+      items: [],
+      committee: "",
     };
   },
-  computed: {},
-  watch: {},
   mounted() {
     this.loadData();
   },
@@ -142,9 +131,8 @@ export default {
     async loadData() {
       try {
         this.loading = true;
-        const { data, meta } = await AlleyApi.getAll({
+        const { data, meta } = await Commitee.getAll({
           ...this.param,
-          includes: "subdistrict",
         });
         this.items = data;
         this.meta = meta;
@@ -155,28 +143,6 @@ export default {
       } finally {
         this.loading = false;
       }
-    },
-    async submit() {
-      try {
-        const validate = await this.$validator.validateAll();
-        if (!validate) return;
-
-        await AlleyApi.create({
-          alley_name: this.alley,
-          subdistrict_id: 102303,
-        });
-
-        this.$toast.success("สร้างซอยสำเร็จ");
-        this.clear();
-        this.modalActive = false;
-        this.loadData();
-      } catch {
-        this.$toast.error("ผิดพลาด");
-      }
-    },
-    clear() {
-      this.alley = "";
-      this.$validator.reset();
     },
     updateParam(paramName, value) {
       this.param = {
@@ -208,6 +174,27 @@ export default {
       this.updateParam("page", 1);
       this.loadData();
     },
+    async submit() {
+      try {
+        const validate = await this.$validator.validateAll();
+        if (!validate) return;
+
+        await Commitee.create({
+          committee_name: this.committee,
+        });
+
+        this.$toast.success("สร้างตำแหน่งสำเร็จ");
+        this.clear();
+        this.modalActive = false;
+        this.loadData();
+      } catch {
+        this.$toast.error("ผิดพลาด, ตำแหน่งที่เพิ่มอาจจะซ้ำ");
+      }
+    },
+    clear() {
+      this.committee = "";
+      this.$validator.reset();
+    },
   },
 };
 </script>
@@ -222,8 +209,5 @@ table td {
 }
 table td:first-child {
   border-left: none;
-}
-.v-input__control {
-  padding: 0px;
 }
 </style>

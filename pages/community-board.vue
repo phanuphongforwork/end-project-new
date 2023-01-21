@@ -35,17 +35,6 @@
                 outlined
               ></v-select>
             </v-col>
-
-            <v-col class="ml-lg-4 mt-lg-2">
-              <v-btn
-                class="col-12 col-md-12 col-lg-4"
-                @click="modalActive = true"
-                color="success"
-              >
-                <v-icon left> mdi-plus </v-icon>
-                เพิ่มตำแหน่ง
-              </v-btn>
-            </v-col>
           </v-row>
         </v-container>
 
