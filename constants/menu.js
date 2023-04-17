@@ -1,17 +1,5 @@
 export default [
   {
-    // title: "หน้าแรก",
-    // subMenus: [
-    //   {
-    //     text: "หน้าแรก",
-    //     icon: "mdi-home ",
-    //     active: false,
-    //     to: "/",
-    //     level: [3],
-    //   },
-    // ],
-  },
-  {
     head: "อาสาสมัคร",
     subMenus: [
       {
@@ -40,6 +28,13 @@ export default [
         icon: "mdi-book-open-variant ",
         active: false,
         to: "/add-head-house-holds",
+        level: [2],
+      },
+      {
+        text: "ออกรายงานครัวเรือนที่ดูแล",
+        icon: "mdi-file-excel",
+        active: false,
+        to: "export-house-holds",
         level: [2],
       },
     ],
