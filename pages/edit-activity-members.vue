@@ -96,6 +96,18 @@
                     }}
                   </div>
                 </div>
+                <div class="d-flex mt-2">
+                  <div>หน่วยงานที่จัด :</div>
+                  <div class="pl-4 font-weight-bold">
+                    {{ previewData?.agency_name || "-" }}
+                  </div>
+                </div>
+                <div class="d-flex mt-2">
+                  <div>สถานที่จัด :</div>
+                  <div class="pl-4 font-weight-bold">
+                    {{ previewData?.location_name || "-" }}
+                  </div>
+                </div>
               </div>
             </v-card>
 
@@ -131,7 +143,10 @@
                         </tr>
                       </thead>
                       <tbody>
-                        <tr v-for="item in previewData?.users" :key="item">
+                        <tr
+                          v-for="(item, index) in previewData?.users"
+                          :key="index"
+                        >
                           <td>{{ item?.person?.person_name || "-" }}</td>
                           <td>{{ item?.person?.id_card || "-" }}</td>
                           <td>
@@ -203,6 +218,18 @@
                     }}
                   </div>
                 </div>
+                <div class="d-flex mt-2">
+                  <div>หน่วยงานที่จัด :</div>
+                  <div class="pl-4 font-weight-bold">
+                    {{ editData?.agency_name || "-" }}
+                  </div>
+                </div>
+                <div class="d-flex mt-2">
+                  <div>สถานที่จัด :</div>
+                  <div class="pl-4 font-weight-bold">
+                    {{ editData?.location_name || "-" }}
+                  </div>
+                </div>
               </div>
             </v-card>
 
@@ -244,7 +271,10 @@
                         </tr>
                       </thead>
                       <tbody>
-                        <tr v-for="item in editData?.users" :key="item">
+                        <tr
+                          v-for="(item, index) in editData?.users"
+                          :key="index"
+                        >
                           <td>{{ item?.person?.person_name || "-" }}</td>
                           <td>{{ item?.person?.id_card || "-" }}</td>
                           <td>
@@ -257,11 +287,11 @@
 
                           <td>
                             <v-btn
-                              @click="handleEditMember(item)"
-                              color="primary"
+                              @click="handleRemoveMember(item, editData)"
+                              color="error"
                             >
-                              <v-icon left> mdi-pencil-outline </v-icon>
-                              แก้ไขข้อมูล
+                              <v-icon left> mdi-trash-can </v-icon>
+                              ลบสมาชิก
                             </v-btn>
                           </td>
                         </tr>
@@ -352,6 +382,8 @@ export default {
         },
         { text: "รายละเอียดกิจกรรม", value: "activity_description" },
         { text: "วันที่จัดกิจกรรม", value: "activity_date" },
+        { text: "หน่วยงานที่จัด", value: "agency_name" },
+        { text: "สถานที่จัด", value: "location_name" },
         { text: "แสดงรายละเอียด", value: "preview" },
         { text: "แก้ไขผู้เข้าร่วมกิจกรรม", value: "edit_members" },
       ],
@@ -372,6 +404,8 @@ export default {
       activityName: "",
       activityDate: "",
       activityDesc: "",
+      agencyName: "",
+      locationName: "",
       datepick: false,
       editDataMember: null,
       showEditDataMember: false,
@@ -411,8 +445,10 @@ export default {
   },
   methods: {
     dayjs,
-    async addMemberSuccess() {
+    async addMemberSuccess(data) {
+      this.editData = data;
       this.addMember = false;
+
       await this.loadData();
     },
     async loadData() {
@@ -508,7 +544,8 @@ export default {
       this.activityDate = "";
       this.$validator.reset();
     },
-    async editMember(activity) {
+    editMember(activity) {
+      console.log(activity);
       this.editData = activity;
       this.showEditData = true;
     },
@@ -529,6 +566,22 @@ export default {
     },
     showAddMember() {
       this.addMember = true;
+    },
+    async handleRemoveMember(item, editData) {
+      try {
+        await Activity.update(item.activity_id, {
+          deleteUserIds: [item.person_id],
+        });
+        this.$toast.success("ลบผู้เข้าร่วมกิจกรรมสําเร็จ");
+
+        const newUsers = this.editData?.users.filter(
+          (user) => user.person_id !== item.person_id
+        );
+        this.editData.users = newUsers;
+        this.loadData();
+      } catch (e) {
+        this.$toast.error("เกิดข้อผิดพลาด, กรุณาตรวจสอบและลองใหม่อีกครั้ง");
+      }
     },
   },
 };

@@ -101,6 +101,18 @@
                     }}
                   </div>
                 </div>
+                <div class="d-flex mt-2">
+                  <div>หน่วยงานที่จัด :</div>
+                  <div class="pl-4 font-weight-bold">
+                    {{ previewData?.agency_name || "-" }}
+                  </div>
+                </div>
+                <div class="d-flex mt-2">
+                  <div>สถานที่จัด :</div>
+                  <div class="pl-4 font-weight-bold">
+                    {{ previewData?.location_name || "-" }}
+                  </div>
+                </div>
               </div>
             </v-card>
 
@@ -208,6 +220,30 @@
                 </v-text-field>
               </v-col>
               <v-col cols="12">
+                <v-text-field
+                  v-model="agencyName"
+                  label="หน่วยงานที่จัด"
+                  name="agencyName"
+                  data-vv-as="หน่วยงานที่จัด"
+                  v-validate="'required'"
+                  :error-messages="errors && errors.first('agencyName')"
+                  outlined
+                >
+                </v-text-field>
+              </v-col>
+              <v-col cols="12">
+                <v-text-field
+                  v-model="locationName"
+                  label="สถานที่จัด"
+                  name="locationName"
+                  data-vv-as="สถานที่จัด"
+                  v-validate="'required'"
+                  :error-messages="errors && errors.first('locationName')"
+                  outlined
+                >
+                </v-text-field>
+              </v-col>
+              <v-col cols="12">
                 <v-menu
                   v-model="datepick"
                   :close-on-content-click="false"
@@ -230,7 +266,7 @@
                     v-model="activityDate"
                     @change="datepick = false"
                     name="activityDate"
-                    data-vv-as="วัวันที่จัดกิจกรรม"
+                    data-vv-as="วันที่จัดกิจกรรม"
                     v-validate="'required'"
                     locale="th-TH"
                   ></v-date-picker>
@@ -306,6 +342,8 @@ export default {
         },
         { text: "รายละเอียดกิจกรรม", value: "activity_description" },
         { text: "วันที่จัดกิจกรรม", value: "activity_date" },
+        { text: "หน่วยงานที่จัด", value: "agency_name" },
+        { text: "สถานที่จัด", value: "location_name" },
         { text: "แสดงรายละเอียด", value: "preview" },
       ],
 
@@ -325,6 +363,8 @@ export default {
       activityName: "",
       activityDate: "",
       activityDesc: "",
+      agencyName: "",
+      locationName: "",
       datepick: false,
     };
   },
@@ -420,6 +460,8 @@ export default {
         activity_name: this.activityName,
         activity_date: this.activityDate,
         activity_description: this.activityDesc,
+        agency_name: this.agencyName,
+        location_name: this.locationName,
         status: "1",
       };
 
@@ -450,6 +492,8 @@ export default {
       this.activityName = "";
       this.activityDesc = "";
       this.activityDate = "";
+      this.agencyName = "";
+      this.locationName = "";
       this.$validator.reset();
     },
   },

@@ -258,7 +258,7 @@ export default {
       if (!validate) return;
 
       try {
-        await Activity.update(this.activity.activity_id, {
+        const { data } = await Activity.update(this.activity.activity_id, {
           activity_date: dayjs(this.activity.activity_date).format(
             "YYYY-MM-DD"
           ),
@@ -271,7 +271,8 @@ export default {
 
         this.loadData();
         this.closeModalAddStatus();
-        this.$emit("success");
+        this.$emit("success", data);
+        // this.$emit("addData", data);
 
         this.member = null;
         this.items = [];
