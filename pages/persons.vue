@@ -14,6 +14,55 @@
         เพิ่มสมาชิกชุมชน
       </v-btn>
     </div>
+
+    <v-card outlined class="mt-4" style="padding: 8px">
+      <v-row>
+        <v-col cols="12" md="4">
+          <v-card flat color="transparent">
+            <v-subheader>เลือกช่วงอายุ (ปี)</v-subheader>
+
+            <v-card-text>
+              <v-row>
+                <v-col class="px-4">
+                  <v-range-slider
+                    v-model="range"
+                    :max="max"
+                    :min="min"
+                    hide-details
+                    class="align-center"
+                    @change="handleChangeRange()"
+                  >
+                    <template v-slot:prepend>
+                      <v-text-field
+                        :value="range[0]"
+                        class="mt-0 pt-0"
+                        hide-details
+                        single-line
+                        type="number"
+                        style="width: 60px"
+                        @change="$set(range, 0, $event)"
+                      ></v-text-field>
+                    </template>
+                    <template v-slot:append>
+                      <v-text-field
+                        :value="range[1]"
+                        class="mt-0 pt-0"
+                        hide-details
+                        single-line
+                        type="number"
+                        style="width: 60px"
+                        @change="$set(range, 1, $event)"
+                      ></v-text-field>
+                    </template>
+                  </v-range-slider>
+                </v-col>
+              </v-row>
+            </v-card-text>
+          </v-card>
+        </v-col>
+      </v-row>
+    </v-card>
+
     <v-card class="mt-6" outlined>
       <v-card-title class="col-12">
         <div class="col-12">
@@ -243,6 +292,9 @@ export default {
           href: "persons",
         },
       ],
+      min: 0,
+      max: 100,
+      range: [0, 60],
       search: "",
       meta: {},
       param: {
@@ -301,6 +353,7 @@ export default {
         { text: "ดูข้อมูลเพิ่มเติม", value: "actions", sortable: false },
       ],
       items: [],
+      defaultItems: [],
       showDetailData: false,
       detail: null,
       showCreatePerson: false,
@@ -331,6 +384,7 @@ export default {
           q: this.search ?? undefined,
         });
         this.items = data;
+        this.defaultItems = data;
         this.meta = meta;
 
         this.loading = false;
@@ -403,6 +457,14 @@ export default {
     closeCreatePerson() {
       this.showCreatePerson = false;
       this.loadData();
+    },
+    handleChangeRange() {
+      this.items = this.defaultItems.filter((item) => {
+        const age = this.getAge(item?.date_of_birth)
+          ? Number(this.getAge(item.date_of_birth))
+          : 0;
+        return age >= this.range[0] && age <= this.range[1];
+      });
     },
   },
 };
