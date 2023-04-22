@@ -15,9 +15,10 @@
         สร้างกิจกรรม
       </v-btn>
     </div>
+
     <v-card class="mt-6" outlined>
       <v-card-title class="col-12">
-        <div class="col-12">
+        <div class="col-12 col-md-9">
           <v-text-field
             v-model="name"
             class="col-12"
@@ -27,6 +28,19 @@
             hide-details
             outlined
           ></v-text-field>
+        </div>
+
+        <div class="col-12 col-md-3">
+          <v-btn
+            color="primary"
+            large
+            class="col-12"
+            outlined
+            @click="handleExport()"
+          >
+            <v-icon left> mdi-download-box</v-icon>
+            ออกรายงาน
+          </v-btn>
         </div>
       </v-card-title>
       <v-data-table
@@ -316,6 +330,7 @@ export default {
 
   data() {
     return {
+      isExport: false,
       showCreate: false,
       loading: false,
       title: "กิจกรรม",
@@ -404,7 +419,7 @@ export default {
         this.loading = true;
         const { data, meta } = await Activity.getAll({
           ...this.param,
-          "filters[name]": this.name ?? undefined,
+          "filters[activity_name]": this.name ?? undefined,
         });
         this.activities = data;
         this.meta = meta;
@@ -495,6 +510,16 @@ export default {
       this.agencyName = "";
       this.locationName = "";
       this.$validator.reset();
+    },
+    async handleExport() {
+      try {
+        await Activity.export({
+          ...this.param,
+          "filters[activity_name]": this.name ?? undefined,
+        });
+      } catch {
+        this.$toast.error("เกิดข้อผิดพลาด, กรุณาลองใหม่อีกครั้ง");
+      }
     },
   },
 };

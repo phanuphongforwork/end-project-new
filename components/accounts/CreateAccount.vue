@@ -441,6 +441,7 @@ export default {
 
         this.loading = true;
         const { data } = await Person.create(payload);
+        console.log("data====>", data);
         this.resultData = data;
         this.loading = false;
 

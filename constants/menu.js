@@ -9,13 +9,13 @@ export default [
         to: "house-holds",
         level: [2],
       },
-      {
-        text: "แก้ไขเบียนครัวเรือน",
-        icon: "mdi-home-edit ",
-        active: false,
-        to: "/edit-house-holds",
-        level: [2],
-      },
+      // {
+      //   text: "แก้ไขเบียนครัวเรือน",
+      //   icon: "mdi-home-edit ",
+      //   active: false,
+      //   to: "/edit-house-holds",
+      //   level: [2],
+      // },
       {
         text: "แก้ไขข้อมูลสมาชิกครัวเรือน",
         icon: "mdi-account-edit ",
@@ -24,7 +24,7 @@ export default [
         level: [2],
       },
       {
-        text: "เลือกหัวหน้าครัวเรือน",
+        text: "แก้ไขหัวหน้าครัวเรือน",
         icon: "mdi-book-open-variant ",
         active: false,
         to: "/add-head-house-holds",
@@ -35,6 +35,13 @@ export default [
         icon: "mdi-file-excel",
         active: false,
         to: "export-house-holds",
+        level: [2],
+      },
+      {
+        text: "การเข้าร่วมกิจกรรม",
+        icon: "mdi-coffee-to-go",
+        active: false,
+        to: "/edit-activity-members",
         level: [2],
       },
     ],

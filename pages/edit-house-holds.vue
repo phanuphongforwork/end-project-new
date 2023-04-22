@@ -543,6 +543,8 @@ export default {
         this.loading = false;
 
         this.showResult = true;
+
+        this.$toast.success("แก้ไขสำเร็จ");
       } catch (e) {
         this.$toast.error("เกิดข้อผิดพลาด, กรุณาลองใหม่อีกครั้ง");
       } finally {

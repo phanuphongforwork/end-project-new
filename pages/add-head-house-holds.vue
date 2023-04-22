@@ -390,10 +390,10 @@ export default {
             status: item?.status,
             member_status: "1",
           });
+          this.editData.person.person_name = item?.person?.person_name;
           this.$toast.success(
             `แต่งตั้ง ${item?.person?.person_name} เป็นหัวหน้าครอบครัวแล้ว !`
           );
-          this.editData.person.person_name = item?.person?.person_name;
         } catch (e) {
           this.$toast.error("ผิดพลาด, แต่งตั้งไม่สำเร็จ");
         } finally {

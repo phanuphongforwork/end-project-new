@@ -45,7 +45,7 @@
           <a @click="showPreview(item)" href="#">แสดงรายละเอียด</a>
         </template>
 
-        <template v-slot:item.edit_members="{ item }">
+        <template v-if="canEdit" v-slot:item.edit_members="{ item }">
           <a @click="editMember(item)" href="#"
             >แก้ไขรายชื่อผู้เข้าร่วมกิจกรรม</a
           >
@@ -267,6 +267,7 @@
                           <th class="text-left">ชื่อ-นามสกุล</th>
                           <th class="text-left">บัตรประชาชน</th>
                           <th class="text-left">วัน/เดือน/ปีเกิด</th>
+                          <th class="text-left">วันที่เข้าร่วม</th>
                           <th class="text-left">แก้ไขสมาชิก</th>
                         </tr>
                       </thead>
@@ -282,6 +283,16 @@
                               dayjs(item?.person?.date_of_birth)
                                 .add(543, "year")
                                 .format("DD MMMM YYYY") || "-"
+                            }}
+                          </td>
+
+                          <td>
+                            {{
+                              item?.join_date
+                                ? dayjs(item?.join_date)
+                                    .add(543, "year")
+                                    .format("DD MMMM YYYY")
+                                : "-"
                             }}
                           </td>
 
@@ -373,20 +384,7 @@ export default {
       ],
       search: "",
       page: 1,
-      headers: [
-        {
-          text: "ชื่อกิจกรรม",
-          align: "start",
-          sortable: false,
-          value: "activity_name",
-        },
-        { text: "รายละเอียดกิจกรรม", value: "activity_description" },
-        { text: "วันที่จัดกิจกรรม", value: "activity_date" },
-        { text: "หน่วยงานที่จัด", value: "agency_name" },
-        { text: "สถานที่จัด", value: "location_name" },
-        { text: "แสดงรายละเอียด", value: "preview" },
-        { text: "แก้ไขผู้เข้าร่วมกิจกรรม", value: "edit_members" },
-      ],
+      headers: [],
 
       activities: [],
       meta: {},
@@ -422,6 +420,13 @@ export default {
       }
       return false;
     },
+    canEdit() {
+      const myLevel = localStorage.getItem("user_level") || null;
+      if (Number(myLevel) === 1 || Number(myLevel) === 2) {
+        return true;
+      }
+      return false;
+    },
     computedDateFormatted() {
       return this.activityDate
         ? dayjs(this.activityDate).add(543, "year").format("DD MMMM YYYY")
@@ -441,6 +446,26 @@ export default {
     },
   },
   mounted() {
+    this.headers = [
+      {
+        text: "ชื่อกิจกรรม",
+        align: "start",
+        sortable: false,
+        value: "activity_name",
+      },
+      { text: "รายละเอียดกิจกรรม", value: "activity_description" },
+      { text: "วันที่จัดกิจกรรม", value: "activity_date" },
+      { text: "หน่วยงานที่จัด", value: "agency_name" },
+      { text: "สถานที่จัด", value: "location_name" },
+      { text: "แสดงรายละเอียด", value: "preview" },
+    ];
+
+    if (this.isAdmin || this.canEdit) {
+      this.headers.push({
+        text: "แก้ไขผู้เข้าร่วมกิจกรรม",
+        value: "edit_members",
+      });
+    }
     this.loadData();
   },
   methods: {

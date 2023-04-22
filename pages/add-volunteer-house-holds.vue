@@ -299,7 +299,7 @@ export default {
       try {
         const { data: persons } = await Person.getAll({
           perPage: 1000,
-          "filters[role]": "2",
+          isVolunteer: 1,
           "filters[id_card]": this.search ?? undefined,
         });
 

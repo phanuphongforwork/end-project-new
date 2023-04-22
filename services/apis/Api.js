@@ -1,39 +1,39 @@
-import ApiUtil from '@/utils/api'
-import { queryStringStringify } from '@/helpers/query-string'
+import ApiUtil from "@/utils/api";
+import { queryStringStringify } from "@/helpers/query-string";
 
 class Api {
   static async getAll(params = {}) {
-    const query = queryStringStringify(params)
-    const response = await ApiUtil.$axios.$get(`${this.url}?${query}`)
+    const query = queryStringStringify(params);
+    const response = await ApiUtil.$axios.$get(`${this.url}?${query}`);
 
-    return response
+    return response;
   }
 
   static async create(payload) {
-    const response = await ApiUtil.$axios.$post(this.url, payload)
+    const response = await ApiUtil.$axios.$post(this.url, payload);
 
-    return response
+    return response;
   }
 
   static async getById(id, params = {}) {
-    const query = queryStringStringify(params)
+    const query = queryStringStringify(params);
 
-    const { data } = await ApiUtil.$axios.$get(`${this.url}/${id}?${query}`)
+    const { data } = await ApiUtil.$axios.$get(`${this.url}/${id}?${query}`);
 
-    return data
+    return data;
   }
 
   static async update(id, payload) {
-    const response = await ApiUtil.$axios.$put(`${this.url}/${id}`, payload)
+    const response = await ApiUtil.$axios.$put(`${this.url}/${id}`, payload);
 
-    return response
+    return response;
   }
 
   static async delete(id, params = {}) {
-    const query = queryStringStringify(params)
+    const query = queryStringStringify(params);
 
-    await ApiUtil.$axios.$delete(`${this.url}/${id}?${query}`)
+    await ApiUtil.$axios.$delete(`${this.url}/${id}?${query}`);
   }
 }
 
-export default Api
+export default Api;

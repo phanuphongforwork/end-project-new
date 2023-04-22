@@ -48,6 +48,10 @@
         <template v-slot:item.preview="{ item }">
           <a @click="showPreview(item)" href="#">แสดงรายละเอียด</a>
         </template>
+
+        <template v-slot:item.export="{ item }">
+          <a @click="exportData(item)" href="#">ออกรายงาน</a>
+        </template>
       </v-data-table>
     </v-card>
     <v-dialog
@@ -247,6 +251,7 @@ export default {
         { text: "แขวง", value: "subdistrict.subdistrict_name" },
         { text: "รหัสไปรษณีย์", value: "subdistrict.post_code" },
         { text: "แสดงรายละเอียด", value: "preview" },
+        { text: "ออกรายงาน", value: "export" },
       ],
 
       houseHolds: [],
@@ -391,6 +396,15 @@ export default {
       }
 
       return "-";
+    },
+    async exportData(data) {
+      const houseId = data?.house_id || null;
+      try {
+        await HouseHold.export(houseId);
+      } catch (e) {
+        console.log(e);
+        this.$toast.error("เกิดข้อผิดพลาด, กรุณาลองใหม่อีกครั้ง");
+      }
     },
   },
 };
