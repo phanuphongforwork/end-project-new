@@ -89,7 +89,7 @@
                   label="รหัสผ่านเข้าสู่ระบบ"
                   name="password"
                   data-vv-as="รหัสผ่านเข้าสู่ระบบ"
-                  v-validate=""
+                  v-validate="''"
                   :error-messages="errors && errors.first('password')"
                   outlined
                   :disabled="isVolunteer"
@@ -127,19 +127,6 @@
                   :error-messages="errors && errors.first('personName')"
                   outlined
                   :disabled="isAdmin || isVolunteer"
-                >
-                </v-text-field>
-              </v-col>
-              <v-col cols="12" md="3" lg="4">
-                <v-text-field
-                  v-model="editData.id_card"
-                  label="บัตรประชาชน"
-                  name="idCard"
-                  data-vv-as="บัตรประชาชน"
-                  v-validate="'required|length:13|numeric'"
-                  :error-messages="errors && errors.first('idCard')"
-                  outlined
-                  :disabled="isVolunteer || isAdmin"
                 >
                 </v-text-field>
               </v-col>
@@ -345,12 +332,12 @@ export default {
           sortable: false,
           value: "username",
         },
-        {
-          text: "บัตรประชาชน",
-          align: "start",
-          sortable: false,
-          value: "id_card",
-        },
+        // {
+        //   text: "บัตรประชาชน",
+        //   align: "start",
+        //   sortable: false,
+        //   value: "id_card",
+        // },
 
         {
           text: "วัน/เดือน/ปีเกิด",

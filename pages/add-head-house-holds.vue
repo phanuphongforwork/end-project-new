@@ -144,7 +144,7 @@
                       <thead>
                         <tr>
                           <th class="text-left">ชื่อ-นามสกุล</th>
-                          <th class="text-left">บัตรประชาชน</th>
+                          <th v-if="isAdmin" class="text-left">บัตรประชาชน</th>
                           <th class="text-left">วัน/เดือน/ปีเกิด</th>
                           <th class="text-left">สถานะในครัวเรือน</th>
                           <th class="text-left">สถานะ</th>
@@ -154,7 +154,9 @@
                       <tbody>
                         <tr v-for="item in members" :key="item">
                           <td>{{ item?.person?.person_name || "-" }}</td>
-                          <td>{{ item?.person?.id_card || "-" }}</td>
+                          <td v-if="isAdmin">
+                            {{ item?.person?.id_card || "-" }}
+                          </td>
                           <td>
                             {{
                               dayjs(item?.person?.date_of_birth)
@@ -288,6 +290,15 @@ export default {
   },
   mounted() {
     this.loadData();
+  },
+  computed: {
+    isAdmin() {
+      const level = localStorage.getItem("user_level") || null;
+      if (Number(level) === 1) {
+        return true;
+      }
+      return false;
+    },
   },
   methods: {
     dayjs,

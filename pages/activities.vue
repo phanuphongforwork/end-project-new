@@ -157,14 +157,14 @@
                       <thead>
                         <tr>
                           <th class="text-left">ชื่อ-นามสกุล</th>
-                          <th class="text-left">บัตรประชาชน</th>
+                          <!-- <th class="text-left">บัตรประชาชน</th> -->
                           <th class="text-left">วัน/เดือน/ปีเกิด</th>
                         </tr>
                       </thead>
                       <tbody>
                         <tr v-for="item in previewData?.users" :key="item">
                           <td>{{ item?.person?.person_name || "-" }}</td>
-                          <td>{{ item?.person?.id_card || "-" }}</td>
+                          <!-- <td>{{ item?.person?.id_card || "-" }}</td> -->
                           <td>
                             {{
                               dayjs(item?.person?.date_of_birth)
@@ -203,7 +203,7 @@
           <v-btn icon dark @click="closeCreate()">
             <v-icon>mdi-close</v-icon>
           </v-btn>
-          <v-toolbar-title>เพิ่มสมาชิกชุมชน</v-toolbar-title>
+          <v-toolbar-title>เพิ่มกิจกรรมชุมชน</v-toolbar-title>
           <v-spacer></v-spacer>
         </v-toolbar>
         <div class="px-4 py-4">

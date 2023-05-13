@@ -138,7 +138,7 @@
                       <thead>
                         <tr>
                           <th class="text-left">ชื่อ-นามสกุล</th>
-                          <th class="text-left">บัตรประชาชน</th>
+                          <!-- <th class="text-left">บัตรประชาชน</th> -->
                           <th class="text-left">วัน/เดือน/ปีเกิด</th>
                         </tr>
                       </thead>
@@ -148,7 +148,7 @@
                           :key="index"
                         >
                           <td>{{ item?.person?.person_name || "-" }}</td>
-                          <td>{{ item?.person?.id_card || "-" }}</td>
+                          <!-- <td>{{ item?.person?.id_card || "-" }}</td> -->
                           <td>
                             {{
                               dayjs(item?.person?.date_of_birth)

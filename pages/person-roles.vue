@@ -290,35 +290,12 @@ export default {
           sortable: false,
           value: "person_name",
         },
-        {
-          text: "บัตรประชาชน",
-          align: "start",
-          sortable: false,
-          value: "id_card",
-        },
+
         {
           text: "บัญชีเข้าสู่ระบบ",
           align: "start",
           sortable: false,
           value: "username",
-        },
-        {
-          text: "วัน/เดือน/ปีเกิด",
-          align: "start",
-          sortable: false,
-          value: "date_of_birth",
-        },
-        {
-          text: "อายุ (ปี)",
-          align: "center",
-          sortable: false,
-          value: "age",
-        },
-        {
-          text: "เบอร์โทรศัพท์",
-          align: "start",
-          sortable: false,
-          value: "phone",
         },
 
         { text: "จัดการสิทธิ์", value: "actions", sortable: false },

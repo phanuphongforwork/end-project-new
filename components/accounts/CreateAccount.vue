@@ -30,6 +30,7 @@
           </v-text-field>
         </v-col>
       </v-row>
+      <v-row> sdasdas </v-row>
       <v-row>
         <v-col cols="12">
           <v-alert type="info">ส่วนสำหรับจัดการข้อมูลส่วนตัวของบุคคล</v-alert>
@@ -441,7 +442,6 @@ export default {
 
         this.loading = true;
         const { data } = await Person.create(payload);
-        console.log("data====>", data);
         this.resultData = data;
         this.loading = false;
 
@@ -475,6 +475,7 @@ export default {
       this.showResult = false;
       this.clear();
       this.$emit("success");
+      this.$router.push("add-house-hold-members");
     },
     getDisabled(disableStatus) {
       return disableStatus ? "เป็นผู้พิการ" : "ไม่ได้เป็นผู้พิการ";
