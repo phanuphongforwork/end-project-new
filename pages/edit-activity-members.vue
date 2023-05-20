@@ -40,6 +40,15 @@
               .format("DD MMMM YYYY") || "-"
           }}
         </template>
+        <template v-slot:item.activity_end_date="{ item }">
+          {{
+            item?.activity_end_date
+              ? dayjs(item?.activity_end_date)
+                  .add(543, "year")
+                  .format("DD MMMM YYYY")
+              : "-"
+          }}
+        </template>
 
         <template v-slot:item.preview="{ item }">
           <a @click="showPreview(item)" href="#">แสดงรายละเอียด</a>
@@ -91,6 +100,16 @@
                   <div class="pl-4 font-weight-bold">
                     {{
                       dayjs(previewData?.activity_date)
+                        .add(543, "year")
+                        .format("DD MMMM YYYY") || "-"
+                    }}
+                  </div>
+                </div>
+                <div class="d-flex mt-2">
+                  <div>วันที่สิ้นสุดกิจกรรม :</div>
+                  <div class="pl-4 font-weight-bold">
+                    {{
+                      dayjs(previewData?.activity_end_date)
                         .add(543, "year")
                         .format("DD MMMM YYYY") || "-"
                     }}
@@ -219,6 +238,16 @@
                   </div>
                 </div>
                 <div class="d-flex mt-2">
+                  <div>วันที่สิ้นสุดกิจกรรม :</div>
+                  <div class="pl-4 font-weight-bold">
+                    {{
+                      dayjs(editData?.activityEndDate)
+                        .add(543, "year")
+                        .format("DD MMM YYYY") || "-"
+                    }}
+                  </div>
+                </div>
+                <div class="d-flex mt-2">
                   <div>หน่วยงานที่จัด :</div>
                   <div class="pl-4 font-weight-bold">
                     {{ editData?.agency_name || "-" }}
@@ -265,8 +294,8 @@
                       <thead>
                         <tr>
                           <th class="text-left">ชื่อ-นามสกุล</th>
-                          <th class="text-left">บัตรประชาชน</th>
-                          <th class="text-left">วัน/เดือน/ปีเกิด</th>
+                          <!-- <th class="text-left">บัตรประชาชน</th> -->
+                          <!-- <th class="text-left">วัน/เดือน/ปีเกิด</th> -->
                           <th class="text-left">วันที่เข้าร่วม</th>
                           <th class="text-left">แก้ไขสมาชิก</th>
                         </tr>
@@ -277,14 +306,14 @@
                           :key="index"
                         >
                           <td>{{ item?.person?.person_name || "-" }}</td>
-                          <td>{{ item?.person?.id_card || "-" }}</td>
-                          <td>
+                          <!-- <td>{{ item?.person?.id_card || "-" }}</td> -->
+                          <!-- <td>
                             {{
                               dayjs(item?.person?.date_of_birth)
                                 .add(543, "year")
                                 .format("DD MMMM YYYY") || "-"
                             }}
-                          </td>
+                          </td> -->
 
                           <td>
                             {{
@@ -401,6 +430,7 @@ export default {
       previewData: null,
       activityName: "",
       activityDate: "",
+      activityEndDate: "",
       activityDesc: "",
       agencyName: "",
       locationName: "",
@@ -455,6 +485,7 @@ export default {
       },
       { text: "รายละเอียดกิจกรรม", value: "activity_description" },
       { text: "วันที่จัดกิจกรรม", value: "activity_date" },
+      { text: "วันที่สิ้นสุดกิจกรรม", value: "activity_end_date" },
       { text: "หน่วยงานที่จัด", value: "agency_name" },
       { text: "สถานที่จัด", value: "location_name" },
       { text: "แสดงรายละเอียด", value: "preview" },

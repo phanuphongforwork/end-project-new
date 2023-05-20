@@ -65,6 +65,15 @@
               .format("DD MMMM YYYY") || "-"
           }}
         </template>
+        <template v-slot:item.activity_end_date="{ item }">
+          {{
+            item?.activity_end_date
+              ? dayjs(item?.activity_end_date)
+                  .add(543, "year")
+                  .format("DD MMMM YYYY")
+              : "-"
+          }}
+        </template>
 
         <template v-slot:item.preview="{ item }">
           <a @click="showPreview(item)" href="#">แสดงรายละเอียด</a>
@@ -110,6 +119,16 @@
                   <div class="pl-4 font-weight-bold">
                     {{
                       dayjs(previewData?.activity_date)
+                        .add(543, "year")
+                        .format("DD MMMM YYYY") || "-"
+                    }}
+                  </div>
+                </div>
+                <div class="d-flex mt-2">
+                  <div>วันที่สิ้นสุดกิจกรรม :</div>
+                  <div class="pl-4 font-weight-bold">
+                    {{
+                      dayjs(previewData?.activity_end_date)
                         .add(543, "year")
                         .format("DD MMMM YYYY") || "-"
                     }}
@@ -286,6 +305,37 @@
                   ></v-date-picker>
                 </v-menu>
               </v-col>
+              <v-col cols="12">
+                <v-menu
+                  v-model="datepick2"
+                  :close-on-content-click="false"
+                  max-width="290"
+                >
+                  <template v-slot:activator="{ on, attrs }">
+                    <v-text-field
+                      :value="computedEndDateFormatted"
+                      clearable
+                      label="วันที่สิ้นสุดกิจกรรม"
+                      readonly
+                      v-bind="attrs"
+                      v-on="on"
+                      @click:clear="activityEndDate = null"
+                      :error-messages="
+                        errors && errors.first('activityEndDate')
+                      "
+                      outlined
+                    ></v-text-field>
+                  </template>
+                  <v-date-picker
+                    v-model="activityEndDate"
+                    @change="datepick2 = false"
+                    name="activityEndDate"
+                    data-vv-as="วันที่สิ้นสุดกิจกรรม"
+                    v-validate="'required'"
+                    locale="th-TH"
+                  ></v-date-picker>
+                </v-menu>
+              </v-col>
             </v-row>
 
             <div class="mt-4">
@@ -357,6 +407,7 @@ export default {
         },
         { text: "รายละเอียดกิจกรรม", value: "activity_description" },
         { text: "วันที่จัดกิจกรรม", value: "activity_date" },
+        { text: "วันที่สิ้นสุดกิจกรรม", value: "activity_end_date" },
         { text: "หน่วยงานที่จัด", value: "agency_name" },
         { text: "สถานที่จัด", value: "location_name" },
         { text: "แสดงรายละเอียด", value: "preview" },
@@ -377,10 +428,12 @@ export default {
       previewData: null,
       activityName: "",
       activityDate: "",
+      activityEndDate: "",
       activityDesc: "",
       agencyName: "",
       locationName: "",
       datepick: false,
+      datepick2: false,
     };
   },
   computed: {
@@ -394,6 +447,11 @@ export default {
     computedDateFormatted() {
       return this.activityDate
         ? dayjs(this.activityDate).add(543, "year").format("DD MMMM YYYY")
+        : "";
+    },
+    computedEndDateFormatted() {
+      return this.activityEndDate
+        ? dayjs(this.activityEndDate).add(543, "year").format("DD MMMM YYYY")
         : "";
     },
   },
@@ -474,6 +532,7 @@ export default {
       let payload = {
         activity_name: this.activityName,
         activity_date: this.activityDate,
+        activity_end_date: this.activityEndDate,
         activity_description: this.activityDesc,
         agency_name: this.agencyName,
         location_name: this.locationName,
@@ -507,6 +566,7 @@ export default {
       this.activityName = "";
       this.activityDesc = "";
       this.activityDate = "";
+      this.activityEndDate = "";
       this.agencyName = "";
       this.locationName = "";
       this.$validator.reset();
