@@ -47,7 +47,7 @@ export default [
     ],
   },
   {
-    head: "ชาวบ้าน",
+    head: "สมาชิกชุมชน",
     subMenus: [
       {
         text: "ทะเบียนครัวเรือนของฉัน",
@@ -176,6 +176,25 @@ export default [
         icon: "mdi-coffee-to-go",
         active: false,
         to: "/edit-activity-members",
+        level: [1],
+      },
+    ],
+  },
+  {
+    title: "ตรวจสุขภาพ",
+    subMenus: [
+      {
+        text: "กิจกรรมตรวจสุขภาพ",
+        icon: "mdi-coffee",
+        active: false,
+        to: "/health-check",
+        level: [1],
+      },
+      {
+        text: "การเข้าร่วมตรวจสุขภาพ",
+        icon: "mdi-coffee-to-go",
+        active: false,
+        to: "/edit-health-check",
         level: [1],
       },
     ],

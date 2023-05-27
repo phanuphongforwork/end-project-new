@@ -26,6 +26,19 @@ class Person extends Api {
     return response;
   }
 
+  static async getNotInHealthCheck(params = {}, userIds = []) {
+    const query = queryStringStringify(params);
+
+    const response = await ApiUtil.$axios.$post(
+      `${this.url}/not-in-health-check?${query}`,
+      {
+        userIds,
+      }
+    );
+
+    return response;
+  }
+
   static async updateLevels(payload) {
     const response = await ApiUtil.$axios.$post(`${this.url}/levels`, payload);
 
