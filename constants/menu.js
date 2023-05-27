@@ -185,14 +185,14 @@ export default [
     subMenus: [
       {
         text: "กิจกรรมตรวจสุขภาพ",
-        icon: "mdi-coffee",
+        icon: "mdi-heart-plus",
         active: false,
         to: "/health-check",
         level: [1],
       },
       {
         text: "การเข้าร่วมตรวจสุขภาพ",
-        icon: "mdi-coffee-to-go",
+        icon: "mdi-account-heart",
         active: false,
         to: "/edit-health-check",
         level: [1],

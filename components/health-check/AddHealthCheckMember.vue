@@ -272,7 +272,6 @@ export default {
         this.loadData();
         this.closeModalAddStatus();
         this.$emit("success", data);
-        // this.$emit("addData", data);
 
         this.member = null;
         this.items = [];
