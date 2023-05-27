@@ -16,8 +16,11 @@
     "dayjs": "^1.11.6",
     "lodash": "^4.17.21",
     "nuxt": "^2.15.8",
+    "sass": "^1.62.1",
+    "sass-loader": "^13.2.2",
     "vee-validate": "^2.2.8",
     "vue": "^2.6.14",
+    "vue-html-to-paper": "^1.4.4",
     "vue-server-renderer": "^2.6.14",
     "vue-template-compiler": "^2.6.14",
     "vue-toastification": "^1.7.14",
@@ -25,7 +28,10 @@
     "webpack": "^4.46.0"
   },
   "devDependencies": {
-    "@nuxtjs/vuetify": "^1.12.3"
+    "@nuxtjs/vuetify": "^1.12.3",
+    "autoprefixer": "^10.4.14",
+    "postcss": "^8.4.23",
+    "tailwindcss": "^3.3.2"
   },
   "packageManager": "yarn@3.3.0"
 }

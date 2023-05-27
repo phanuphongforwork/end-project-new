@@ -21,7 +21,7 @@ export default {
   },
 
   // Global CSS: https://go.nuxtjs.dev/config-css
-  css: [],
+  css: ["@/assets/css/main.css"],
 
   // Plugins to run before rendering page: https://go.nuxtjs.dev/config-plugins
   plugins: [
@@ -29,6 +29,7 @@ export default {
     { src: "@/plugins/toast", ssr: false },
     // "@/plugins/toast",
     "@/plugins/axios",
+    "@/plugins/html-print",
   ],
 
   // Auto import components: https://go.nuxtjs.dev/config-components
@@ -59,7 +60,7 @@ export default {
 
   // Vuetify module configuration: https://go.nuxtjs.dev/config-vuetify
   vuetify: {
-    customVariables: ["~/assets/variables.scss"],
+    customVariables: ["~/assets/css/main.css"],
     theme: {
       dark: false,
       themes: {
@@ -104,6 +105,15 @@ export default {
     },
 
     // Build Configuration: https://go.nuxtjs.dev/config-build
-    build: {},
+    build: {
+      postcss: {
+        postcssOptions: {
+          plugins: {
+            tailwindcss: {},
+            autoprefixer: {},
+          },
+        },
+      },
+    },
   },
 };
