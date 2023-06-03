@@ -287,8 +287,8 @@
                           <!-- <th class="text-left">บัตรประชาชน</th> -->
                           <!-- <th class="text-left">วัน/เดือน/ปีเกิด</th> -->
                           <th class="text-left">วันที่เข้าร่วม</th>
-                          <th class="text-left">แก้ไขสมาชิก</th>
                           <th class="text-left">รายละเอียด</th>
+                          <th class="text-left">แก้ไขสมาชิก</th>
                         </tr>
                       </thead>
                       <tbody>
@@ -366,7 +366,7 @@
           <v-spacer></v-spacer>
         </v-toolbar>
         <div class="px-4 py-4">
-          <AddActivityMember :activity="editData" @success="addMemberSuccess" />
+          <AddHealthCheckMember :item="editData" @success="addMemberSuccess" />
         </div>
       </v-card>
     </v-dialog>
@@ -377,7 +377,7 @@
 import dayjs from "dayjs";
 import Breadcrumb from "@/components/Breadcrumbs";
 import HealthCheck from "../services/apis/HealthCheck";
-import AddActivityMember from "../components/activities/AddActivityMember.vue";
+import AddHealthCheckMember from "../components/health-check/AddHealthCheckMember.vue";
 
 require("dayjs/locale/th");
 dayjs.locale("th");
@@ -385,7 +385,7 @@ dayjs.locale("th");
 export default {
   components: {
     Breadcrumb,
-    AddActivityMember,
+    AddHealthCheckMember,
   },
 
   data() {
@@ -614,7 +614,7 @@ export default {
     },
     async handleRemoveMember(item, editData) {
       try {
-        await HealthCheck.update(item.heal_check_id, {
+        await HealthCheck.update(item.health_check_id, {
           deleteUserIds: [item.person_id],
         });
         this.$toast.success("ลบผู้เข้าร่วมกิจกรรมสําเร็จ");

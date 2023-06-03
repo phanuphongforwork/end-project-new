@@ -29,10 +29,6 @@
         no-results-text="ไม่พบข้อมูล"
         no-data-text="ไม่พบข้อมูล, ลองค้นหาใหม่อีกครั้ง"
       >
-        <template v-slot:item.date_of_birth="{ item }">
-          {{ dayjs(item.date_of_birth).add(543, "year").format("DD/MM/YYYY") }}
-        </template>
-
         <template v-slot:item.actions="{ item }">
           <v-btn @click="addItem(item)" color="info">
             <v-icon left> mdi-plus </v-icon>
@@ -78,12 +74,12 @@
                 </div>
               </div>
               <div class="d-flex mt-2">
-                <div>วัน/เดือน/ปีเกิด :</div>
-                <div class="pl-4 font-weight-bold">
-                  {{
-                    dayjs(member?.date_of_birth).format("DD MMMM YYYY") || "-"
-                  }}
-                </div>
+                <v-textarea
+                  v-model="detail"
+                  outlined
+                  name="input-7-4"
+                  label="รายละเอียดการตรวจสุขภาพ"
+                ></v-textarea>
               </div>
             </div>
           </v-card>
@@ -103,13 +99,13 @@
 import dayjs from "dayjs";
 import Breadcrumb from "@/components/Breadcrumbs";
 import Person from "../../services/apis/Person";
-import Activity from "../../services/apis/Activity";
+import HealthCheck from "../../services/apis/HealthCheck";
 
 require("dayjs/locale/th");
 dayjs.locale("th");
 
 export default {
-  props: ["activity"],
+  props: ["item"],
   components: {
     Breadcrumb,
   },
@@ -141,25 +137,6 @@ export default {
           sortable: false,
           value: "id_card",
         },
-        {
-          text: "บัญชีเข้าสู่ระบบ",
-          align: "start",
-          sortable: false,
-          value: "id_card",
-        },
-        {
-          text: "วัน/เดือน/ปีเกิด",
-          align: "start",
-          sortable: false,
-          value: "date_of_birth",
-        },
-        {
-          text: "เบอร์โทรศัพท์",
-          align: "start",
-          sortable: false,
-          value: "phone",
-        },
-
         { text: "กดเพื่อเพิ่ม", value: "actions", sortable: false },
       ],
       items: [],
@@ -167,6 +144,7 @@ export default {
       detail: null,
       member: null,
       showAddStatus: false,
+      detail: "",
     };
   },
   watch: {
@@ -182,6 +160,7 @@ export default {
     },
   },
   mounted() {
+    this.detail = "";
     this.items = [];
     this.loadData();
   },
@@ -190,11 +169,11 @@ export default {
     async loadData() {
       try {
         const userIds = [];
-        this.activity?.users?.forEach((user) => {
+        this.item?.users?.forEach((user) => {
           userIds.push(user.person.person_id);
         });
 
-        const { data, meta } = await Person.getNotInActivity(
+        const { data, meta } = await Person.getNotInHealthCheck(
           {
             ...this.param,
             q: this.search ?? undefined,
@@ -240,6 +219,7 @@ export default {
 
     closeModalAddStatus() {
       this.showAddStatus = false;
+      this.detail = "";
     },
 
     addItem(item) {
@@ -258,13 +238,13 @@ export default {
       if (!validate) return;
 
       try {
-        const { data } = await Activity.update(this.activity.activity_id, {
-          activity_date: dayjs(this.activity.activity_date).format(
+        const { data } = await HealthCheck.update(this.item.health_check_id, {
+          health_check_date: dayjs(this.item.health_check_id).format(
             "YYYY-MM-DD"
           ),
-          status: this.activity.status,
-          activity_name: this.activity.activity_name,
-          activity_description: this.activity.activity_description,
+          status: this.item.status,
+          health_check_name: this.item.health_check_name,
+          remark: this.detail,
           newUserIds: [this.member.person_id],
           deleteUserIds: [],
         });
@@ -275,6 +255,7 @@ export default {
 
         this.member = null;
         this.items = [];
+        this.detail = "";
 
         this.$toast.success("เพิ่มสมาชิก สำเร็จ!");
       } catch (e) {

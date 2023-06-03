@@ -60,6 +60,11 @@ export default {
       radioGroup: 1,
     };
   },
+  head() {
+    return {
+      title: "แบบบันทึกทะเบียนครัวเรือน",
+    };
+  },
   methods: {
     async login() {
       try {
