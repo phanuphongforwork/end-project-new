@@ -206,55 +206,27 @@
       </v-card>
     </v-dialog>
 
-    <div id="printMe" style="display: none">
+    <div id="printMe" style="display: none; padding: 8px">
+      <div>asda;lsdsadl'asdasdlas;ldkas;ldks;aldsad</div>
       <table class="table table-sm">
         <thead>
           <tr>
-            <th scope="col">#</th>
-            <th scope="col">First</th>
-            <th scope="col">Last</th>
-            <th scope="col">Handle</th>
-            <th scope="col">First</th>
-            <th scope="col">Last</th>
-            <th scope="col">Handle</th>
-            <th scope="col">First</th>
-            <th scope="col">Last</th>
-            <th scope="col">Handle</th>
+            <th scope="col">ลำดับที่</th>
+            <th scope="col">ชื่อ-นามสกุล</th>
+            <th scope="col">บัตรประชาชน</th>
+            <th scope="col">วัน/เดือน/ปีเกิด</th>
           </tr>
         </thead>
         <tbody>
-          <tr>
-            <th scope="row">1</th>
-            <td>Mark</td>
-            <td>Otto</td>
-            <td>@mdo</td>
-            <td>Mark</td>
-            <td>Otto</td>
-            <td>@mdo</td>
-            <td>Mark</td>
-            <td>Otto</td>
-            <td>@mdo</td>
-          </tr>
-          <tr>
-            <th scope="row">2</th>
-            <td>Jacob</td>
-            <td>Thornton</td>
-            <td>@fat</td>
-            <td>Jacob</td>
-            <td>Thornton</td>
-            <td>@fat</td>
-            <td>Jacob</td>
-            <td>Thornton</td>
-            <td>@fat</td>
-          </tr>
-          <tr>
-            <th scope="row">3</th>
-            <td colspan="2">Larry the Bird</td>
-            <td>@twitter</td>
-            <td colspan="2">Larry the Bird</td>
-            <td>@twitter</td>
-            <td colspan="2">Larry the Bird</td>
-            <td>@twitter</td>
+          <tr
+            v-if="dataExport?.members"
+            v-for="(member, index) in dataExport?.members"
+            :key="index"
+          >
+            <th scope="row">{{ index + 1 }}</th>
+            <td>{{ member?.person?.person_name || "" }}</td>
+            <td>{{ member?.person?.id_card }}</td>
+            <td>{{ member?.person?.date_of_birth }}</td>
           </tr>
         </tbody>
       </table>
@@ -351,6 +323,7 @@ export default {
         { text: "แสดงรายละเอียด", value: "preview" },
         { text: "ออกรายงาน", value: "export" },
       ],
+      dataExport: null,
 
       houseHolds: [],
       meta: {},
@@ -498,6 +471,7 @@ export default {
     async exportData(data) {
       const houseId = data?.house_id || null;
       try {
+        this.dataExport = data;
         this.$htmlToPaper("printMe");
         // await HouseHold.getById(houseId);
       } catch (e) {
