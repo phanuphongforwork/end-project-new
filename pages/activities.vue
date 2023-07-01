@@ -29,19 +29,6 @@
             outlined
           ></v-text-field>
         </div>
-
-        <div class="col-12 col-md-3">
-          <v-btn
-            color="primary"
-            large
-            class="col-12"
-            outlined
-            @click="handleExport()"
-          >
-            <v-icon left> mdi-download-box</v-icon>
-            ออกรายงาน
-          </v-btn>
-        </div>
       </v-card-title>
       <v-data-table
         :loading="loading"
@@ -77,6 +64,9 @@
 
         <template v-slot:item.preview="{ item }">
           <a @click="showPreview(item)" href="#">แสดงรายละเอียด</a>
+        </template>
+        <template v-slot:item.export="{ item }">
+          <a @click="handleExport(item)" href="#">ออกรายงาน</a>
         </template>
       </v-data-table>
     </v-card>
@@ -362,6 +352,153 @@
         </div>
       </v-card>
     </v-dialog>
+
+    <div id="printMe" style="display: none; padding: 8px">
+      <center>
+        <h1>รายงานการเข้าร่วมกิจกรรม {{ new Date().getFullYear() + 543 }}</h1>
+      </center>
+
+      <div style="width: 100%; display: grid; grid-template-columns: 1fr 1fr">
+        <div style="width: 100%; display: flex">
+          <div style="width: 180px">ชื่อกิจกรรม</div>
+          <div style="width: 100%; border-bottom-style: dotted">
+            {{ dataExport?.activity_name || "" }}
+          </div>
+        </div>
+        <div style="width: 100%; display: flex">
+          <div style="width: 180px">รายละเอียด</div>
+          <div style="width: 100%; border-bottom-style: dotted">
+            {{ dataExport?.activity_description || "" }}
+          </div>
+        </div>
+      </div>
+
+      <div
+        style="
+          width: 100%;
+          display: grid;
+          grid-template-columns: 1fr 1fr;
+          margin-top: 4px;
+        "
+      >
+        <div style="width: 100%; display: flex">
+          <div style="width: 180px">หน่วยงานที่จัด</div>
+          <div style="width: 100%; border-bottom-style: dotted">
+            {{ dataExport?.agency_name }}
+          </div>
+        </div>
+        <div style="width: 100%; display: flex">
+          <div style="width: 180px">สถานที่จัดกิจกรรม</div>
+          <div style="width: 100%; border-bottom-style: dotted">
+            {{ dataExport?.location_name }}
+          </div>
+        </div>
+      </div>
+
+      <div
+        style="
+          width: 100%;
+          display: grid;
+          grid-template-columns: 1fr 1fr;
+          margin-top: 4px;
+        "
+      >
+        <div style="width: 100%; display: flex">
+          <div style="width: 180px">วันที่เริ่มต้น</div>
+          <div style="width: 100%; border-bottom-style: dotted">
+            {{ dayjs(dataExport?.activity_date).format("DD/MMMM/YYYY") }}
+          </div>
+        </div>
+        <div style="width: 100%; display: flex">
+          <div style="width: 180px">วันที่สิ้นสุด</div>
+          <div style="width: 100%; border-bottom-style: dotted">
+            {{
+              dataExport?.activity_end_date
+                ? dayjs(dataExport?.activity_end_date).format("DD/MMMM/YYYY")
+                : ""
+            }}
+          </div>
+        </div>
+      </div>
+
+      <table
+        style="
+          border: 0.5px solid #ddd;
+          border-collapse: separate;
+          border-spacing: 0px;
+          width: 100%;
+          margin-top: 20px;
+        "
+      >
+        <thead
+          style="
+            border: 0.5px solid #ddd;
+            border-collapse: separate;
+            border-spacing: 0px;
+          "
+        >
+          <tr>
+            <th
+              style="
+                border: 0.5px solid #ddd;
+                border-collapse: separate;
+                border-spacing: 0px;
+              "
+            >
+              ลำดับที่
+            </th>
+            <th
+              style="
+                border: 0.5px solid #ddd;
+                border-collapse: separate;
+                border-spacing: 0px;
+              "
+            >
+              ชื่อ-นามสกุล
+            </th>
+            <th
+              style="
+                border: 0.5px solid #ddd;
+                border-collapse: separate;
+                border-spacing: 0px;
+              "
+            >
+              อายุ
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr
+            v-if="dataExport?.users"
+            v-for="(data, index) in dataExport?.users"
+            :key="index"
+          >
+            <th scope="row" style="border-bottom: 0.5px solid #ddd">
+              {{ index + 1 }}
+            </th>
+            <td
+              style="
+                border-bottom: 0.5px solid #ddd;
+                border-right: 0.5px solid #ddd;
+                border-left: 0.5px solid #ddd;
+              "
+            >
+              {{ data?.person?.person_name || "-" }}
+            </td>
+            <td
+              style="
+                text-align: center;
+                border-bottom: 0.5px solid #ddd;
+                border-right: 0.5px solid #ddd;
+                border-left: 0.5px solid #ddd;
+              "
+            >
+              {{ getAge(data?.person?.date_of_birth) || "-" }}
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
   </div>
 </template>
 
@@ -411,6 +548,7 @@ export default {
         { text: "หน่วยงานที่จัด", value: "agency_name" },
         { text: "สถานที่จัด", value: "location_name" },
         { text: "แสดงรายละเอียด", value: "preview" },
+        { text: "ออกรายงาน", value: "export" },
       ],
 
       activities: [],
@@ -434,6 +572,7 @@ export default {
       locationName: "",
       datepick: false,
       datepick2: false,
+      dataExport: null,
     };
   },
   computed: {
@@ -571,15 +710,28 @@ export default {
       this.locationName = "";
       this.$validator.reset();
     },
-    async handleExport() {
-      try {
-        await Activity.export({
-          ...this.param,
-          "filters[activity_name]": this.name ?? undefined,
+    // async handleExport() {
+    //   try {
+    //     await Activity.export({
+    //       ...this.param,
+    //       "filters[activity_name]": this.name ?? undefined,
+    //     });
+    //   } catch {
+    //     this.$toast.error("เกิดข้อผิดพลาด, กรุณาลองใหม่อีกครั้ง");
+    //   }
+    // },
+
+    async handleExport(item) {
+      this.dataExport = item;
+
+      await setTimeout(() => {
+        this.$htmlToPaper("printMe", {
+          styles: [],
         });
-      } catch {
-        this.$toast.error("เกิดข้อผิดพลาด, กรุณาลองใหม่อีกครั้ง");
-      }
+      }, 2000);
+    },
+    getAge(dob) {
+      return dayjs().diff(dob, "year");
     },
   },
 };
