@@ -207,27 +207,340 @@
     </v-dialog>
 
     <div id="printMe" style="display: none; padding: 8px">
-      <div>asda;lsdsadl'asdasdlas;ldkas;ldks;aldsad</div>
-      <table class="table table-sm">
-        <thead>
+    <!-- <div id="printMe" style="padding: 8px"> -->
+      <div style="display: flex; justify-content: end">
+        <div style="width: 50%;">
+          <div style=" font-size: 25px; font-weight: 300">
+            ทะเบียนครัวเรือน
+          </div>
+
+        </div>
+        <div style="display:flex; gap: 2px; border: 1px solid black; padding: 4px; ">
+         <div style="width: 150px">
+          ครัวเรือนที่
+         </div>
+         <div style="width: 100%; border-bottom-style: dotted">
+          {{ dataExport?.house_id }}
+         </div>
+        </div>
+
+      </div>
+
+      <div style="width:100%; display: grid;  grid-template-columns: 1fr 1fr 1fr 1fr; gap: 4px; margin-top: 20px">
+        <div style="width: 100%; display: flex;">
+          <div style="width:150px">
+            บ้านเลขที่
+          </div>
+          <div style="width: 100%; border-bottom-style: dotted;">
+            {{dataExport?.house_number}}
+          </div>
+        </div>
+        <div style="width: 100%; display: flex;">
+          <div style="width:70px">
+            ชุมชน
+          </div>
+          <div style="width: 100%; border-bottom-style: dotted;">
+            {{dataExport?.community?.comm_name || ''}}
+          </div>
+        </div>
+        <div style="width: 100%; display: flex;">
+          <div style="width:70px">
+            ซอย
+          </div>
+          <div style="width: 100%; border-bottom-style: dotted;">
+            {{dataExport?.alley?.alley_name || ''}}
+          </div>
+        </div>
+        <div style="width: 100%; display: flex;">
+          <div style="width:70px">
+            ถนน
+          </div>
+          <div style="width: 100%; border-bottom-style: dotted;">
+            {{dataExport?.road?.road_name || ''}}
+          </div>
+        </div>
+        <div style="width: 100%; display: flex;">
+          <div style="width:70px">
+            แขวง
+          </div>
+          <div style="width: 100%; border-bottom-style: dotted;">
+            {{dataExport?.subdistrict?.subdistrict_name || ''}}
+          </div>
+        </div>
+        <div style="width: 100%; display: flex;">
+          <div style="width:70px">
+            เขต
+          </div>
+          <div style="width: 100%; border-bottom-style: dotted;">
+            {{dataExport?.district?.district_name || ''}}
+          </div>
+        </div>
+        <div style="width: 100%; display: flex;">
+          <div style="width:150px">
+            รหัสไปรษณีย์
+          </div>
+          <div style="width: 100%; border-bottom-style: dotted;">
+            {{dataExport?.subdistrict?.post_code || ''}}
+          </div>
+        </div>
+        <div style="width: 100%; display: flex;">
+          <div style="width:150px">
+            โทรศัพท์
+          </div>
+          <div style="width: 100%; border-bottom-style: dotted;">
+            {{dataExport?.phone || ''}}
+          </div>
+        </div>
+      </div>
+
+      <div style="width:100%; display: grid;  grid-template-columns: 1fr 1fr;">
+        <div style="width: 100%; display: flex;">
+          <div style="width:180px">
+            หัวหน้าครัวเรือน
+          </div>
+          <div style="width: 100%; border-bottom-style: dotted;">
+            {{dataExport?.person?.person_name || ''}}
+          </div>
+        </div>
+        <div style="width: 100%; display: flex;">
+          <div style="width:150px">
+            จำนวนสมาชิก
+          </div>
+          <div style="width: 100%; border-bottom-style: dotted;">
+            {{dataExport?.members?.length || 0}}
+          </div>
+          <div>
+            คน
+          </div>
+        </div>
+      </div>
+
+
+
+      <table
+        style="
+          border: 0.5px solid #ddd;
+          border-collapse: separate;
+          border-spacing: 0px;
+          width: 100%;
+          margin-top: 20px
+        "
+      >
+        <thead
+          style="
+            border: 0.5px solid #ddd;
+            border-collapse: separate;
+            border-spacing: 0px;
+          "
+        >
           <tr>
-            <th scope="col">ลำดับที่</th>
-            <th scope="col">ชื่อ-นามสกุล</th>
-            <th scope="col">บัตรประชาชน</th>
-            <th scope="col">วัน/เดือน/ปีเกิด</th>
+            <th
+              style="
+                border: 0.5px solid #ddd;
+                border-collapse: separate;
+                border-spacing: 0px;
+              "
+              rowspan="3"
+            >
+              ลำดับที่
+            </th>
+            <th
+            style="
+              border: 0.5px solid #ddd;
+              border-collapse: separate;
+              border-spacing: 0px;
+            "
+            rowspan="3"
+          >
+            ชื่อ-สกุล
+          </th>
+            <th
+              style="
+                border: 0.5px solid #ddd;
+                border-collapse: separate;
+                border-spacing: 0px;
+              "
+              rowspan="3"
+            >
+              อายุ
+            </th>
+            <th
+              style="
+                border: 0.5px solid #ddd;
+                border-collapse: separate;
+                border-spacing: 0px;
+              "
+              rowspan="3"
+            >
+              วัน/เดือน/ปีเกิด
+            </th>
+
+            <th colspan="9">กลุ่มที่ต้องดูแลพิเศษ</th>
+          </tr>
+          <tr>
+            <th
+              style="
+                border: 0.5px solid #ddd;
+                border-collapse: separate;
+                border-spacing: 0px;
+              "
+              colspan="3"
+            >
+              เด็กแรกเกิด ๖ ปี
+            </th>
+            <th
+              style="
+                border: 0.5px solid #ddd;
+                border-collapse: separate;
+                border-spacing: 0px;
+              "
+              colspan="2"
+            >
+              หญิงตั้งครรภ์
+            </th>
+            <th
+              style="
+                border: 0.5px solid #ddd;
+                border-collapse: separate;
+                border-spacing: 0px;
+              "
+              rowspan="3"
+            >
+              หญิงหลังคลอด
+            </th>
+            <th
+              style="
+                border: 0.5px solid #ddd;
+                border-collapse: separate;
+                border-spacing: 0px;
+              "
+              rowspan="3"
+            >
+              ผู้สูงอายุ
+            </th>
+            <th
+              style="
+                border: 0.5px solid #ddd;
+                border-collapse: separate;
+                border-spacing: 0px;
+              "
+              rowspan="3"
+            >
+              ผู้พิการ
+            </th>
+            <th
+              style="
+                border: 0.5px solid #ddd;
+                border-collapse: separate;
+                border-spacing: 0px;
+              "
+              rowspan="3"
+            >
+              ผู้ป่วยเรื้อรัง
+            </th>
+            <th
+              style="
+                border: 0.5px solid #ddd;
+                border-collapse: separate;
+                border-spacing: 0px;
+              "
+              rowspan="3"
+            >
+              มีพฤติกรรมเสี่ยงด้านความรุนแรง
+            </th>
+          </tr>
+          <tr>
+            <th
+              style="
+                border: 0.5px solid #ddd;
+                border-collapse: separate;
+                border-spacing: 0px;
+              "
+            >
+              อายุต่ำกว่า ๖ เดือน
+            </th>
+            <th
+              style="
+                border: 0.5px solid #ddd;
+                border-collapse: separate;
+                border-spacing: 0px;
+              "
+            >
+              ๖ เดือน - ๒ ปีครึ่ง
+            </th>
+            <th
+              style="
+                border: 0.5px solid #ddd;
+                border-collapse: separate;
+                border-spacing: 0px;
+              "
+            >
+              ๒ ปีครึ่ง - ๖ ปี
+            </th>
+            <th
+              style="
+                border: 0.5px solid #ddd;
+                border-collapse: separate;
+                border-spacing: 0px;
+              "
+            >
+              อายุ ๒๐ ปีขึ้นไป
+            </th>
+            <th
+              style="
+                border: 0.5px solid #ddd;
+                border-collapse: separate;
+                border-spacing: 0px;
+              "
+            >
+              อายุต่ำ ๒๐ ปี
+            </th>
           </tr>
         </thead>
         <tbody>
           <tr
-            v-if="dataExport?.members"
-            v-for="(member, index) in dataExport?.members"
-            :key="index"
-          >
-            <th scope="row">{{ index + 1 }}</th>
-            <td>{{ member?.person?.person_name || "" }}</td>
-            <td>{{ member?.person?.id_card }}</td>
-            <td>{{ member?.person?.date_of_birth }}</td>
-          </tr>
+          v-if="dataExport?.members"
+          v-for="(member, index) in dataExport?.members"
+          :key="index"
+        >
+          <th scope="row">{{ index + 1 }}</th>
+          <td style="border-bottom: 0.5px solid #ddd;">{{ member?.person?.person_name || "" }}</td>
+          <td style="text-align: center; border-bottom: 0.5px solid #ddd;">{{ getAge(member?.person?.date_of_birth )|| "" }}</td>
+          <td style="text-align: center; border-bottom: 0.5px solid #ddd;">{{ getDOB(member?.person?.date_of_birth )|| "" }}</td>
+          <td style="text-align: center; border-bottom: 0.5px solid #ddd;">
+           {{ member?.person?.newborn === "1" ? '&#x2714' : ''}}
+          </td>
+          <td style="text-align: center; border; border-bottom: 0.5px solid #ddd;">
+            {{ member?.person?.newborn === "2" ? '&#x2714' : ''}}
+          </td>
+          <td style="text-align: center; border-bottom: 0.5px solid #ddd;">
+            {{ member?.person?.newborn === "3" ? '&#x2714' : ''}}
+          </td>
+
+          <td style="text-align: center; border-bottom: 0.5px solid #ddd;">
+            {{ member?.person?.pregnant === "1" ? '&#x2714' : ''}}
+          </td>
+          <td style="text-align: center; border-bottom: 0.5px solid #ddd;">
+            {{ member?.person?.pregnant === "2" ? '&#x2714' : ''}}
+          </td>
+          <td style="text-align: center; border-bottom: 0.5px solid #ddd;">
+            {{ member?.person?.postpartum ? '&#x2714' : ''}}
+          </td>
+          <td style="text-align: center; border-bottom: 0.5px solid #ddd;">
+            {{ Number(getAge(member?.person?.date_of_birth )>=60) ? '&#x2714' : ''}}
+          </td>
+          <td style="text-align: center; border-bottom: 0.5px solid #ddd;">
+            {{ member?.person?.disabled ? '&#x2714' : ''}}
+          </td>
+          <td style="text-align: center; border-bottom: 0.5px solid #ddd;">
+            {{ member?.person?.chronic_disease ? '&#x2714' : ''}}
+          </td>
+          <td style="text-align: center; border-bottom: 0.5px solid #ddd;">
+            {{ member?.person?.violent_behavior ? '&#x2714' : ''}}
+          </td>
+
+         </tr>
+
         </tbody>
       </table>
     </div>
@@ -471,13 +784,29 @@ export default {
     async exportData(data) {
       const houseId = data?.house_id || null;
       try {
+
         this.dataExport = data;
-        this.$htmlToPaper("printMe");
-        // await HouseHold.getById(houseId);
+
+        await setTimeout(()=>{
+          this.$htmlToPaper("printMe", {
+          styles: [
+            "/assets/css/landscape.css",
+            // "https://cdn.jsdelivr.net/npm/bootstrap@4.1.3/dist/css/bootstrap.min.css",
+            // "https://unpkg.com/kidlat-css/css/kidlat.css",
+          ],
+        });
+        },2000)
+
       } catch (e) {
         console.log(e);
         this.$toast.error("เกิดข้อผิดพลาด, กรุณาลองใหม่อีกครั้ง");
       }
+    },
+    getDOB(dob) {
+      return dayjs(dob).add(543, "year").format("DD/MMM/YY");
+    },
+    getAge(dob) {
+      return dayjs().diff(dob, "year");
     },
   },
 };
@@ -496,5 +825,9 @@ table td:first-child {
 }
 .v-input__control {
   padding: 0px;
+}
+.table-print {
+  border: 1px solid #ddd;
+  border-spacing: 1px;
 }
 </style>
