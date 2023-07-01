@@ -13,6 +13,16 @@
         <v-icon left> mdi-plus-circle </v-icon>
         เพิ่มสมาชิกชุมชน
       </v-btn>
+      <v-btn
+        color="primary"
+        large
+        outlined
+        class="col-12 col-lg-2 mt-6"
+        @click="handleExportOld()"
+      >
+        <v-icon left> mdi-file-download-outline </v-icon>
+        ออกรายงานผู้สูงอายุ
+      </v-btn>
     </div>
 
     <v-card outlined class="mt-4" style="padding: 8px">
@@ -250,6 +260,163 @@
         </div>
       </v-card>
     </v-dialog>
+
+    <div id="printMe" style="display: none; padding: 8px">
+      <center>
+        <h1>รายชื่อผู้สูงอายุประจำปี {{ new Date().getFullYear() + 543 }}</h1>
+      </center>
+      <table
+        style="
+          border: 0.5px solid #ddd;
+          border-collapse: separate;
+          border-spacing: 0px;
+          width: 100%;
+          margin-top: 20px;
+        "
+      >
+        <thead
+          style="
+            border: 0.5px solid #ddd;
+            border-collapse: separate;
+            border-spacing: 0px;
+          "
+        >
+          <tr>
+            <th
+              style="
+                border: 0.5px solid #ddd;
+                border-collapse: separate;
+                border-spacing: 0px;
+              "
+              rowspan="2"
+            >
+              ลำดับที่
+            </th>
+            <th
+              style="
+                border: 0.5px solid #ddd;
+                border-collapse: separate;
+                border-spacing: 0px;
+              "
+              rowspan="2"
+            >
+              ชื่อ-นามสกุล
+            </th>
+            <th
+              style="
+                border: 0.5px solid #ddd;
+                border-collapse: separate;
+                border-spacing: 0px;
+              "
+              rowspan="2"
+            >
+              อายุ
+            </th>
+            <th
+              colspan="2"
+              style="
+                border: 0.5px solid #ddd;
+                border-collapse: separate;
+                border-spacing: 0px;
+              "
+            >
+              ประเภท
+            </th>
+            <th
+              rowspan="2"
+              style="
+                border: 0.5px solid #ddd;
+                border-collapse: separate;
+                border-spacing: 0px;
+              "
+            >
+              ที่อยู่/บ้านเลขที่
+            </th>
+          </tr>
+          <tr>
+            <th
+              style="
+                border: 0.5px solid #ddd;
+                border-collapse: separate;
+                border-spacing: 0px;
+              "
+            >
+              ผู้สูงอายุ
+            </th>
+            <th
+              style="
+                border: 0.5px solid #ddd;
+                border-collapse: separate;
+                border-spacing: 0px;
+              "
+            >
+              สมทบ
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr
+            v-if="dataExport"
+            v-for="(data, index) in dataExport"
+            :key="index"
+          >
+            <th scope="row" style="border-bottom: 0.5px solid #ddd">
+              {{ index + 1 }}
+            </th>
+            <td
+              style="
+                border-bottom: 0.5px solid #ddd;
+                border-right: 0.5px solid #ddd;
+                border-left: 0.5px solid #ddd;
+              "
+            >
+              {{ data?.person_name || "-" }}
+            </td>
+            <td
+              style="
+                text-align: center;
+                border-bottom: 0.5px solid #ddd;
+                border-right: 0.5px solid #ddd;
+                border-left: 0.5px solid #ddd;
+              "
+            >
+              {{ getAge(data?.date_of_birth) || "-" }}
+            </td>
+            <td
+              style="
+                text-align: center;
+                border-bottom: 0.5px solid #ddd;
+                border-right: 0.5px solid #ddd;
+                border-left: 0.5px solid #ddd;
+              "
+            >
+              {{ '&#x2714' }}
+            </td>
+            <td
+              style="
+                text-align: center;
+                border-bottom: 0.5px solid #ddd;
+                border-right: 0.5px solid #ddd;
+                border-left: 0.5px solid #ddd;
+              "
+            >
+              {{ "" }}
+            </td>
+            <td
+              style="
+                text-align: center;
+                border-bottom: 0.5px solid #ddd;
+                border-bottom: 0.5px solid #ddd;
+                border-right: 0.5px solid #ddd;
+                border-left: 0.5px solid #ddd;
+              "
+            >
+              {{ data?.household_member?.household?.house_number || "-" }}
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
   </div>
 </template>
 
@@ -357,6 +524,8 @@ export default {
       showDetailData: false,
       detail: null,
       showCreatePerson: false,
+      dataExport: null,
+      isLoadingExport: false,
     };
   },
   watch: {
@@ -465,6 +634,26 @@ export default {
           : 0;
         return age >= this.range[0] && age <= this.range[1];
       });
+    },
+    handleFilterAgeOld() {
+      return this.defaultItems.filter((item) => {
+        const age = this.getAge(item?.date_of_birth)
+          ? Number(this.getAge(item.date_of_birth))
+          : 0;
+
+        return age >= 60;
+      });
+    },
+    async handleExportOld() {
+      this.isLoadingExport = true;
+      this.dataExport = this.handleFilterAgeOld() || [];
+      this.isLoadingExport = false;
+
+      await setTimeout(() => {
+        this.$htmlToPaper("printMe", {
+          styles: [],
+        });
+      }, 2000);
     },
   },
 };

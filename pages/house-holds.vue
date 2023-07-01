@@ -207,7 +207,6 @@
     </v-dialog>
 
     <div id="printMe" style="display: none; padding: 8px">
-    <!-- <div id="printMe" style="padding: 8px"> -->
       <div style="display: flex; justify-content: end">
         <div style="width: 50%;">
           <div style=" font-size: 25px; font-weight: 300">
