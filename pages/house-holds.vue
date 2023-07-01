@@ -5,46 +5,26 @@
     </div>
 
     <div v-if="isAdmin">
-      <v-btn
-        color="primary"
-        large
-        class="col-12 col-lg-2 mt-6"
-        nuxt
-        to="/add-house-holds"
-      >
+      <v-btn color="primary" large class="col-12 col-lg-2 mt-6" nuxt to="/add-house-holds">
         <v-icon left> mdi-plus-circle </v-icon>
         สร้างทะเบียนครัวเรือน
+      </v-btn>
+      <v-btn color="primary" large class="col-12 col-lg-2 mt-6" outlined @click="handleExport()" v-if="isAdmin">
+        ออกรายงานข้อมูลชุมชน
+        <v-icon right> mdi-file-download-outline </v-icon>
       </v-btn>
     </div>
     <v-card class="mt-6" outlined>
       <v-card-title class="col-12">
         <div class="col-12">
-          <v-text-field
-            v-model="house_number"
-            class="col-12"
-            append-icon="mdi-magnify"
-            label="ค้นหาบ้านเลขที่"
-            single-line
-            hide-details
-            outlined
-          ></v-text-field>
+          <v-text-field v-model="house_number" class="col-12" append-icon="mdi-magnify" label="ค้นหาบ้านเลขที่"
+            single-line hide-details outlined></v-text-field>
         </div>
       </v-card-title>
-      <v-data-table
-        :loading="loading"
-        :headers="headers"
-        :items="houseHolds"
-        disable-filtering
-        disable-sort
-        :page="meta.page"
-        :itemsPerPage="meta.perPage || 5"
-        :server-items-length="meta.total"
-        class="elevation-1"
-        @update:items-per-page="changePerPage"
-        @update:page="changePage"
-        no-results-text="ไม่พบข้อมูล"
-        no-data-text="ไม่พบข้อมูล, ลองค้นหาทะเบียนบ้านใหม่อีกครั้ง"
-      >
+      <v-data-table :loading="loading" :headers="headers" :items="houseHolds" disable-filtering disable-sort
+        :page="meta.page" :itemsPerPage="meta.perPage || 5" :server-items-length="meta.total" class="elevation-1"
+        @update:items-per-page="changePerPage" @update:page="changePage" no-results-text="ไม่พบข้อมูล"
+        no-data-text="ไม่พบข้อมูล, ลองค้นหาทะเบียนบ้านใหม่อีกครั้ง">
         <template v-slot:item.preview="{ item }">
           <a @click="showPreview(item)" href="#">แสดงรายละเอียด</a>
         </template>
@@ -54,23 +34,15 @@
         </template>
       </v-data-table>
     </v-card>
-    <v-dialog
-      v-model="isShowPreview"
-      :fullscreen="true"
-      transition="dialog-bottom-transition"
-      width="800px"
-      persistent
-      @click:outside="closePreview()"
-    >
+    <v-dialog v-model="isShowPreview" :fullscreen="true" transition="dialog-bottom-transition" width="800px" persistent
+      @click:outside="closePreview()">
       <v-card v-if="previewData">
         <v-toolbar dark color="primary">
           <v-btn icon dark @click="closePreview()">
             <v-icon>mdi-close</v-icon>
           </v-btn>
-          <v-toolbar-title
-            >สมาชิกครัวเรือน บ้านเลขที่
-            {{ previewData.house_number }}</v-toolbar-title
-          >
+          <v-toolbar-title>สมาชิกครัวเรือน บ้านเลขที่
+            {{ previewData.house_number }}</v-toolbar-title>
           <v-spacer></v-spacer>
         </v-toolbar>
         <div class="px-4 py-4">
@@ -145,22 +117,13 @@
 
               <div class="px-4">
                 <div>
-                  <div
-                    class="d-flex mb-8 mt-4"
-                    v-if="
-                      previewData?.members && previewData?.members?.length === 0
-                    "
-                  >
+                  <div class="d-flex mb-8 mt-4" v-if="previewData?.members && previewData?.members?.length === 0
+                    ">
                     ไม่มีสมาชิกในครัวเรือน
                   </div>
 
-                  <v-simple-table
-                    v-if="
-                      previewData?.members && previewData?.members?.length > 0
-                    "
-                    fixed-header
-                    height="300px"
-                  >
+                  <v-simple-table v-if="previewData?.members && previewData?.members?.length > 0
+                    " fixed-header height="300px">
                     <template v-slot:default>
                       <thead>
                         <tr>
@@ -215,12 +178,12 @@
 
         </div>
         <div style="display:flex; gap: 2px; border: 1px solid black; padding: 4px; ">
-         <div style="width: 150px">
-          ครัวเรือนที่
-         </div>
-         <div style="width: 100%; border-bottom-style: dotted">
-          {{ dataExport?.house_id }}
-         </div>
+          <div style="width: 150px">
+            ครัวเรือนที่
+          </div>
+          <div style="width: 100%; border-bottom-style: dotted">
+            {{ dataExport?.house_id }}
+          </div>
         </div>
 
       </div>
@@ -231,7 +194,7 @@
             บ้านเลขที่
           </div>
           <div style="width: 100%; border-bottom-style: dotted;">
-            {{dataExport?.house_number}}
+            {{ dataExport?.house_number }}
           </div>
         </div>
         <div style="width: 100%; display: flex;">
@@ -239,7 +202,7 @@
             ชุมชน
           </div>
           <div style="width: 100%; border-bottom-style: dotted;">
-            {{dataExport?.community?.comm_name || ''}}
+            {{ dataExport?.community?.comm_name || '' }}
           </div>
         </div>
         <div style="width: 100%; display: flex;">
@@ -247,7 +210,7 @@
             ซอย
           </div>
           <div style="width: 100%; border-bottom-style: dotted;">
-            {{dataExport?.alley?.alley_name || ''}}
+            {{ dataExport?.alley?.alley_name || '' }}
           </div>
         </div>
         <div style="width: 100%; display: flex;">
@@ -255,7 +218,7 @@
             ถนน
           </div>
           <div style="width: 100%; border-bottom-style: dotted;">
-            {{dataExport?.road?.road_name || ''}}
+            {{ dataExport?.road?.road_name || '' }}
           </div>
         </div>
         <div style="width: 100%; display: flex;">
@@ -263,7 +226,7 @@
             แขวง
           </div>
           <div style="width: 100%; border-bottom-style: dotted;">
-            {{dataExport?.subdistrict?.subdistrict_name || ''}}
+            {{ dataExport?.subdistrict?.subdistrict_name || '' }}
           </div>
         </div>
         <div style="width: 100%; display: flex;">
@@ -271,7 +234,7 @@
             เขต
           </div>
           <div style="width: 100%; border-bottom-style: dotted;">
-            {{dataExport?.district?.district_name || ''}}
+            {{ dataExport?.district?.district_name || '' }}
           </div>
         </div>
         <div style="width: 100%; display: flex;">
@@ -279,7 +242,7 @@
             รหัสไปรษณีย์
           </div>
           <div style="width: 100%; border-bottom-style: dotted;">
-            {{dataExport?.subdistrict?.post_code || ''}}
+            {{ dataExport?.subdistrict?.post_code || '' }}
           </div>
         </div>
         <div style="width: 100%; display: flex;">
@@ -287,7 +250,7 @@
             โทรศัพท์
           </div>
           <div style="width: 100%; border-bottom-style: dotted;">
-            {{dataExport?.phone || ''}}
+            {{ dataExport?.phone || '' }}
           </div>
         </div>
       </div>
@@ -298,7 +261,7 @@
             หัวหน้าครัวเรือน
           </div>
           <div style="width: 100%; border-bottom-style: dotted;">
-            {{dataExport?.person?.person_name || ''}}
+            {{ dataExport?.person?.person_name || '' }}
           </div>
         </div>
         <div style="width: 100%; display: flex;">
@@ -306,7 +269,7 @@
             จำนวนสมาชิก
           </div>
           <div style="width: 100%; border-bottom-style: dotted;">
-            {{dataExport?.members?.length || 0}}
+            {{ dataExport?.members?.length || 0 }}
           </div>
           <div>
             คน
@@ -316,232 +279,323 @@
 
 
 
-      <table
-        style="
+      <table style="
           border: 0.5px solid #ddd;
           border-collapse: separate;
           border-spacing: 0px;
           width: 100%;
           margin-top: 20px
-        "
-      >
-        <thead
-          style="
+        ">
+        <thead style="
             border: 0.5px solid #ddd;
             border-collapse: separate;
             border-spacing: 0px;
-          "
-        >
+          ">
           <tr>
-            <th
-              style="
+            <th style="
                 border: 0.5px solid #ddd;
                 border-collapse: separate;
                 border-spacing: 0px;
-              "
-              rowspan="3"
-            >
+              " rowspan="3">
               ลำดับที่
             </th>
-            <th
-            style="
+            <th style="
               border: 0.5px solid #ddd;
               border-collapse: separate;
               border-spacing: 0px;
-            "
-            rowspan="3"
-          >
-            ชื่อ-สกุล
-          </th>
-            <th
-              style="
+            " rowspan="3">
+              ชื่อ-สกุล
+            </th>
+            <th style="
                 border: 0.5px solid #ddd;
                 border-collapse: separate;
                 border-spacing: 0px;
-              "
-              rowspan="3"
-            >
+              " rowspan="3">
               อายุ
             </th>
-            <th
-              style="
+            <th style="
                 border: 0.5px solid #ddd;
                 border-collapse: separate;
                 border-spacing: 0px;
-              "
-              rowspan="3"
-            >
+              " rowspan="3">
               วัน/เดือน/ปีเกิด
             </th>
 
             <th colspan="9">กลุ่มที่ต้องดูแลพิเศษ</th>
           </tr>
           <tr>
-            <th
-              style="
+            <th style="
                 border: 0.5px solid #ddd;
                 border-collapse: separate;
                 border-spacing: 0px;
-              "
-              colspan="3"
-            >
+              " colspan="3">
               เด็กแรกเกิด ๖ ปี
             </th>
-            <th
-              style="
+            <th style="
                 border: 0.5px solid #ddd;
                 border-collapse: separate;
                 border-spacing: 0px;
-              "
-              colspan="2"
-            >
+              " colspan="2">
               หญิงตั้งครรภ์
             </th>
-            <th
-              style="
+            <th style="
                 border: 0.5px solid #ddd;
                 border-collapse: separate;
                 border-spacing: 0px;
-              "
-              rowspan="3"
-            >
+              " rowspan="3">
               หญิงหลังคลอด
             </th>
-            <th
-              style="
+            <th style="
                 border: 0.5px solid #ddd;
                 border-collapse: separate;
                 border-spacing: 0px;
-              "
-              rowspan="3"
-            >
+              " rowspan="3">
               ผู้สูงอายุ
             </th>
-            <th
-              style="
+            <th style="
                 border: 0.5px solid #ddd;
                 border-collapse: separate;
                 border-spacing: 0px;
-              "
-              rowspan="3"
-            >
+              " rowspan="3">
               ผู้พิการ
             </th>
-            <th
-              style="
+            <th style="
                 border: 0.5px solid #ddd;
                 border-collapse: separate;
                 border-spacing: 0px;
-              "
-              rowspan="3"
-            >
+              " rowspan="3">
               ผู้ป่วยเรื้อรัง
             </th>
-            <th
-              style="
+            <th style="
                 border: 0.5px solid #ddd;
                 border-collapse: separate;
                 border-spacing: 0px;
-              "
-              rowspan="3"
-            >
+              " rowspan="3">
               มีพฤติกรรมเสี่ยงด้านความรุนแรง
             </th>
           </tr>
           <tr>
-            <th
-              style="
+            <th style="
                 border: 0.5px solid #ddd;
                 border-collapse: separate;
                 border-spacing: 0px;
-              "
-            >
+              ">
               อายุต่ำกว่า ๖ เดือน
             </th>
-            <th
-              style="
+            <th style="
                 border: 0.5px solid #ddd;
                 border-collapse: separate;
                 border-spacing: 0px;
-              "
-            >
+              ">
               ๖ เดือน - ๒ ปีครึ่ง
             </th>
-            <th
-              style="
+            <th style="
                 border: 0.5px solid #ddd;
                 border-collapse: separate;
                 border-spacing: 0px;
-              "
-            >
+              ">
               ๒ ปีครึ่ง - ๖ ปี
             </th>
-            <th
-              style="
+            <th style="
                 border: 0.5px solid #ddd;
                 border-collapse: separate;
                 border-spacing: 0px;
-              "
-            >
+              ">
               อายุ ๒๐ ปีขึ้นไป
             </th>
-            <th
-              style="
+            <th style="
                 border: 0.5px solid #ddd;
                 border-collapse: separate;
                 border-spacing: 0px;
-              "
-            >
+              ">
               อายุต่ำ ๒๐ ปี
             </th>
           </tr>
         </thead>
         <tbody>
-          <tr
-          v-if="dataExport?.members"
-          v-for="(member, index) in dataExport?.members"
-          :key="index"
-        >
-          <th scope="row">{{ index + 1 }}</th>
-          <td style="border-bottom: 0.5px solid #ddd;">{{ member?.person?.person_name || "" }}</td>
-          <td style="text-align: center; border-bottom: 0.5px solid #ddd;">{{ getAge(member?.person?.date_of_birth )|| "" }}</td>
-          <td style="text-align: center; border-bottom: 0.5px solid #ddd;">{{ getDOB(member?.person?.date_of_birth )|| "" }}</td>
-          <td style="text-align: center; border-bottom: 0.5px solid #ddd;">
-           {{ member?.person?.newborn === "1" ? '&#x2714' : ''}}
-          </td>
-          <td style="text-align: center; border; border-bottom: 0.5px solid #ddd;">
-            {{ member?.person?.newborn === "2" ? '&#x2714' : ''}}
-          </td>
-          <td style="text-align: center; border-bottom: 0.5px solid #ddd;">
-            {{ member?.person?.newborn === "3" ? '&#x2714' : ''}}
-          </td>
+          <tr v-if="dataExport?.members" v-for="(member, index) in dataExport?.members" :key="index">
+            <th scope="row">{{ index + 1 }}</th>
+            <td style="border-bottom: 0.5px solid #ddd;">{{ member?.person?.person_name || "" }}</td>
+            <td style="text-align: center; border-bottom: 0.5px solid #ddd;">{{ getAge(member?.person?.date_of_birth) ||
+              "" }}</td>
+            <td style="text-align: center; border-bottom: 0.5px solid #ddd;">{{ getDOB(member?.person?.date_of_birth) ||
+              "" }}</td>
+            <td style="text-align: center; border-bottom: 0.5px solid #ddd;">
+              {{ member?.person?.newborn === "1" ? '&#x2714' : '' }}
+            </td>
+            <td style="text-align: center; border; border-bottom: 0.5px solid #ddd;">
+              {{ member?.person?.newborn === "2" ? '&#x2714' : '' }}
+            </td>
+            <td style="text-align: center; border-bottom: 0.5px solid #ddd;">
+              {{ member?.person?.newborn === "3" ? '&#x2714' : '' }}
+            </td>
 
-          <td style="text-align: center; border-bottom: 0.5px solid #ddd;">
-            {{ member?.person?.pregnant === "1" ? '&#x2714' : ''}}
-          </td>
-          <td style="text-align: center; border-bottom: 0.5px solid #ddd;">
-            {{ member?.person?.pregnant === "2" ? '&#x2714' : ''}}
-          </td>
-          <td style="text-align: center; border-bottom: 0.5px solid #ddd;">
-            {{ member?.person?.postpartum ? '&#x2714' : ''}}
-          </td>
-          <td style="text-align: center; border-bottom: 0.5px solid #ddd;">
-            {{ Number(getAge(member?.person?.date_of_birth )>=60) ? '&#x2714' : ''}}
-          </td>
-          <td style="text-align: center; border-bottom: 0.5px solid #ddd;">
-            {{ member?.person?.disabled ? '&#x2714' : ''}}
-          </td>
-          <td style="text-align: center; border-bottom: 0.5px solid #ddd;">
-            {{ member?.person?.chronic_disease ? '&#x2714' : ''}}
-          </td>
-          <td style="text-align: center; border-bottom: 0.5px solid #ddd;">
-            {{ member?.person?.violent_behavior ? '&#x2714' : ''}}
-          </td>
+            <td style="text-align: center; border-bottom: 0.5px solid #ddd;">
+              {{ member?.person?.pregnant === "1" ? '&#x2714' : '' }}
+            </td>
+            <td style="text-align: center; border-bottom: 0.5px solid #ddd;">
+              {{ member?.person?.pregnant === "2" ? '&#x2714' : '' }}
+            </td>
+            <td style="text-align: center; border-bottom: 0.5px solid #ddd;">
+              {{ member?.person?.postpartum ? '&#x2714' : '' }}
+            </td>
+            <td style="text-align: center; border-bottom: 0.5px solid #ddd;">
+              {{ Number(getAge(member?.person?.date_of_birth) >= 60) ? '&#x2714' : '' }}
+            </td>
+            <td style="text-align: center; border-bottom: 0.5px solid #ddd;">
+              {{ member?.person?.disabled ? '&#x2714' : '' }}
+            </td>
+            <td style="text-align: center; border-bottom: 0.5px solid #ddd;">
+              {{ member?.person?.chronic_disease ? '&#x2714' : '' }}
+            </td>
+            <td style="text-align: center; border-bottom: 0.5px solid #ddd;">
+              {{ member?.person?.violent_behavior ? '&#x2714' : '' }}
+            </td>
 
-         </tr>
+          </tr>
 
         </tbody>
       </table>
+    </div>
+
+
+
+
+    <div id="printMe2" style="display: none; padding: 8px">
+      <center>
+        <h1>ข้อมูลชุมชนสงวนคำ ปี({{ new Date().getFullYear() + 543 }})</h1>
+      </center>
+
+      <!-- age1,
+      age2,
+      age3,
+      age4,
+      age5,
+      age6,
+      age7,
+      allUsersCount,
+      disabled,
+      chronicDisease,
+      houseHolds: houseHolds?.length || 0 -->
+
+
+      <div style="width: 100%; display: grid; grid-template-columns: 1fr 1fr 1fr; padding: 8px;">
+        <div style="width: 100%">
+          1. จำนวนครัวเรือน
+        </div>
+        <div style="width: 100%">
+          {{ exportHouseHold?.houseHolds || 0 }}
+        </div>
+        <div style="width: 100%">
+          ครัวเรือน
+        </div>
+
+        <div style="width: 100%; margin-top: 30px">
+          2. จำนวนประชากร
+        </div>
+        <div style="width: 100%; margin-top: 30px">
+          {{ exportHouseHold?.allUsersCount || 0 }}
+        </div>
+        <div style="width: 100%; margin-top: 30px">
+          คน
+        </div>
+
+        <div style="width: 100%; margin-top: 30px">
+          3. อายุแรกเกิด - 6 ปี
+        </div>
+        <div style="width: 100%; margin-top: 30px">
+          {{ exportHouseHold?.age1 || 0 }}
+        </div>
+        <div style="width: 100%; margin-top: 30px">
+          คน
+        </div>
+
+        <div style="width: 100%; margin-top: 30px">
+          4. อายุ 6 - 15 ปี
+        </div>
+        <div style="width: 100%; margin-top: 30px">
+          {{ exportHouseHold?.age2 || 0 }}
+        </div>
+        <div style="width: 100%; margin-top: 30px">
+          คน
+        </div>
+
+        <div style="width: 100%; margin-top: 30px">
+          5. อายุ 16 - 59 ปี
+        </div>
+        <div style="width: 100%; margin-top: 30px">
+          {{ exportHouseHold?.age3 || 0 }}
+        </div>
+        <div style="width: 100%; margin-top: 30px">
+          คน
+        </div>
+
+
+
+        <div style="width: 100%; margin-top: 30px">
+          6. อายุ 60 ปีขึ้นไป
+        </div>
+        <div style="width: 100%; margin-top: 30px">
+          {{ exportHouseHold?.age4 || 0 }}
+        </div>
+        <div style="width: 100%; margin-top: 30px">
+          คน
+        </div>
+
+
+        <div style="width: 100%; margin-top: 10px; margin-left: 15px;">
+          อายุ 60 - 69 ปี
+        </div>
+        <div style="width: 100%; margin-top: 10px">
+          {{ exportHouseHold?.age5 || 0 }}
+        </div>
+        <div style="width: 100%; margin-top: 10px">
+          คน
+        </div>
+
+
+        <div style="width: 100%; margin-top: 10px; margin-left: 15px;">
+          อายุ 70 - 79 ปี
+        </div>
+        <div style="width: 100%; margin-top: 10px">
+          {{ exportHouseHold?.age6 || 0 }}
+        </div>
+        <div style="width: 100%; margin-top: 10px">
+          คน
+        </div>
+
+        <div style="width: 100%; margin-top: 10px; margin-left: 15px;">
+          อายุ 80 ปีขึ้นไป
+        </div>
+        <div style="width: 100%; margin-top: 10px">
+          {{ exportHouseHold?.age7 || 0 }}
+        </div>
+        <div style="width: 100%; margin-top: 10px">
+          คน
+        </div>
+
+        <div style="width: 100%; margin-top: 30px">
+          7. ผู้พิการ
+        </div>
+        <div style="width: 100%; margin-top: 30px">
+          {{ exportHouseHold?.disabled || 0 }}
+        </div>
+        <div style="width: 100%; margin-top: 30px">
+          คน
+        </div>
+
+
+        <div style="width: 100%; margin-top: 30px">
+          8. ผู้ป่วยเรื้อรัง
+        </div>
+        <div style="width: 100%; margin-top: 30px">
+          {{ exportHouseHold?.chronicDisease || 0 }}
+        </div>
+        <div style="width: 100%; margin-top: 30px">
+          คน
+        </div>
+      </div>
+
     </div>
   </div>
 </template>
@@ -550,6 +604,7 @@
 import dayjs from "dayjs";
 import Breadcrumb from "@/components/Breadcrumbs";
 import HouseHold from "../services/apis/HouseHold";
+import ExportService from "../services/apis/Export";
 
 require("dayjs/locale/th");
 dayjs.locale("th");
@@ -636,7 +691,7 @@ export default {
         { text: "ออกรายงาน", value: "export" },
       ],
       dataExport: null,
-
+      exportHouseHold: null,
       houseHolds: [],
       meta: {},
       param: {
@@ -684,6 +739,13 @@ export default {
       }
       return false;
     },
+    canUse() {
+      const myLevel = localStorage.getItem("user_level") || null;
+      if (Number(myLevel) === 1 || (Number(myLevel) === 2)) {
+        return true;
+      }
+      return false;
+    }
   },
   watch: {
     house_number: {
@@ -786,15 +848,15 @@ export default {
 
         this.dataExport = data;
 
-        await setTimeout(()=>{
+        await setTimeout(() => {
           this.$htmlToPaper("printMe", {
-          styles: [
-            "/assets/css/landscape.css",
-            // "https://cdn.jsdelivr.net/npm/bootstrap@4.1.3/dist/css/bootstrap.min.css",
-            // "https://unpkg.com/kidlat-css/css/kidlat.css",
-          ],
-        });
-        },2000)
+            styles: [
+              "/assets/css/landscape.css",
+              // "https://cdn.jsdelivr.net/npm/bootstrap@4.1.3/dist/css/bootstrap.min.css",
+              // "https://unpkg.com/kidlat-css/css/kidlat.css",
+            ],
+          });
+        }, 2000)
 
       } catch (e) {
         console.log(e);
@@ -807,6 +869,19 @@ export default {
     getAge(dob) {
       return dayjs().diff(dob, "year");
     },
+    async handleExport() {
+
+      const data = await ExportService.exportHouseHold()
+
+      this.exportHouseHold = data
+
+
+      await setTimeout(() => {
+        this.$htmlToPaper("printMe2", {
+          styles: [],
+        });
+      }, 2000);
+    },
   },
 };
 </script>
@@ -816,15 +891,19 @@ table {
   border: none;
   border-collapse: collapse;
 }
+
 table td {
   border-left: 1px solid #dddddd;
 }
+
 table td:first-child {
   border-left: none;
 }
+
 .v-input__control {
   padding: 0px;
 }
+
 .table-print {
   border: 1px solid #ddd;
   border-spacing: 1px;

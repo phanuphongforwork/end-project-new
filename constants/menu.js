@@ -31,13 +31,6 @@ export default [
         level: [2],
       },
       {
-        text: "ออกรายงานครัวเรือนที่ดูแล",
-        icon: "mdi-file-excel",
-        active: false,
-        to: "export-house-holds",
-        level: [2],
-      },
-      {
         text: "การเข้าร่วมกิจกรรม",
         icon: "mdi-coffee-to-go",
         active: false,
