@@ -30,7 +30,7 @@
           </v-text-field>
         </v-col>
       </v-row>
-      <v-row> sdasdas </v-row>
+
       <v-row>
         <v-col cols="12">
           <v-alert type="info">ส่วนสำหรับจัดการข้อมูลส่วนตัวของบุคคล</v-alert>

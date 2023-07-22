@@ -28,6 +28,7 @@
             <v-radio label="ผู้ดูแลระบบ" :value="1"></v-radio>
             <v-radio label="อาสาสมัคร" :value="2"></v-radio>
             <v-radio label="สมาชิกชุมชน" :value="3"></v-radio>
+            <v-radio label="เขต" :value="4"></v-radio>
           </v-radio-group>
         </v-row>
 
